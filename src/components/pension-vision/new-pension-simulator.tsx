@@ -225,7 +225,7 @@ export function NewPensionSimulator() {
         </div>
         
         <div className="p-6 border rounded-lg bg-card shadow-sm space-y-4">
-            <h3 className="font-headline text-xl text-primary">Dodatkowe parametry zatrudnienia</h3>
+            <h3 className="font-headline text-xl text-primary">Dodatkowe parametry zatrudnienia i przebieg kariery</h3>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {periodConfig.map((period) => (
                     <div key={period.type} className="p-3 border rounded-lg bg-background/50 space-y-3">
@@ -285,7 +285,6 @@ export function NewPensionSimulator() {
                 ))}
              </div>
             <div className="mt-4">
-                <h3 className="font-headline text-xl text-primary mb-4">Przebieg kariery zawodowej</h3>
                 <CareerMonthsVisualizer 
                     periods={careerPeriodsForVisualizer}
                     startYear={startWorkYear} 
@@ -304,14 +303,23 @@ export function NewPensionSimulator() {
         </div>
       </div>
 
-      <div className="text-center p-8 border-2 rounded-lg mt-8" style={{ borderColor: isGoalAchieved ? '#22c55e' : '#ef4444' }}>
-        <h3 className="text-lg text-muted-foreground">Twoja szacowana wartość emerytury wynosi:</h3>
-        <p className={cn('text-5xl font-bold font-headline my-2', isGoalAchieved ? 'text-green-500' : 'text-red-500')}>
-          {pensionResult.kwotaUrealniona.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
-        </p>
-        <p className="text-sm text-muted-foreground">
-          (Wartość urealniona. Rzeczywista kwota w roku emerytury: {pensionResult.prognozowanaEmerytura.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })})
-        </p>
+      <div className="p-8 border-2 rounded-lg mt-8" style={{ borderColor: isGoalAchieved ? '#22c55e' : '#ef4444' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+            <div>
+                <h3 className="text-lg text-muted-foreground">Emerytura urealniona</h3>
+                <p className={cn('text-5xl font-bold font-headline my-2', isGoalAchieved ? 'text-green-500' : 'text-red-500')}>
+                  {pensionResult.kwotaUrealniona.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
+                </p>
+                <p className="text-sm text-muted-foreground">(wartość w dzisiejszych cenach)</p>
+            </div>
+            <div>
+                <h3 className="text-lg text-muted-foreground">Emerytura rzeczywista</h3>
+                 <p className={cn('text-5xl font-bold font-headline my-2', isGoalAchieved ? 'text-green-500' : 'text-red-500')}>
+                  {pensionResult.prognozowanaEmerytura.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
+                </p>
+                 <p className="text-sm text-muted-foreground">(wartość w roku przejścia na emeryturę)</p>
+            </div>
+        </div>
       </div>
     </div>
   );
