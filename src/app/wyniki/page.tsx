@@ -3,11 +3,24 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, RefreshCw, LayoutDashboard } from 'lucide-react';
+import { ArrowLeft, RefreshCw, LayoutDashboard, Download } from 'lucide-react';
 import Link from 'next/link';
 import { SimulationResults } from '@/components/pension-vision/simulation-results';
+import { useToast } from '@/hooks/use-toast';
+
 
 export default function ResultsPage() {
+  const { toast } = useToast();
+
+  const handleDownloadReport = () => {
+    toast({
+      title: "Generowanie raportu...",
+      description: "Twój raport w formacie PDF jest przygotowywany i wkrótce się pobierze.",
+    });
+    // Placeholder for actual PDF generation logic
+    console.log("Rozpoczęto generowanie raportu.");
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
@@ -19,7 +32,7 @@ export default function ResultsPage() {
               Wróć do formularza
             </Link>
           </Button>
-           <div className="flex gap-2">
+           <div className="flex flex-wrap gap-2">
              <Button asChild variant="outline">
               <Link href="/symulacja">
                 <RefreshCw className="mr-2 h-4 w-4" />
@@ -31,6 +44,10 @@ export default function ResultsPage() {
                 <LayoutDashboard className="mr-2 h-4 w-4" />
                 Przejdź do Dashboardu
               </Link>
+            </Button>
+             <Button onClick={handleDownloadReport}>
+              <Download className="mr-2 h-4 w-4" />
+              Pobierz raport
             </Button>
            </div>
         </div>
