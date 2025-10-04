@@ -43,7 +43,7 @@ export function PensionInput() {
           </CardTitle>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground">
+              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground" aria-label="Więcej informacji o obliczaniu emerytury przez ZUS">
                 <Info className="h-5 w-5" />
               </Button>
             </DialogTrigger>

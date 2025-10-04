@@ -10,7 +10,7 @@
     --card-foreground: 210 20% 20%;
     --popover: 0 0% 100%;
     --popover-foreground: 210 20% 20%;
-    --primary: 147 100% 25%;  /* #008033 - ZUS Green */
+    --primary: 151 100% 21%;  /* #006A2B - ZUS Green with sufficient contrast */
     --primary-foreground: 0 0% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 210 10% 20%;
@@ -22,8 +22,8 @@
     --destructive-foreground: 0 0% 98%;
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 147 100% 30%; /* #00993F */
-    --chart-1: 147 100% 30%; /* #00993F */
+    --ring: 147 100% 25%; /* Original ZUS Green for rings/focus */
+    --chart-1: 147 100% 25%; /* Original ZUS Green */
     --chart-2: 210 71% 53%; /* #3F84D2 */
     --chart-3: 33 100% 65%; /* #FFB34F */
     --chart-4: 0 84% 60%; /* #F05E5E */
@@ -37,7 +37,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 205 40% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 147 100% 30%;
+    --primary: 151 100% 25%;
     --primary-foreground: 0 0% 98%;
     --secondary: 210 40% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -49,8 +49,8 @@
     --destructive-foreground: 0 0% 98%;
     --border: 210 40% 20%;
     --input: 210 40% 20%;
-    --ring: 147 100% 30%;
-    --chart-1: 147 100% 40%;
+    --ring: 147 100% 25%;
+    --chart-1: 147 100% 35%;
     --chart-2: 210 81% 63%;
     --chart-3: 33 100% 65%;
     --chart-4: 0 84% 70%;
