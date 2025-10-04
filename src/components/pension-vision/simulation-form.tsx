@@ -158,7 +158,7 @@ function CapitalSection({ form }: { form: any }) {
             </FormItem>
           )}
         />
-         <SalaryHelper onSalarySelect={(salary, options) => form.setValue('grossSalary', salary, options)} />
+         <SalaryHelper onSalarySelect={(salary) => form.setValue('grossSalary', salary)} />
       </div>
       <div className="space-y-8">
         <p className="text-sm text-muted-foreground pt-8">
@@ -388,7 +388,8 @@ export function SimulationForm() {
         Number(values.maternityLeaveDuration) +
         values.childcareLeaveDuration +
         (values.includeL4 ? 12 : 0) // Assume 1 year avg L4 for MVP
-      )
+      ),
+      wariant: 1, // Defaulting to intermediate variant
     };
 
     const { prognozowanaEmerytura, kwotaUrealniona, przewidywanaStopaZastapienia } = calculatePension(calculationInput);
