@@ -134,6 +134,11 @@ export function SimulationForm() {
       params.set('realisticPension', kwotaUrealniona.toString());
       params.set('replacementRate', (przewidywanaStopaZastapienia * 100).toString());
       params.set('pensionWithoutL4', (prognozowanaEmerytura * 1.05).toString()); // Mock value
+      params.set('grossSalary', values.grossSalary.toString());
+      params.set('age', values.age.toString());
+      params.set('gender', values.gender);
+      params.set('retirementYear', values.retirementYear.toString());
+      
       const expectedPension = searchParams.get('expectedPension');
       if (expectedPension) {
           params.set('expectedPension', expectedPension);

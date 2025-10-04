@@ -12,6 +12,7 @@ import { SimulationResults } from '@/components/pension-vision/simulation-result
 import { useToast } from '@/hooks/use-toast';
 import { RegionalQualityIndicator } from '@/components/pension-vision/regional-quality-indicator';
 import { Separator } from '@/components/ui/separator';
+import { ThirdPillarSimulator } from '@/components/pension-vision/third-pillar-simulator';
 
 
 function WynikiPageContent() {
@@ -95,6 +96,8 @@ function WynikiPageContent() {
         
         <div ref={resultsRef} className="space-y-8">
             <SimulationResults />
+            <Separator className="my-8"/>
+            <ThirdPillarSimulator />
             <Separator className="my-8"/>
             <RegionalQualityIndicator />
         </div>
