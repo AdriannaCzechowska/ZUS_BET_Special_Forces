@@ -1,0 +1,56 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+
+export function PensionInput() {
+  const [amount, setAmount] = useState("");
+
+  return (
+    <Card className="overflow-hidden shadow-lg">
+      <CardHeader>
+        <CardTitle className="font-headline text-2xl md:text-3xl">
+          Jaką kwotę emerytury chcesz otrzymywać?
+        </CardTitle>
+        <CardDescription>
+          Wpisz kwotę netto („na rękę”), którą chciałbyś otrzymywać co miesiąc na emeryturze.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form
+          className="flex flex-col sm:flex-row gap-4"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <div className="relative flex-grow">
+            <Input
+              type="number"
+              min="0"
+              placeholder="np. 4500"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="pr-16 text-lg h-12"
+              aria-label="Docelowa kwota emerytury"
+            />
+            <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground font-semibold">
+              PLN
+            </span>
+          </div>
+          <Button
+            type="submit"
+            className="h-12 bg-accent text-accent-foreground hover:bg-accent/90 focus-visible:ring-accent-foreground font-semibold"
+          >
+            Zapisz oczekiwanie
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}

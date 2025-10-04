@@ -1,3 +1,37 @@
+'use client';
+import { Button } from '@/components/ui/button';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
+import { PensionInput } from '@/components/pension-vision/pension-input';
+import { PensionChart } from '@/components/pension-vision/pension-chart';
+import { DailyFactCard, DailyFactAccordion } from '@/components/pension-vision/daily-fact';
+
 export default function Home() {
-  return <></>;
+  return (
+    <div className="flex flex-col min-h-screen bg-background">
+      <Header />
+      <main className="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 flex flex-col gap-8">
+            <PensionInput />
+            <PensionChart />
+            <div className="lg:hidden">
+              <DailyFactAccordion />
+            </div>
+            <Button
+              size="lg"
+              className="w-full lg:w-auto lg:max-w-md lg:self-start rounded-2xl text-lg py-7"
+              aria-label="Przejdź do szczegółowej symulacji emerytalnej"
+            >
+              Przejdź do symulacji
+            </Button>
+          </div>
+          <div className="hidden lg:block">
+            <DailyFactCard />
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
 }
