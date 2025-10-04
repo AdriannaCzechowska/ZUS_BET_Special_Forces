@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useMemo } from 'react';
 import { produce } from 'immer';
@@ -75,6 +76,8 @@ export function NewPensionSimulator() {
   const [startWorkYear, setStartWorkYear] = useState(currentYear - 10);
   const [retireYear, setRetireYear] = useState(currentYear + 30);
   const [salary, setSalary] = useState(6000);
+  const [wariant, setWariant] = useState<1 | 2 | 3>(1);
+
 
   const [leavePeriods, setLeavePeriods] = useState<Record<PeriodType, { enabled: boolean; durationMonths: number; startAge: number }>>(
     () => Object.fromEntries(
@@ -119,9 +122,10 @@ export function NewPensionSimulator() {
       rokPrzejsciaNaEmeryture: retireYear,
       dodatkoweLataPracy: extraWorkYears,
       przerwyWLacznychMiesiacach: totalLeaveMonths,
+      wariant: wariant
     });
     return result.prognozowanaEmerytura;
-  }, [age, gender, salary, startWorkYear, retireYear, leavePeriods, birthYear]);
+  }, [age, gender, salary, startWorkYear, retireYear, leavePeriods, birthYear, wariant]);
 
   const isGoalAchieved = calculatedPension >= desiredPension;
 
@@ -233,6 +237,15 @@ export function NewPensionSimulator() {
         </div>
       </div>
       
+      <div className="p-6 border rounded-lg bg-card shadow-sm mt-8">
+        <h3 className="font-headline text-xl text-primary mb-4">Wybierz wariant prognozy</h3>
+        <div className="flex gap-2">
+            <Button variant={wariant === 1 ? 'default' : 'outline'} onClick={() => setWariant(1)}>Pośredni</Button>
+            <Button variant={wariant === 2 ? 'default' : 'outline'} onClick={() => setWariant(2)}>Pesymistyczny</Button>
+            <Button variant={wariant === 3 ? 'default' : 'outline'} onClick={() => setWariant(3)}>Optymistyczny</Button>
+        </div>
+      </div>
+
       <div className="text-center p-8 border-2 rounded-lg mt-8" style={{ borderColor: isGoalAchieved ? '#22c55e' : '#ef4444' }}>
         <h3 className="text-lg text-muted-foreground">Twoja szacowana wartość emerytury wynosi:</h3>
         <p className={cn('text-5xl font-bold font-headline my-2', isGoalAchieved ? 'text-green-500' : 'text-red-500')}>
