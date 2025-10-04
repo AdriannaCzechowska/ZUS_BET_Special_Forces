@@ -1,4 +1,5 @@
 
+
 'use client';
 import { useState, useMemo } from 'react';
 import { produce } from 'immer';
@@ -153,12 +154,7 @@ export function NewPensionSimulator() {
     <div className="space-y-8">
        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <div className="space-y-8">
-            <FormSection title="Jaką emeryturę chciałbyś mieć w przyszłości?">
-                <FormField label="Oczekiwana kwota emerytury (PLN netto)">
-                <Input type="number" value={desiredPension} onChange={e => setDesiredPension(Number(e.target.value))} className="max-w-xs text-lg" />
-                </FormField>
-            </FormSection>
-
+           
             <FormSection title="Podstawowe informacje">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField label="Ile masz lat?">
@@ -225,7 +221,7 @@ export function NewPensionSimulator() {
         </div>
         
         <div className="p-6 border rounded-lg bg-card shadow-sm space-y-4">
-            <h3 className="font-headline text-xl text-primary">Scenariusze i przebieg kariery</h3>
+            <h3 className="font-headline text-xl text-primary">Dodatkowe parametry zatrudnienia</h3>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {periodConfig.map((period) => (
                     <div key={period.type} className="p-3 border rounded-lg bg-background/50 space-y-3">
@@ -313,5 +309,3 @@ export function NewPensionSimulator() {
     </div>
   );
 }
-
-    

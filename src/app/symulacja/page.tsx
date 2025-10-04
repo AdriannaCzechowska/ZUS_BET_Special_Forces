@@ -16,7 +16,7 @@ export default function SimulationPage() {
         { label: 'Symulator emerytalny', href: '/' },
         { label: 'Formularz symulacji' }
       ]} />
-      <main className="flex-grow w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+      <main className="flex-grow w-full mx-auto p-4 sm:p-6 lg:p-8">
         <SimulationForm />
       </main>
       <Footer />
