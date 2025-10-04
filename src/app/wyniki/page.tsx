@@ -95,7 +95,7 @@ function WynikiPageContent() {
             ["Płeć", searchParams.get('gender') === 'K' ? 'Kobieta' : 'Mężczyzna'],
             ["Wysokość wynagrodzenia", searchParams.get('grossSalary') || 'Brak'],
             ["Czy uwzględniał okresy choroby", searchParams.get('includeL4') === 'true' ? 'Tak' : 'Nie'],
-            ["Wysokość zgromadzonych środków na koncie i Subkoncie", searchParams.get('ofeBalance') || 'Brak'],
+            ["Wysokość zgromadzonych środków na koncie i Subkoncie", 'N/A (nowy model)'],
             ["Emerytura rzeczywista", searchParams.get('realPension') || 'Brak'],
             ["Emerytura urealniona", searchParams.get('realisticPension') || 'Brak'],
             ["Kod pocztowy", postcodeRef.current || 'Brak Danych'],

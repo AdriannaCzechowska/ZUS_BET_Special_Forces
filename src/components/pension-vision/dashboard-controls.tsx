@@ -8,80 +8,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PlusCircle, Trash2, SlidersHorizontal } from 'lucide-react';
 import { produce } from 'immer';
+import { Slider } from '../ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
-interface SalaryHistoryEntry {
-  id: number;
-  year: number;
-  amount: number;
+interface WorkBreak {
+  id: string;
+  type: 'l4' | 'macierzynski' | 'wychowawczy' | 'bezrobocie';
+  durationMonths: number;
 }
 
-interface SicknessPeriodEntry {
-  id: number;
-  startDate: string;
-  endDate: string;
-}
-
-function SalaryHistory({
-  salaryHistory,
-  setSalaryHistory,
-}: {
-  salaryHistory: SalaryHistoryEntry[];
-  setSalaryHistory: React.Dispatch<React.SetStateAction<SalaryHistoryEntry[]>>;
-}) {
-  const addYear = () => {
-    setSalaryHistory([
-      ...salaryHistory,
-      { id: Date.now(), year: new Date().getFullYear() - 1, amount: 0 },
-    ]);
-  };
-
-  const removeYear = (id: number) => {
-    setSalaryHistory(salaryHistory.filter(entry => entry.id !== id));
-  };
-
-  const handleChange = (id: number, field: 'year' | 'amount', value: string) => {
-    setSalaryHistory(
-        produce(draft => {
-            const entry = draft.find(e => e.id === id);
-            if (entry) {
-                entry[field] = Number(value);
-            }
-        })
-    );
-  };
-
-  return (
-    <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        Wprowadź swoje roczne zarobki brutto z poprzednich lat.
-      </p>
-      {salaryHistory.map(entry => (
-        <div key={entry.id} className="flex items-center gap-2">
-          <Input
-            type="number"
-            value={entry.year}
-            onChange={(e) => handleChange(entry.id, 'year', e.target.value)}
-            className="w-24"
-            aria-label={`Rok zarobków ${entry.year}`}
-          />
-          <Input
-            type="number"
-            value={entry.amount}
-            onChange={(e) => handleChange(entry.id, 'amount', e.target.value)}
-            aria-label={`Kwota zarobków za rok ${entry.year}`}
-          />
-          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => removeYear(entry.id)}>
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      ))}
-      <Button variant="outline" size="sm" className="w-full" onClick={addYear}>
-        <PlusCircle className="mr-2 h-4 w-4" />
-        Dodaj rok
-      </Button>
-    </div>
-  );
-}
 
 function FutureProjections({
     futureSalaryGrowth,
@@ -107,79 +42,116 @@ function FutureProjections({
         <Label htmlFor="indexation-rate">Wskaźnik waloryzacji składek ZUS (%)</Label>
         <Input id="indexation-rate" type="number" value={zusIndexationRate} onChange={e => setZusIndexationRate(Number(e.target.value))} />
       </div>
-       <Button variant="outline" size="sm" className="w-full" disabled>
-        <PlusCircle className="mr-2 h-4 w-4" />
-        Dodaj okres ze zmianą zarobków (wkrótce)
-      </Button>
     </div>
   );
 }
 
-function SicknessPeriods({
-    sicknessPeriods,
-    setSicknessPeriods,
+function WorkBreaks({
+    breaks,
+    setBreaks,
 } : {
-    sicknessPeriods: SicknessPeriodEntry[];
-    setSicknessPeriods: React.Dispatch<React.SetStateAction<SicknessPeriodEntry[]>>;
+    breaks: WorkBreak[];
+    setBreaks: React.Dispatch<React.SetStateAction<WorkBreak[]>>;
 }) {
 
-    const addPeriod = () => {
-        setSicknessPeriods([...sicknessPeriods, { id: Date.now(), startDate: '', endDate: '' }]);
+    const addBreak = (type: WorkBreak['type']) => {
+        setBreaks(produce(draft => {
+            draft.push({ id: Date.now().toString(), type, durationMonths: 12 });
+        }));
     };
 
-    const removePeriod = (id: number) => {
-        setSicknessPeriods(sicknessPeriods.filter(p => p.id !== id));
+    const removeBreak = (id: string) => {
+        setBreaks(breaks.filter(p => p.id !== id));
     };
 
-    const handleChange = (id: number, field: 'startDate' | 'endDate', value: string) => {
-        setSicknessPeriods(
-            produce(draft => {
-                const period = draft.find(p => p.id === id);
-                if (period) {
-                    period[field] = value;
-                }
-            })
-        );
+    const updateDuration = (id: string, duration: number) => {
+        setBreaks(produce(draft => {
+            const item = draft.find(b => b.id === id);
+            if (item) {
+                item.durationMonths = duration;
+            }
+        }))
+    }
+    
+    const breakLabels: Record<WorkBreak['type'], string> = {
+        l4: "Zwolnienie L4",
+        macierzynski: "Urlop macierzyński/rodzicielski",
+        wychowawczy: "Urlop wychowawczy",
+        bezrobocie: "Okres bezrobocia"
     };
 
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Dodaj okresy przebywania na zwolnieniu lekarskim (L4).
+        Dodaj okresy przerw w karierze zawodowej, które mają wpływ na wysokość składek.
       </p>
-      {sicknessPeriods.map(period => (
-          <div key={period.id} className="flex items-center gap-2">
-            <Input type="date" value={period.startDate} onChange={e => handleChange(period.id, 'startDate', e.target.value)} aria-label="Data rozpoczęcia L4" />
-            <span className="text-muted-foreground">-</span>
-            <Input type="date" value={period.endDate} onChange={e => handleChange(period.id, 'endDate', e.target.value)} aria-label="Data zakończenia L4" />
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => removePeriod(period.id)}>
+
+       <div className="space-y-2">
+          <Label>Szybkie scenariusze L4</Label>
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" onClick={() => addBreak('l4')}>Średni czas na L4</Button>
+            <Button size="sm" variant="outline" onClick={() => updateDuration(breaks.find(b => b.type === 'l4')?.id || '', 6)}>Pół roku</Button>
+            <Button size="sm" variant="outline" onClick={() => updateDuration(breaks.find(b => b.type === 'l4')?.id || '', 12)}>Cały rok</Button>
+          </div>
+        </div>
+
+      {breaks.map(b => (
+          <div key={b.id} className="flex items-center gap-2">
+            <Input value={breakLabels[b.type]} readOnly className="border-0 bg-transparent shadow-none px-0" />
+            <Input type="number" value={b.durationMonths} onChange={e => updateDuration(b.id, Number(e.target.value))} className="w-24" aria-label="Czas trwania przerwy w miesiącach" />
+            <span className='text-xs text-muted-foreground'>m-cy</span>
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => removeBreak(b.id)}>
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
       ))}
-      <Button variant="outline" size="sm" className="w-full" onClick={addPeriod}>
-        <PlusCircle className="mr-2 h-4 w-4" />
-        Dodaj okres
-      </Button>
+      <Select onValueChange={(value: WorkBreak['type']) => addBreak(value)}>
+        <SelectTrigger>
+            <SelectValue placeholder="Dodaj nową przerwę..." />
+        </SelectTrigger>
+        <SelectContent>
+            <SelectItem value="l4">Zwolnienie L4</SelectItem>
+            <SelectItem value="macierzynski">Urlop macierzyński</SelectItem>
+            <SelectItem value="wychowawczy">Urlop wychowawczy</SelectItem>
+            <SelectItem value="bezrobocie">Bezrobocie</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 }
 
+function ExtraWork({ extraYears, setExtraYears}: {extraYears: number; setExtraYears: (val: number) => void;}) {
+    return (
+        <div className="space-y-4 pt-4">
+            <div className="flex justify-between items-center">
+                 <Label htmlFor="extra-years-slider">Dodatkowe lata pracy</Label>
+                 <span className="font-bold text-lg text-primary">{extraYears} {extraYears === 1 ? 'rok' : 'lat'}</span>
+            </div>
+             <Slider
+                id="extra-years-slider"
+                min={0}
+                max={10}
+                step={1}
+                value={[extraYears]}
+                onValueChange={(val) => setExtraYears(val[0])}
+            />
+            <p className='text-xs text-muted-foreground'>Określ, ile lat planujesz pracować dłużej po osiągnięciu ustawowego wieku emerytalnego.</p>
+        </div>
+    )
+}
+
 export function DashboardControls() {
-  const [salaryHistory, setSalaryHistory] = useState<SalaryHistoryEntry[]>([
-    { id: 1, year: 2022, amount: 65000 },
-    { id: 2, year: 2023, amount: 72000 },
-  ]);
   const [futureSalaryGrowth, setFutureSalaryGrowth] = useState(3.5);
   const [zusIndexationRate, setZusIndexationRate] = useState(4.2);
-  const [sicknessPeriods, setSicknessPeriods] = useState<SicknessPeriodEntry[]>([]);
+  const [breaks, setBreaks] = useState<WorkBreak[]>([]);
+  const [extraYears, setExtraYears] = useState(0);
 
   const handleRecalculate = () => {
     const simulationParams = {
-        salaryHistory,
         futureSalaryGrowth,
         zusIndexationRate,
-        sicknessPeriods,
+        breaks,
+        extraYears,
     };
     console.log("Przeliczanie symulacji z parametrami:", simulationParams);
     // Tutaj docelowo będzie wywołanie logiki obliczeniowej
@@ -194,14 +166,14 @@ export function DashboardControls() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="history" className="w-full">
+        <Tabs defaultValue="breaks" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="history">Przeszłość</TabsTrigger>
+            <TabsTrigger value="breaks">Przerwy</TabsTrigger>
             <TabsTrigger value="future">Przyszłość</TabsTrigger>
-            <TabsTrigger value="sickness">Choroba</TabsTrigger>
+            <TabsTrigger value="extraWork">Dłuższa praca</TabsTrigger>
           </TabsList>
-          <TabsContent value="history" className="mt-6">
-            <SalaryHistory salaryHistory={salaryHistory} setSalaryHistory={setSalaryHistory} />
+          <TabsContent value="breaks" className="mt-6">
+            <WorkBreaks breaks={breaks} setBreaks={setBreaks} />
           </TabsContent>
           <TabsContent value="future" className="mt-6">
             <FutureProjections 
@@ -211,8 +183,8 @@ export function DashboardControls() {
                 setZusIndexationRate={setZusIndexationRate}
             />
           </TabsContent>
-          <TabsContent value="sickness" className="mt-6">
-            <SicknessPeriods sicknessPeriods={sicknessPeriods} setSicknessPeriods={setSicknessPeriods} />
+          <TabsContent value="extraWork" className="mt-6">
+            <ExtraWork extraYears={extraYears} setExtraYears={setExtraYears} />
           </TabsContent>
         </Tabs>
         <Button className="w-full mt-6" size="lg" onClick={handleRecalculate}>

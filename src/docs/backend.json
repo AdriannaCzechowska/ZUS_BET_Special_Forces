@@ -21,15 +21,15 @@
         },
         "kwotaZwaloryzowanychSkladek": {
           "type": "number",
-          "description": "The amount of revalorized contributions."
+          "description": "DEPRECATED. The amount of revalorized contributions."
         },
         "zwaloryzowanyKapitalPoczatkowy": {
           "type": "number",
-          "description": "The revalorized initial capital."
+          "description": "DEPRECATED. The revalorized initial capital."
         },
         "srodkiOFE": {
           "type": "number",
-          "description": "The amount of funds in OFE (Open Pension Fund) or other capital components."
+          "description": "DEPRECATED. The amount of funds in OFE (Open Pension Fund)."
         },
         "rokPrzechodzeniaNaEmeryture": {
           "type": "number",
@@ -65,7 +65,7 @@
         },
         "uwzglednijOFE": {
           "type": "boolean",
-          "description": "A boolean indicating whether OFE is considered in the calculation."
+          "description": "DEPRECATED. A boolean indicating whether OFE is considered in the calculation."
         },
         "ciazaL4": {
           "type": "number",
@@ -84,9 +84,6 @@
         "id",
         "userId",
         "timestamp",
-        "kwotaZwaloryzowanychSkladek",
-        "zwaloryzowanyKapitalPoczatkowy",
-        "srodkiOFE",
         "rokPrzechodzeniaNaEmeryture",
         "wiek",
         "plec",
@@ -94,7 +91,6 @@
         "prognozowanaEmerytura",
         "kwotaUrealniona",
         "przewidywanaStopaZastapienia",
-        "uwzglednijOFE",
         "ciazaL4",
         "urlopMacierzynski",
         "urlopWychowawczy"

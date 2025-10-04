@@ -42,9 +42,6 @@ const formSchema = z.object({
     .min(1960, 'Rok rozpoczęcia pracy nie może być wcześniejszy niż 1960.')
     .max(currentYear, `Rok rozpoczęcia pracy nie może być w przyszłości.`),
   retirementYear: z.coerce.number().min(currentYear, 'Planowany rok zakończenia pracy nie może być w przeszłości.'),
-  zusContributions: z.coerce.number().min(0, 'Środki nie mogą być ujemne.').optional(),
-  initialCapital: z.coerce.number().min(0, 'Kapitał nie może być ujemny.').optional(),
-  ofeBalance: z.coerce.number().min(0, 'Środki nie mogą być ujemne.').optional(),
   includeL4: z.boolean().default(false).optional(),
   workLonger: z.boolean().default(false).optional(),
   includeOFE: z.boolean().default(true).optional(),
@@ -164,61 +161,11 @@ function CapitalSection({ form }: { form: any }) {
          <SalaryHelper onSalarySelect={(salary, options) => form.setValue('grossSalary', salary, options)} />
       </div>
       <div className="space-y-8">
-        <FormField
-            control={form.control}
-            name="zusContributions"
-            render={({ field }) => (
-            <FormItem>
-                <div className="flex items-center">
-                <FormLabel>Zwaloryzowane składki I filaru (opcjonalnie)</FormLabel>
-                <FormTooltip fieldName="zwaloryzowaneSkladki" />
-                </div>
-                <FormControl>
-                <Input type="number" placeholder="np. 150000" {...field} />
-                </FormControl>
-                <FormDescription>
-                    Dane znajdziesz w Informacji o Stanie Konta Ubezpieczonego w ZUS (IOKU).
-                </FormDescription>
-                <FormMessage />
-            </FormItem>
-            )}
-        />
-        <FormField
-            control={form.control}
-            name="initialCapital"
-            render={({ field }) => (
-            <FormItem>
-                <div className="flex items-center">
-                <FormLabel>Zwaloryzowany kapitał początkowy (opcjonalnie)</FormLabel>
-                <FormTooltip fieldName="zwaloryzowanyKapitalPoczatkowy" />
-                </div>
-                <FormControl>
-                <Input type="number" placeholder="np. 30000" {...field} />
-                </FormControl>
-                <FormDescription>
-                    Dotyczy osób, które pracowały przed 1999 r.
-                </FormDescription>
-            </FormItem>
-            )}
-        />
-        <FormField
-            control={form.control}
-            name="ofeBalance"
-            render={({ field }) => (
-            <FormItem>
-                <div className="flex items-center">
-                    <FormLabel>Środki z OFE / subkonta (opcjonalnie)</FormLabel>
-                    <FormTooltip fieldName="srodkiOFE" />
-                </div>
-                <FormControl>
-                <Input type="number" placeholder="np. 20000" {...field} />
-                </FormControl>
-                <FormDescription>
-                    Suma środków na subkoncie w ZUS i rachunku w OFE.
-                </FormDescription>
-            </FormItem>
-            )}
-        />
+        <p className="text-sm text-muted-foreground pt-8">
+          W tym uproszczonym symulatorze nie prosimy o historyczne dane dotyczące kapitału. 
+          Koncentrujemy się na wpływie przyszłych decyzji zawodowych. Twoja prognoza zostanie 
+          obliczona na podstawie podanego wynagrodzenia i okresu pracy.
+        </p>
       </div>
      </div>
   );
@@ -341,31 +288,6 @@ function ParenthoodSection({ form }: { form: any }) {
 function ScenariosSection({ form }: { form: any }) {
   return (
     <div className="space-y-4">
-       <FormField
-          control={form.control}
-          name="includeOFE"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <div className='flex items-center'>
-                  <FormLabel>
-                    Uwzględnij środki z OFE / subkonta
-                  </FormLabel>
-                  <FormTooltip fieldName="uwzglednijOFE" />
-                </div>
-                <FormDescription>
-                   Zaznacz, aby do symulacji wliczyć środki zgromadzone w Otwartym Funduszu Emerytalnym i na subkoncie ZUS.
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
       <FormField
           control={form.control}
           name="includeL4"
@@ -375,18 +297,17 @@ function ScenariosSection({ form }: { form: any }) {
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                  disabled
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
                 <div className='flex items-center'>
                   <FormLabel>
-                    Uwzględnij potencjalne zwolnienia L4 (wkrótce)
+                    Uwzględnij średni czas na L4
                   </FormLabel>
                    <FormTooltip fieldName="uwzglednijL4" />
                 </div>
                 <FormDescription>
-                  Zaznacz, jeśli symulacja ma uwzględnić statystyczną liczbę dni na zwolnieniu lekarskim w przyszłości.
+                  Zaznacz, aby symulacja uwzględniła statystyczną liczbę dni na zwolnieniu lekarskim w przyszłości.
                 </FormDescription>
               </div>
             </FormItem>
@@ -438,10 +359,7 @@ export function SimulationForm() {
       retirementYear: currentYear + 30,
       includeL4: false,
       workLonger: false,
-      includeOFE: true,
-      zusContributions: 150000,
-      initialCapital: 30000,
-      ofeBalance: 20000,
+      includeOFE: true, // This can be removed or repurposed later
       pregnancyLeaveDuration: '0',
       maternityLeaveDuration: '0',
       childcareLeaveDuration: 0,
@@ -459,12 +377,18 @@ export function SimulationForm() {
     }
     
     const calculationInput: PensionInput = {
-      kwotaZwaloryzowanychSkladek: values.zusContributions || 0,
-      zwaloryzowanyKapitalPoczatkowy: values.initialCapital || 0,
-      srodkiOFE: values.ofeBalance || 0,
       wiek: values.age,
       plec: values.gender,
-      uwzglednijOFE: values.includeOFE || false,
+      pensjaBrutto: values.grossSalary,
+      rokRozpoczeciaPracy: values.startYear,
+      rokPrzejsciaNaEmeryture: values.retirementYear,
+      dodatkoweLataPracy: values.workLonger ? 1 : 0,
+      przerwyWLacznychMiesiacach: (
+        Number(values.pregnancyLeaveDuration) +
+        Number(values.maternityLeaveDuration) +
+        values.childcareLeaveDuration +
+        (values.includeL4 ? 12 : 0) // Assume 1 year avg L4 for MVP
+      )
     };
 
     const { prognozowanaEmerytura, kwotaUrealniona, przewidywanaStopaZastapienia } = calculatePension(calculationInput);
@@ -473,9 +397,9 @@ export function SimulationForm() {
     const prognosisData = {
       userId: user.uid,
       timestamp: serverTimestamp(),
-      kwotaZwaloryzowanychSkladek: values.zusContributions || 0,
-      zwaloryzowanyKapitalPoczatkowy: values.initialCapital || 0,
-      srodkiOFE: values.ofeBalance || 0,
+      kwotaZwaloryzowanychSkladek: 0,
+      zwaloryzowanyKapitalPoczatkowy: 0,
+      srodkiOFE: 0,
       rokPrzechodzeniaNaEmeryture: values.retirementYear,
       wiek: values.age,
       plec: values.gender,
@@ -483,8 +407,8 @@ export function SimulationForm() {
       prognozowanaEmerytura,
       kwotaUrealniona,
       przewidywanaStopaZastapienia,
-      podwyzszonyWiek: null, // Placeholder
-      uwzglednijOFE: values.includeOFE || false,
+      podwyzszonyWiek: values.workLonger ? (values.gender === 'K' ? 61: 66) : null,
+      uwzglednijOFE: false,
       ciazaL4: Number(values.pregnancyLeaveDuration),
       urlopMacierzynski: Number(values.maternityLeaveDuration),
       urlopWychowawczy: values.childcareLeaveDuration,
@@ -509,7 +433,6 @@ export function SimulationForm() {
       params.set('age', values.age.toString());
       params.set('gender', values.gender);
       params.set('retirementYear', values.retirementYear.toString());
-      params.set('ofeBalance', (values.ofeBalance || 0).toString());
       params.set('includeL4', (values.includeL4 || false).toString());
       
       const expectedPension = searchParams.get('expectedPension');
@@ -529,7 +452,7 @@ export function SimulationForm() {
       <CardHeader>
         <CardTitle className="font-headline text-2xl md:text-3xl">Formularz symulacji</CardTitle>
         <CardDescription>
-          Wypełnij poniższe pola, abyśmy mogli przygotować dla Ciebie szczegółową symulację emerytalną. Im więcej danych podasz, tym dokładniejszy będzie wynik.
+          Wypełnij poniższe pola, abyśmy mogli przygotować dla Ciebie szczegółową symulację emerytalną opartą na Twojej ścieżce kariery.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -540,7 +463,7 @@ export function SimulationForm() {
               <BasicInfoSection form={form} />
             </div>
              <div>
-              <h3 className="text-xl font-headline font-semibold mb-4 border-b pb-2">2. Kapitał i zarobki</h3>
+              <h3 className="text-xl font-headline font-semibold mb-4 border-b pb-2">2. Wynagrodzenie</h3>
               <CapitalSection form={form} />
             </div>
              <div>
