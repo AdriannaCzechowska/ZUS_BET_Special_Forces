@@ -8,19 +8,19 @@ const ZusLogo = () => (
 );
 
 const HearingIcon = () => (
-    <img src="/gluchy.png" alt="Hearing" className="h-5 w-5 object-contain"/>
+    <img src="/gluchy.png" alt="Hearing" className="h-10 w-10 object-contain"/>
 )
 
 const WheelchairIcon = () => (
-    <img src="/amadeusz.png" alt="Wheelchair" className="h-5 w-5 object-contain"/>
+    <img src="/amadeusz.png" alt="Wheelchair" className="h-10 w-10 object-contain"/>
 )
 
 const BipIcon = () => (
-    <img src="/bip.png" alt="BIP" className="h-5 w-8 object-contain"/>
+    <img src="/bip.png" alt="BIP" className="h-10 w-15 object-contain"/>
 )
 
 const EUFlagIcon = () => (
-    <img src="/unia.png" alt="EU" className="h-5 w-8 object-contain"/>
+    <img src="/unia.png" alt="EU" className="h-10 w-15 object-contain"/>
 )
 
 export function Header() {

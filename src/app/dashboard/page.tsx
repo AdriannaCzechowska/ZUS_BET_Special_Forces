@@ -9,6 +9,7 @@ import { ZusGrowthChart } from '@/components/pension-vision/zus-growth-chart';
 import { DashboardResults } from '@/components/pension-vision/dashboard-results';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { calculatePension, type PensionInput } from '@/lib/pension-calculator';
+import { CareerMonthsChart } from '@/components/pension-vision/career-months-chart';
 
 function DashboardPageContent() {
   const searchParams = useSearchParams();
@@ -48,6 +49,13 @@ function DashboardPageContent() {
     realisticPension: initialResult.kwotaUrealniona,
     replacementRate: initialResult.przewidywanaStopaZastapienia * 100,
   });
+  
+  const [careerEvents, setCareerEvents] = useState([
+      { year: 2026, month: 1, duration: 9, type: 'sickness', label: 'Zwolnienie lekarskie' },
+      { year: 2027, month: 1, duration: 12, type: 'maternity', label: 'Urlop macierzyński' },
+      { year: 2028, month: 1, duration: 24, type: 'childcare', label: 'Urlop wychowawczy' },
+      { year: 2035, month: 6, duration: 6, type: 'unemployment', label: 'Okres bezrobocia'},
+  ]);
 
   const zusGrowthData = [
     { year: 2024, amount: 150000 },
@@ -107,6 +115,11 @@ function DashboardPageContent() {
           </div>
           <div className="lg:col-span-2 flex flex-col gap-8">
             <DashboardResults data={simulationData} />
+            <CareerMonthsChart 
+                startYear={initialParams.startYear} 
+                endYear={initialParams.retirementYear}
+                events={careerEvents}
+            />
             <ZusGrowthChart data={zusGrowthData} />
           </div>
         </div>
