@@ -151,7 +151,7 @@
               "description": "The unique identifier for the user who owns this pension projection."
             },
             {
-              "name": "emeryturaPrognozaId",
+              "name": "emeryturaPrognosisId",
               "description": "The unique identifier for the pension projection document."
             }
           ]
