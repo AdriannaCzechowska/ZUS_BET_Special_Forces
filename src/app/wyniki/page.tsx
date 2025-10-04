@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { RegionalQualityIndicator } from '@/components/pension-vision/regional-quality-indicator';
 import { Separator } from '@/components/ui/separator';
 import { ThirdPillarSimulator } from '@/components/pension-vision/third-pillar-simulator';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 
 
 function WynikiPageContent() {
@@ -66,6 +67,10 @@ function WynikiPageContent() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
+      <Breadcrumbs items={[
+        { label: 'Symulator emerytalny', href: '/' },
+        { label: 'Wyniki symulacji' }
+      ]} />
       <main className="flex-grow w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <Button asChild variant="ghost" className="pl-0 text-base">

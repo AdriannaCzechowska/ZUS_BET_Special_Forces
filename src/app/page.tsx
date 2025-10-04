@@ -4,11 +4,13 @@ import { Footer } from '@/components/layout/footer';
 import { PensionInput } from '@/components/pension-vision/pension-input';
 import { PensionChart } from '@/components/pension-vision/pension-chart';
 import { DailyFactCard, DailyFactAccordion } from '@/components/pension-vision/daily-fact';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
+      <Breadcrumbs items={[{ label: 'Symulator emerytalny' }]} />
       <main className="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <h1 className="text-3xl font-bold mb-6">Symulator Emerytalny</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">

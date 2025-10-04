@@ -9,6 +9,7 @@ import { DashboardControls } from '@/components/pension-vision/dashboard-control
 import { ZusGrowthChart } from '@/components/pension-vision/zus-growth-chart';
 import { DashboardResults } from '@/components/pension-vision/dashboard-results';
 import { Separator } from '@/components/ui/separator';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 
 export default function DashboardPage() {
   // Mock data for the components
@@ -30,6 +31,10 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
+      <Breadcrumbs items={[
+        { label: 'Symulator emerytalny', href: '/' },
+        { label: 'Dashboard analityczny' }
+      ]} />
       <main className="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="mb-6">
           <Button asChild variant="ghost" className="pl-0">
