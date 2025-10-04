@@ -109,6 +109,7 @@ export function NewPensionSimulator() {
   const [wariant, setWariant] = useState<1 | 2 | 3>(1);
   const [employmentType, setEmploymentType] = useState<EmploymentType>('uop');
   const [leavePeriods, setLeavePeriods] = useState<LeavePeriod[]>([]);
+  const [newPeriodType, setNewPeriodType] = useState<PeriodType | ''>('');
   
   const minRetireYear = useMemo(() => {
     return currentYear + (gender === 'K' ? 60 : 65) - age;
@@ -150,7 +151,9 @@ export function NewPensionSimulator() {
 
   const isGoalAchieved = pensionResult.kwotaUrealniona >= desiredPension;
 
-  const addLeavePeriod = (type: PeriodType) => {
+  const addLeavePeriod = () => {
+    if (!newPeriodType) return;
+    const type = newPeriodType;
     setLeavePeriods(produce(draft => {
         draft.push({
             id: Date.now().toString(),
@@ -159,7 +162,8 @@ export function NewPensionSimulator() {
             startAge: age + 1,
             startMonth: 1
         })
-    }))
+    }));
+    setNewPeriodType('');
   }
 
   const removeLeavePeriod = (id: string) => {
@@ -323,16 +327,21 @@ export function NewPensionSimulator() {
                   )
               })}
             </div>
-             <Select onValueChange={(value: PeriodType) => addLeavePeriod(value)}>
-                <SelectTrigger>
-                    <SelectValue placeholder="Dodaj nowy okres przerwy..." />
-                </SelectTrigger>
-                <SelectContent>
-                    {Object.entries(periodConfig).map(([type, config]) => (
-                        <SelectItem key={type} value={type}>{config.label}</SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
+             <div className="flex gap-2 items-center">
+                <Select value={newPeriodType} onValueChange={(value) => setNewPeriodType(value as PeriodType)}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Wybierz typ przerwy..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {Object.entries(periodConfig).map(([type, config]) => (
+                            <SelectItem key={type} value={type}>{config.label}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                 <Button onClick={addLeavePeriod} disabled={!newPeriodType} size="sm">
+                    <Plus className="mr-2 h-4 w-4" /> Dodaj
+                 </Button>
+            </div>
 
             <div className="mt-4">
                 <CareerMonthsVisualizer 
