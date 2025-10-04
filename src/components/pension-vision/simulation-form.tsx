@@ -509,6 +509,8 @@ export function SimulationForm() {
       params.set('age', values.age.toString());
       params.set('gender', values.gender);
       params.set('retirementYear', values.retirementYear.toString());
+      params.set('ofeBalance', (values.ofeBalance || 0).toString());
+      params.set('includeL4', (values.includeL4 || false).toString());
       
       const expectedPension = searchParams.get('expectedPension');
       if (expectedPension) {

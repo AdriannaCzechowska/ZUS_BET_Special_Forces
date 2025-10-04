@@ -41,8 +41,11 @@ function Gauge({ value }: { value: number }) {
     );
 }
 
+interface RegionalQualityIndicatorProps {
+    onPostcodeChange: (postcode: string) => void;
+}
 
-export function RegionalQualityIndicator() {
+export function RegionalQualityIndicator({ onPostcodeChange }: RegionalQualityIndicatorProps) {
   const searchParams = useSearchParams();
   const [postcode, setPostcode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +64,7 @@ export function RegionalQualityIndicator() {
     setIsLoading(true);
     setError(null);
     setResult(null);
+    onPostcodeChange(postcode);
     
     setTimeout(() => {
         const data = getRegionalData(postcode);

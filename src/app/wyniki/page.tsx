@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useRef } from 'react';
+import { Suspense, useRef, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { stringify }from 'csv-stringify/browser/esm/sync';
@@ -28,6 +28,7 @@ import { ParenthoodImpact } from '@/components/pension-vision/ParenthoodImpact';
 function WynikiPageContent() {
   const { toast } = useToast();
   const resultsRef = useRef<HTMLDivElement>(null);
+  const postcodeRef = useRef<string>('');
   const searchParams = useSearchParams();
 
   const handleDownloadReport = async () => {
@@ -81,34 +82,24 @@ function WynikiPageContent() {
     });
     
     try {
-      const realPension = searchParams.get('realPension') || '0';
-      const realisticPension = searchParams.get('realisticPension') || '0';
-      const replacementRate = searchParams.get('replacementRate') || '0';
-      const pensionWithoutL4 = searchParams.get('pensionWithoutL4') || '0';
-      const grossSalary = searchParams.get('grossSalary') || '0';
-      const age = searchParams.get('age') || '0';
-      const gender = searchParams.get('gender') || 'N/A';
-      const retirementYear = searchParams.get('retirementYear') || 'N/A';
-
-      const headers = [
-        "Parametr",
-        "Wartość"
-      ];
-      const data = [
-        ["Identyfikator Symulacji", searchParams.get('id') || 'Brak'],
-        ["Data wygenerowania", new Date().toLocaleString('pl-PL')],
-        ["--- Dane Wejściowe ---", ""],
-        ["Wiek", age],
-        ["Płeć", gender === 'K' ? 'Kobieta' : 'Mężczyzna'],
-        ["Rok przejścia na emeryturę", retirementYear],
-        ["Ostatnie wynagrodzenie brutto", grossSalary],
-        ["--- Główne Wyniki ---", ""],
-        ["Wysokość rzeczywista (brutto)", realPension],
-        ["Wysokość urealniona (brutto)", realisticPension],
-        ["Stopa zastąpienia (%)", replacementRate],
-        ["--- Scenariusze Dodatkowe ---", ""],
-        ["Emerytura bez wpływu L4 (szacunkowo)", pensionWithoutL4],
-      ];
+        const now = new Date();
+        const headers = [
+            "Parametr",
+            "Wartość"
+        ];
+        const data = [
+            ["Data użycia", now.toLocaleDateString('pl-PL')],
+            ["Godzina użycia", now.toLocaleTimeString('pl-PL')],
+            ["Emerytura oczekiwana", searchParams.get('expectedPension') || 'Brak'],
+            ["Wiek", searchParams.get('age') || 'Brak'],
+            ["Płeć", searchParams.get('gender') === 'K' ? 'Kobieta' : 'Mężczyzna'],
+            ["Wysokość wynagrodzenia", searchParams.get('grossSalary') || 'Brak'],
+            ["Czy uwzględniał okresy choroby", searchParams.get('includeL4') === 'true' ? 'Tak' : 'Nie'],
+            ["Wysokość zgromadzonych środków na koncie i Subkoncie", searchParams.get('ofeBalance') || 'Brak'],
+            ["Emerytura rzeczywista", searchParams.get('realPension') || 'Brak'],
+            ["Emerytura urealniona", searchParams.get('realisticPension') || 'Brak'],
+            ["Kod pocztowy", postcodeRef.current || 'Brak Danych'],
+        ];
 
       const csvContent = stringify([headers, ...data], { delimiter: ';' });
       const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
@@ -190,7 +181,7 @@ function WynikiPageContent() {
                 <Separator className="my-8"/>
                 <ThirdPillarSimulator />
                 <Separator className="my-8"/>
-                <RegionalQualityIndicator />
+                <RegionalQualityIndicator onPostcodeChange={(pc) => postcodeRef.current = pc} />
                 <Separator className="my-8"/>
                 <ParenthoodImpact />
             </div>
