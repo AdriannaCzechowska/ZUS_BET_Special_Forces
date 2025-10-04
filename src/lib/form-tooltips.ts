@@ -30,5 +30,17 @@ export const formTooltips = {
   "rokPrzejsciaEmerytura": {
     "label": "Planowany rok przejścia na emeryturę",
     "tooltip": "Rok, w którym planujesz zakończyć aktywność zawodową. Symulacja zakłada odprowadzanie składek do końca stycznia podanego roku i oblicza świadczenie na moment przejścia."
+  },
+  "uwzglednijOFE": {
+    "label": "Uwzględnij środki z OFE / subkonta",
+    "tooltip": "Po zaznaczeniu do obliczeń zostaną doliczone Twoje środki zgromadzone w Otwartych Funduszach Emerytalnych oraz na subkoncie w ZUS. Dane znajdziesz w Informacji o Stanie Konta Ubezpieczonego (IOKU) lub w informacji z OFE."
+  },
+  "uwzglednijL4": {
+    "label": "Uwzględnij potencjalne zwolnienia L4",
+    "tooltip": "Ta opcja wprowadza do symulacji statystyczną liczbę dni zwolnień lekarskich (L4) w przyszłości. Okresy niezdolności do pracy są finansowane z zasiłku, a nie z pełnej składki, co obniża sumę zgromadzonych składek emerytalnych i może zmniejszyć świadczenie."
+  },
+  "scenariuszPracujDluzej": {
+    "label": "Scenariusz „Pracuj dłużej”",
+    "tooltip": "Włączenie tej opcji dodaje do symulacji dodatkowe lata pracy po osiągnięciu ustawowego wieku emerytalnego. Każdy rok pracy więcej zwiększa zgromadzony kapitał i skraca okres pobierania emerytury, co podnosi jej wysokość."
   }
 }

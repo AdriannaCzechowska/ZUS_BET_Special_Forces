@@ -271,9 +271,12 @@ function ScenariosSection({ form }: { form: any }) {
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Uwzględnij środki z OFE / subkonta
-                </FormLabel>
+                <div className='flex items-center'>
+                  <FormLabel>
+                    Uwzględnij środki z OFE / subkonta
+                  </FormLabel>
+                  <FormTooltip fieldName="uwzglednijOFE" />
+                </div>
                 <FormDescription>
                    Zaznacz, aby do symulacji wliczyć środki zgromadzone w Otwartym Funduszu Emerytalnym i na subkoncie ZUS.
                 </FormDescription>
@@ -294,9 +297,12 @@ function ScenariosSection({ form }: { form: any }) {
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Uwzględnij potencjalne zwolnienia L4 (wkrótce)
-                </FormLabel>
+                <div className='flex items-center'>
+                  <FormLabel>
+                    Uwzględnij potencjalne zwolnienia L4 (wkrótce)
+                  </FormLabel>
+                   <FormTooltip fieldName="uwzglednijL4" />
+                </div>
                 <FormDescription>
                   Zaznacz, jeśli symulacja ma uwzględnić statystyczną liczbę dni na zwolnieniu lekarskim w przyszłości.
                 </FormDescription>
@@ -316,9 +322,12 @@ function ScenariosSection({ form }: { form: any }) {
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Scenariusz "Pracuj dłużej"
-                </FormLabel>
+                <div className='flex items-center'>
+                  <FormLabel>
+                    Scenariusz "Pracuj dłużej"
+                  </FormLabel>
+                  <FormTooltip fieldName="scenariuszPracujDluzej" />
+                </div>
                 <FormDescription>
                   Zaznacz, aby zasymulować pracę o 1 rok dłużej po osiągnięciu ustawowego wieku emerytalnego.
                 </FormDescription>
