@@ -8,40 +8,19 @@ const ZusLogo = () => (
 );
 
 const HearingIcon = () => (
-    <img src="/gluchy.png" alt='Hearing' className="h-auto w-auto"/>
+    <img src="/gluchy.png" alt='Hearing' className="h-5 object-contain w-5 object-contain"/>
 )
 
 const WheelchairIcon = () => (
-     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-white">
-        <circle cx="12" cy="4" r="1.5"/><path d="m19 17-5.3 2.3c-1.2.5-2.5 0-3.2-1.2l-3-5.2c-.6-1-2-1.4-3.1-.8l-1.9.9"/><path d="M7 11.5 9.5 9"/><path d="m14.5 11.5 2 2"/><circle cx="6.5" cy="18.5" r="2.5"/><path d="M15 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
-    </svg>
+    <img src="/amadeusz.png" alt='Wheelchair' className="h-5 object-contain w-5 object-contain"/>
 )
 
 const BipIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="20" viewBox="0 0 95.68 47.84">
-        <path fill="#e30613" d="M0 0h95.68v47.84H0z"/>
-        <path fill="#fff" d="M12.93 11.1h9.91v25.64h-9.91zM28.63 11.1h9.91v7h-9.91zM28.63 29.74h9.91v7h-9.91zM48.24 11.1h10.97c7.15 0 10.51 3.52 10.51 8.52 0 4.19-2.09 6.84-5.32 7.74v.13c3.8 1.05 6.37 3.8 6.37 8.52 0 5.4-4.06 9.4-11.45 9.4H48.24zm9.98 12.3c3.28 0 5.05-1.96 5.05-4.58 0-2.8-1.9-4.52-5.18-4.52h-4.8v9.1zm.4 13.34c3.8 0 6.04-2.16 6.04-5.18 0-3.15-2.22-5.12-6.17-5.12h-5.05v10.3zM78.69 11.1h9.91v25.64h-9.91z"/>
-    </svg>
+    <img src="/bip.png" alt='BIP' className="h-5 object-contain w-8 object-contain"/>
 )
 
 const EUFlagIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 36 24">
-        <rect width="36" height="24" fill="#003399"/>
-        <g fill="#ffcc00">
-            <path d="M27,12.95l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M22.5,16.79l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M13.5,16.79l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M9,12.95l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M13.5,5.21l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M22.5,5.21l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M18,3.05l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M18,20.95l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M25.12,7.21l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M25.12,14.79l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M10.88,14.79l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-            <path d="M10.88,7.21l0.31,0.95h0.99l-0.8,0.59l0.31,0.95l-0.8,-0.59l-0.8,0.59l0.31,-0.95l-0.8,-0.59h0.99z"/>
-        </g>
-    </svg>
+    <img src="/unia.png" alt='EU' className="h-5 object-contain w-8 object-contain"/>
 )
 
 export function Header() {
@@ -60,8 +39,8 @@ export function Header() {
                     <ChevronDown className="h-4 w-4"/>
                 </div>
                 <div className="flex items-center border-l pl-4 gap-2">
-                    <button className="bg-primary p-1.5 rounded-sm"><HearingIcon /></button>
-                    <button className="bg-primary p-1.5 rounded-sm"><WheelchairIcon /></button>
+                    <button className="p-1.5 rounded-sm"><HearingIcon /></button>
+                    <button className="p-1.5 rounded-sm"><WheelchairIcon /></button>
                     <a href="#"><BipIcon /></a>
                 </div>
                 <div className="flex items-center gap-2 border-l pl-4">
