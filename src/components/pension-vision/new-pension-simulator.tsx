@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { calculatePension } from '@/lib/pension-calculator';
 import { SalaryHelper } from './salary-helper';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { CareerMonthsChart } from './career-months-chart';
+import { CareerMonthsVisualizer } from './career-months-visualizer';
 
 const FormSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="space-y-4 p-6 border rounded-lg bg-card shadow-sm">
@@ -72,11 +72,11 @@ export function NewPensionSimulator() {
   const [unemploymentMonths, setUnemploymentMonths] = useState(0);
   const [workAbroadMonths, setWorkAbroadMonths] = useState(0);
 
-  const careerEvents = [
-      { year: 2026, month: 1, duration: 9, type: 'sickness' as const, label: 'Zwolnienie lekarskie' },
-      { year: 2027, month: 1, duration: 12, type: 'maternity' as const, label: 'Urlop macierzyński' },
-      { year: 2028, month: 1, duration: 24, type: 'childcare' as const, label: 'Urlop wychowawczy' },
-      { year: 2035, month: 6, duration: 6, type: 'unemployment' as const, label: 'Okres bezrobocia'},
+  const careerPeriods = [
+      { type: "sick_leave" as const, start: { year: 2026, month: 0 }, end: { year: 2026, month: 8 } },
+      { type: "maternity_leave" as const, start: { year: 2027, month: 0 }, end: { year: 2027, month: 11 } },
+      { type: "childcare_leave" as const, start: { year: 2028, month: 0 }, end: { year: 2029, month: 11 } },
+      { type: "unemployed" as const, start: { year: 2035, month: 5 }, end: { year: 2035, month: 10 }},
   ];
 
 
@@ -167,10 +167,10 @@ export function NewPensionSimulator() {
         </AccordionItem>
       </Accordion>
 
-       <CareerMonthsChart 
+       <CareerMonthsVisualizer 
+          periods={careerPeriods}
           startYear={startWorkYear} 
-          endYear={retireYear}
-          events={careerEvents}
+          retirementYear={retireYear}
       />
 
     </div>
