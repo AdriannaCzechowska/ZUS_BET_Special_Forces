@@ -100,7 +100,7 @@ export function CareerMonthsVisualizer({ periods, startYear, retirementYear }: C
           {years.map(year => (
             <div key={year} className="flex items-center">
               <div className="text-xs font-mono w-10 text-right pr-2 text-muted-foreground">{year}</div>
-              <div className="grid grid-cols-12 gap-px w-full">
+              <div className="grid grid-cols-12 gap-x-px w-full">
                 {Array.from({ length: 12 }).map((_, monthIndex) => {
                   const status = getMonthStatus(year, monthIndex);
                   return (
