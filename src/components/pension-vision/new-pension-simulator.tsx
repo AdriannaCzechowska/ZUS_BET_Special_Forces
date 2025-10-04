@@ -10,27 +10,17 @@ import { cn } from '@/lib/utils';
 import { calculatePension } from '@/lib/pension-calculator';
 import { SalaryHelper } from './salary-helper';
 import { CareerMonthsVisualizer } from './career-months-visualizer';
-import { Baby, Briefcase, FileText, Globe, HeartHandshake, Home, School, Plane, Wallet, BookOpen } from 'lucide-react';
 
 type PeriodType = 'unpaid_leave' | 'maternity_leave' | 'parental_leave' | 'sick_leave' | 'childcare_leave' | 'unemployed' | 'foreign_work_no_contrib';
 
-interface LeavePeriod {
-  id: string;
-  type: PeriodType;
-  enabled: boolean;
-  startYear: number;
-  startMonth: number; 
-  durationMonths: number;
-}
-
-const periodConfig: { type: PeriodType; label: string; icon: React.ReactNode, defaultDuration: number, maxDuration: number }[] = [
-    { type: 'maternity_leave', label: 'Urlop macierzyński', icon: <Baby />, defaultDuration: 12, maxDuration: 12 },
-    { type: 'parental_leave', label: 'Urlop rodzicielski', icon: <Baby />, defaultDuration: 12, maxDuration: 36 },
-    { type: 'childcare_leave', label: 'Urlop wychowawczy', icon: <HeartHandshake />, defaultDuration: 24, maxDuration: 36 },
-    { type: 'sick_leave', label: 'Zwolnienie L4', icon: <FileText />, defaultDuration: 6, maxDuration: 24 },
-    { type: 'unpaid_leave', label: 'Urlop bezpłatny', icon: <Wallet />, defaultDuration: 3, maxDuration: 24 },
-    { type: 'unemployed', label: 'Bezrobocie', icon: <Home />, defaultDuration: 6, maxDuration: 24 },
-    { type: 'foreign_work_no_contrib', label: 'Praca za granicą (bez składek PL)', icon: <Plane />, defaultDuration: 12, maxDuration: 60 },
+const periodConfig: { type: PeriodType; label: string; defaultDuration: number, maxDuration: number }[] = [
+    { type: 'maternity_leave', label: 'Urlop macierzyński', defaultDuration: 12, maxDuration: 12 },
+    { type: 'parental_leave', label: 'Urlop rodzicielski', defaultDuration: 12, maxDuration: 36 },
+    { type: 'childcare_leave', label: 'Urlop wychowawczy', defaultDuration: 24, maxDuration: 36 },
+    { type: 'sick_leave', label: 'Zwolnienie L4', defaultDuration: 6, maxDuration: 24 },
+    { type: 'unpaid_leave', label: 'Urlop bezpłatny', defaultDuration: 3, maxDuration: 24 },
+    { type: 'unemployed', label: 'Bezrobocie', defaultDuration: 6, maxDuration: 24 },
+    { type: 'foreign_work_no_contrib', label: 'Praca za granicą (bez składek PL)', defaultDuration: 12, maxDuration: 60 },
 ];
 
 const FormSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
@@ -86,42 +76,31 @@ export function NewPensionSimulator() {
   const [retireYear, setRetireYear] = useState(currentYear + 30);
   const [salary, setSalary] = useState(6000);
 
-  const [leavePeriods, setLeavePeriods] = useState<Record<PeriodType, { enabled: boolean; durationMonths: number }>>(
+  const [leavePeriods, setLeavePeriods] = useState<Record<PeriodType, { enabled: boolean; durationMonths: number; startAge: number }>>(
     () => Object.fromEntries(
-        periodConfig.map(p => [p.type, { enabled: false, durationMonths: p.defaultDuration }])
-    ) as Record<PeriodType, { enabled: boolean; durationMonths: number }>
+        periodConfig.map(p => [p.type, { enabled: false, durationMonths: p.defaultDuration, startAge: age + 1 }])
+    ) as Record<PeriodType, { enabled: boolean; durationMonths: number; startAge: number }>
   );
-
+  
   const minRetireYear = useMemo(() => {
     return currentYear + (gender === 'K' ? 60 : 65) - age;
   }, [age, gender]);
 
   const birthYear = useMemo(() => currentYear - age, [age]);
-  
-  const careerPeriodsForVisualizer = useMemo(() => {
-     let currentSimYear = startWorkYear;
-     let currentSimMonth = 0;
 
-    return Object.entries(leavePeriods)
+  const careerPeriodsForVisualizer = Object.entries(leavePeriods)
       .filter(([, period]) => period.enabled)
       .map(([type, period]) => {
-          const startDate = new Date(currentSimYear, currentSimMonth);
+          const startYearForPeriod = birthYear + period.startAge;
+          const startDate = new Date(startYearForPeriod, 0);
           const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + period.durationMonths, 0);
-
-          const periodData = {
+          
+          return {
               type: type as PeriodType,
               start: { year: startDate.getFullYear(), month: startDate.getMonth() },
               end: { year: endDate.getFullYear(), month: endDate.getMonth() }
           }
-          
-          // Move cursor for next period
-          const nextStartDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1);
-          currentSimYear = nextStartDate.getFullYear();
-          currentSimMonth = nextStartDate.getMonth();
-
-          return periodData;
       });
-  }, [leavePeriods, startWorkYear]);
 
 
   const calculatedPension = useMemo(() => {
@@ -146,7 +125,7 @@ export function NewPensionSimulator() {
 
   const isGoalAchieved = calculatedPension >= desiredPension;
 
-  const updateLeavePeriod = (type: PeriodType, field: 'enabled' | 'durationMonths', value: boolean | number) => {
+  const updateLeavePeriod = (type: PeriodType, field: 'enabled' | 'durationMonths' | 'startAge', value: boolean | number) => {
      setLeavePeriods(produce(draft => {
         (draft[type] as any)[field] = value;
     }));
@@ -154,7 +133,7 @@ export function NewPensionSimulator() {
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <div className="space-y-8">
             <FormSection title="Jaką emeryturę chciałbyś mieć w przyszłości?">
                 <FormField label="Oczekiwana kwota emerytury (PLN netto)">
@@ -198,12 +177,11 @@ export function NewPensionSimulator() {
         <div className="space-y-8">
              <div className="p-6 border rounded-lg bg-card shadow-sm space-y-4">
                 <h3 className="font-headline text-xl text-primary">Dodatkowe parametry zatrudnienia</h3>
-                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {periodConfig.map((period) => (
                         <div key={period.type} className="p-3 border rounded-lg bg-background/50 space-y-3">
                              <div className="flex items-center justify-between">
                                 <Label htmlFor={`switch-${period.type}`} className="flex items-center gap-2 cursor-pointer text-sm font-medium">
-                                    {period.icon}
                                     <span>{period.label}</span>
                                 </Label>
                                 <Switch 
@@ -213,18 +191,33 @@ export function NewPensionSimulator() {
                                 />
                             </div>
                             {leavePeriods[period.type].enabled && (
-                                <div className='space-y-2'>
-                                    <div className='flex justify-between items-center'>
-                                            <Label className='text-xs'>Długość:</Label>
-                                            <span className='text-xs font-bold'>{leavePeriods[period.type].durationMonths} mies.</span>
+                                <div className='space-y-4 pt-2'>
+                                    <div className='space-y-2'>
+                                        <div className='flex justify-between items-center'>
+                                                <Label className='text-xs'>Wiek rozpoczęcia:</Label>
+                                                <span className='text-xs font-bold'>{leavePeriods[period.type].startAge} lat</span>
+                                        </div>
+                                        <Slider
+                                            min={age}
+                                            max={retireYear - birthYear}
+                                            step={1}
+                                            value={[leavePeriods[period.type].startAge]}
+                                            onValueChange={(val) => updateLeavePeriod(period.type, 'startAge', val[0])}
+                                        />
                                     </div>
-                                    <Slider
-                                        min={1}
-                                        max={period.maxDuration}
-                                        step={1}
-                                        value={[leavePeriods[period.type].durationMonths]}
-                                        onValueChange={(val) => updateLeavePeriod(period.type, 'durationMonths', val[0])}
-                                    />
+                                    <div className='space-y-2'>
+                                        <div className='flex justify-between items-center'>
+                                                <Label className='text-xs'>Długość:</Label>
+                                                <span className='text-xs font-bold'>{leavePeriods[period.type].durationMonths} mies.</span>
+                                        </div>
+                                        <Slider
+                                            min={1}
+                                            max={period.maxDuration}
+                                            step={1}
+                                            value={[leavePeriods[period.type].durationMonths]}
+                                            onValueChange={(val) => updateLeavePeriod(period.type, 'durationMonths', val[0])}
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </div>
