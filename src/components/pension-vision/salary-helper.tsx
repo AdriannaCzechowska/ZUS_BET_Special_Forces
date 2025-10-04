@@ -27,7 +27,7 @@ interface SalaryResult {
 
 interface SalaryHelperProps {
   // eslint-disable-next-line no-unused-vars
-  onSalarySelect: (salary: number) => void;
+  onSalarySelect: (salary: number, options?: { shouldValidate?: boolean }) => void;
 }
 
 export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
@@ -43,7 +43,7 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
   });
 
   const handleQuickSet = (salary: number) => {
-    onSalarySelect(salary);
+    onSalarySelect(salary, { shouldValidate: false });
   };
 
   const onSubmit = async (data: FormData) => {
@@ -56,7 +56,7 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
         throw new Error('Nie udało się pobrać danych. Spróbuj ponownie.');
       }
       const salaryResult: SalaryResult = await response.json();
-      onSalarySelect(salaryResult.salary);
+      onSalarySelect(salaryResult.salary, { shouldValidate: true });
     } catch (e: any) {
       setError(e.message || 'Wystąpił nieoczekiwany błąd.');
     } finally {
@@ -72,10 +72,10 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
             <h4 className="font-semibold text-sm">Szybkie uzupełnienie</h4>
         </div>
         <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="outline" onClick={() => handleQuickSet(MINIMUM_WAGE)}>
+            <Button size="sm" variant="outline" onClick={() => handleQuickSet(MINIMUM_WAGE)} type="button">
                 Płaca minimalna
             </Button>
-            <Button size="sm" variant="outline" onClick={() => handleQuickSet(NATIONAL_AVERAGE_SALARY)}>
+            <Button size="sm" variant="outline" onClick={() => handleQuickSet(NATIONAL_AVERAGE_SALARY)} type="button">
                 Średnia krajowa
             </Button>
         </div>

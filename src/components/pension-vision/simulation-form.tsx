@@ -161,7 +161,7 @@ function CapitalSection({ form }: { form: any }) {
             </FormItem>
           )}
         />
-         <SalaryHelper onSalarySelect={(salary) => form.setValue('grossSalary', salary, { shouldValidate: true })} />
+         <SalaryHelper onSalarySelect={(salary, options) => form.setValue('grossSalary', salary, options)} />
       </div>
       <div className="space-y-8">
         <FormField
