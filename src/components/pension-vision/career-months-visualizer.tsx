@@ -96,7 +96,7 @@ export function CareerMonthsVisualizer({ periods, startYear, retirementYear }: C
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-2">
+        <div className="space-y-px">
           {years.map(year => (
             <div key={year} className="flex items-center">
               <div className="text-xs font-mono w-10 text-right pr-2 text-muted-foreground">{year}</div>
