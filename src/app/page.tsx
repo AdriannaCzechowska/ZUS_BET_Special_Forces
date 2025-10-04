@@ -5,6 +5,8 @@ import { PensionInput } from '@/components/pension-vision/pension-input';
 import { PensionChart } from '@/components/pension-vision/pension-chart';
 import { DailyFactCard, DailyFactAccordion } from '@/components/pension-vision/daily-fact';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { SalaryChecker } from '@/components/pension-vision/salary-checker';
+import { Separator } from '@/components/ui/separator';
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <div className="lg:col-span-2 flex flex-col gap-8">
             <PensionInput />
+            <Separator />
+            <SalaryChecker />
             <PensionChart />
           </div>
           <div className="flex flex-col gap-8">
