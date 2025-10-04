@@ -11,10 +11,14 @@ import { produce } from 'immer';
 import { Slider } from '../ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
-interface WorkBreak {
+export interface WorkBreak {
   id: string;
   type: 'l4' | 'macierzynski' | 'wychowawczy' | 'bezrobocie';
   durationMonths: number;
+}
+
+interface DashboardControlsProps {
+    onRecalculate: (breaks: WorkBreak[], extraYears: number, futureSalaryGrowth: number, zusIndexationRate: number) => void;
 }
 
 
@@ -125,7 +129,7 @@ function ExtraWork({ extraYears, setExtraYears}: {extraYears: number; setExtraYe
         <div className="space-y-4 pt-4">
             <div className="flex justify-between items-center">
                  <Label htmlFor="extra-years-slider">Dodatkowe lata pracy</Label>
-                 <span className="font-bold text-lg text-primary">{extraYears} {extraYears === 1 ? 'rok' : 'lat'}</span>
+                 <span className="font-bold text-lg text-primary">{extraYears} {extraYears === 1 ? 'rok' : (extraYears > 1 && extraYears < 5 ? 'lata' : 'lat')}</span>
             </div>
              <Slider
                 id="extra-years-slider"
@@ -140,22 +144,11 @@ function ExtraWork({ extraYears, setExtraYears}: {extraYears: number; setExtraYe
     )
 }
 
-export function DashboardControls() {
+export function DashboardControls({ onRecalculate }: DashboardControlsProps) {
   const [futureSalaryGrowth, setFutureSalaryGrowth] = useState(3.5);
   const [zusIndexationRate, setZusIndexationRate] = useState(4.2);
   const [breaks, setBreaks] = useState<WorkBreak[]>([]);
   const [extraYears, setExtraYears] = useState(0);
-
-  const handleRecalculate = () => {
-    const simulationParams = {
-        futureSalaryGrowth,
-        zusIndexationRate,
-        breaks,
-        extraYears,
-    };
-    console.log("Przeliczanie symulacji z parametrami:", simulationParams);
-    // Tutaj docelowo będzie wywołanie logiki obliczeniowej
-  };
 
   return (
     <Card className="shadow-lg semitransparent-panel">
@@ -187,7 +180,7 @@ export function DashboardControls() {
             <ExtraWork extraYears={extraYears} setExtraYears={setExtraYears} />
           </TabsContent>
         </Tabs>
-        <Button className="w-full mt-6" size="lg" onClick={handleRecalculate}>
+        <Button className="w-full mt-6" size="lg" onClick={() => onRecalculate(breaks, extraYears, futureSalaryGrowth, zusIndexationRate)}>
           Przelicz symulację
         </Button>
       </CardContent>
