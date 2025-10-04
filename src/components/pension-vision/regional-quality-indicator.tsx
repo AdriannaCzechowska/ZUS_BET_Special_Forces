@@ -18,7 +18,7 @@ function Gauge({ value }: { value: number }) {
 
     let colorClass = 'bg-destructive'; // #F05E5E
     if (percentage >= 100) {
-        colorClass = 'bg-primary'; // #00416E
+        colorClass = 'bg-primary'; // green
     } else if (percentage >= 80) {
         colorClass = 'bg-accent'; // #FFB34F
     }
@@ -132,43 +132,42 @@ export function RegionalQualityIndicator() {
         {result && (
             <div className="text-center pt-4 space-y-4">
                 <Gauge value={result.ratio} />
-                <div className="max-w-md mx-auto space-y-4 pt-4">
+                <div className="max-w-md mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                     <div className='bg-background/50 p-4 rounded-lg border'>
-                         <p className="text-muted-foreground">Twoja prognozowana emerytura realna</p>
-                        <p className="text-2xl font-bold font-headline">{realisticPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
+                         <p className="text-muted-foreground text-sm">Twoja prognozowana emerytura realna</p>
+                        <p className="text-xl font-bold font-headline">{realisticPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
                     </div>
                      <div className='bg-background/50 p-4 rounded-lg border'>
-                         <div className="text-muted-foreground flex items-center justify-center gap-1">
-                            <span>Lokalny koszyk seniora w powiecie {result.county}</span>
+                         <div className="text-muted-foreground text-sm flex items-center justify-center gap-1">
+                            <span>Lokalny koszyk seniora</span>
                             <TooltipProvider>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="h-6 w-6 ml-1 inline-flex items-center justify-center">
+                                        <Button variant="ghost" size="icon" className="h-6 w-6 ml-1 -mt-1 inline-flex items-center justify-center">
                                             <Info className="h-4 w-4 text-muted-foreground" />
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <div className="max-w-xs">Koszyk jest szacowany na podstawie średniej emerytury w danym powiecie (dane GUS) i może nie odzwierciedlać w pełni realnych kosztów.</div>
+                                        <div className="max-w-xs">Koszyk jest szacowany na podstawie średniej emerytury w powiecie {result.county} (dane GUS) i może nie odzwierciedlać w pełni realnych kosztów.</div>
                                     </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
                          </div>
-                        <p className="text-2xl font-bold font-headline">{result.basket_cost.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
+                        <p className="text-xl font-bold font-headline">{result.basket_cost.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
                     </div>
-
-                    <Separator />
-
-                    <p className={cn(
-                        "font-semibold text-lg",
+                </div>
+                 <Separator className="max-w-md mx-auto" />
+                 <p className={cn(
+                        "font-semibold text-lg max-w-md mx-auto",
                         result.status === 'green' && 'text-primary',
-                        result.status === 'yellow' && 'text-accent',
+                        result.status === 'yellow' && 'text-accent-dark', // You might need to define text-accent-dark
                         result.status === 'red' && 'text-destructive',
                     )}>
                         {result.status === 'green' && `Pokrywasz ${(result.ratio * 100).toFixed(0)}% kosztów życia – nadwyżka +${(realisticPension - result.basket_cost).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}/m-c`}
                         {result.status === 'yellow' && `Pokrywasz ${(result.ratio * 100).toFixed(0)}% kosztów życia – brakuje ${(result.basket_cost - realisticPension).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}/m-c`}
                         {result.status === 'red' && `Pokrywasz ${(result.ratio * 100).toFixed(0)}% kosztów życia – ryzyko niedoboru -${(result.basket_cost - realisticPension).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}/m-c`}
                     </p>
-                </div>
+
             </div>
         )}
 
