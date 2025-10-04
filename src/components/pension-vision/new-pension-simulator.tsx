@@ -15,6 +15,7 @@ import { HelpCircle, Plus, Trash2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 
 type PeriodType = 'unpaid_leave' | 'maternity_leave' | 'parental_leave' | 'sick_leave' | 'childcare_leave' | 'unemployed' | 'foreign_work_no_contrib';
@@ -252,82 +253,86 @@ export function NewPensionSimulator() {
         
         <div className="p-6 border rounded-lg bg-card shadow-sm space-y-4">
             <h3 className="font-headline text-xl text-primary">Dodatkowe parametry zatrudnienia i przebieg kariery</h3>
-            <div className="space-y-4">
+            
+            <Accordion type="multiple" className="w-full space-y-2">
               {leavePeriods.map((period) => {
                   const config = periodConfig[period.type];
                   return (
-                      <div key={period.id} className="p-4 border rounded-lg bg-background/50 space-y-3 relative">
-                          <div className="flex items-center justify-between">
-                              <Label className="flex items-center gap-2 cursor-pointer text-sm font-medium">
-                                  <span>{config.label}</span>
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button type="button" variant="ghost" size="icon" className="h-4 w-4 ml-1 cursor-help">
-                                          <HelpCircle className="h-4 w-4" />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        <p className="max-w-xs">{config.description}</p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                              </Label>
-                              <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={() => removeLeavePeriod(period.id)}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                          </div>
-                          
-                          <div className='grid grid-cols-1 md:grid-cols-2 gap-4 pt-2'>
-                              <div className='space-y-2'>
-                                  <div className='flex justify-between items-center'>
-                                      <Label className='text-xs'>Wiek rozpoczęcia:</Label>
-                                      <span className='text-xs font-bold'>{period.startAge} lat</span>
+                      <AccordionItem key={period.id} value={period.id} className="p-4 border rounded-lg bg-background/50">
+                          <AccordionTrigger className="p-0 hover:no-underline">
+                              <div className="flex items-center justify-between w-full">
+                                  <Label className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                                      <span>{config.label}</span>
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <Button type="button" variant="ghost" size="icon" className="h-4 w-4 ml-1 cursor-help" onClick={(e) => e.stopPropagation()}>
+                                              <HelpCircle className="h-4 w-4" />
+                                            </Button>
+                                          </TooltipTrigger>
+                                          <TooltipContent>
+                                            <p className="max-w-xs">{config.description}</p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                  </Label>
+                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={(e) => { e.stopPropagation(); removeLeavePeriod(period.id); }}>
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                              </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="pt-4 space-y-3">
+                              <div className='grid grid-cols-1 md:grid-cols-2 gap-4 pt-2'>
+                                  <div className='space-y-2'>
+                                      <div className='flex justify-between items-center'>
+                                          <Label className='text-xs'>Wiek rozpoczęcia:</Label>
+                                          <span className='text-xs font-bold'>{period.startAge} lat</span>
+                                      </div>
+                                      <Slider
+                                          min={age}
+                                          max={retireYear - birthYear}
+                                          step={1}
+                                          value={[period.startAge]}
+                                          onValueChange={(val) => updateLeavePeriod(period.id, 'startAge', val[0])}
+                                      />
                                   </div>
-                                  <Slider
-                                      min={age}
-                                      max={retireYear - birthYear}
-                                      step={1}
-                                      value={[period.startAge]}
-                                      onValueChange={(val) => updateLeavePeriod(period.id, 'startAge', val[0])}
-                                  />
+                                   <div className='space-y-2'>
+                                      <Label className='text-xs'>Miesiąc rozpoczęcia:</Label>
+                                      <Select 
+                                        value={String(period.startMonth)} 
+                                        onValueChange={(val) => updateLeavePeriod(period.id, 'startMonth', Number(val))}
+                                      >
+                                        <SelectTrigger className="h-8">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {months.map(m => (
+                                                <SelectItem key={m.value} value={String(m.value)}>{m.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                      </Select>
+                                  </div>
                               </div>
                                <div className='space-y-2'>
-                                  <Label className='text-xs'>Miesiąc rozpoczęcia:</Label>
-                                  <Select 
-                                    value={String(period.startMonth)} 
-                                    onValueChange={(val) => updateLeavePeriod(period.id, 'startMonth', Number(val))}
-                                  >
-                                    <SelectTrigger className="h-8">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {months.map(m => (
-                                            <SelectItem key={m.value} value={String(m.value)}>{m.label}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                  </Select>
+                                  <div className='flex justify-between items-center'>
+                                          <Label className='text-xs'>Długość:</Label>
+                                          <span className='text-xs font-bold'>{period.durationMonths} mies.</span>
+                                  </div>
+                                  <Slider
+                                      min={1}
+                                      max={config.maxDuration}
+                                      step={1}
+                                      value={[period.durationMonths]}
+                                      onValueChange={(val) => updateLeavePeriod(period.id, 'durationMonths', val[0])}
+                                  />
                               </div>
-                          </div>
-                           <div className='space-y-2'>
-                              <div className='flex justify-between items-center'>
-                                      <Label className='text-xs'>Długość:</Label>
-                                      <span className='text-xs font-bold'>{period.durationMonths} mies.</span>
-                              </div>
-                              <Slider
-                                  min={1}
-                                  max={config.maxDuration}
-                                  step={1}
-                                  value={[period.durationMonths]}
-                                  onValueChange={(val) => updateLeavePeriod(period.id, 'durationMonths', val[0])}
-                              />
-                          </div>
-
-                      </div>
+                          </AccordionContent>
+                      </AccordionItem>
                   )
               })}
-            </div>
-             <div className="flex gap-2 items-center">
+            </Accordion>
+
+             <div className="flex gap-2 items-center pt-2">
                 <Select value={newPeriodType} onValueChange={(value) => setNewPeriodType(value as PeriodType)}>
                     <SelectTrigger>
                         <SelectValue placeholder="Wybierz typ przerwy..." />
