@@ -1,3 +1,4 @@
+
 export interface ResultTooltip {
   id: string;
   cardTitle: string;
@@ -21,7 +22,7 @@ export const resultTooltips: Record<string, ResultTooltip> = {
       "To prognozowana miesięczna kwota brutto w roku przyznania emerytury. Nie korygujemy jej o przyszłą inflację – pokazuje wartość w cenach roku przejścia.",
       "Wyliczenie bazuje na systemie zdefiniowanej składki: zgromadzony kapitał (konto ZUS + subkonto/OFE + kapitał początkowy), po wszystkich waloryzacjach, dzielony przez prognozowane dalsze trwanie życia (miesiące) dla płci i wieku w tablicach GUS."
     ],
-    "formula": "E_nominal = (K_konto + K_subkonto + K_kap_pocz) ÷ L_miesięcy_GUS",
+    "formula": "E<sub>nominal</sub> = (K<sub>konto</sub> + K<sub>subkonto</sub> + K<sub>kap_pocz</sub>) ÷ L<sub>miesięcy_GUS</sub>",
     "units": "PLN/mies. brutto, ceny roku przejścia",
     "source": "FUS prognoza 2023–2080, tablice trwania życia GUS",
     "placeholders": {
@@ -41,7 +42,7 @@ export const resultTooltips: Record<string, ResultTooltip> = {
       "To prognozowana emerytura nominalna zdyskontowana do cen roku bazowego (rok bieżący). Dzięki temu widzisz wartość w „dzisiejszych pieniądzach”.",
       "Do dyskontowania stosujemy ścieżkę CPI z wariantu bazowego FUS."
     ],
-    "formula": "E_real_t0 = E_nominal ÷ Π_{y=t0+1}^{T} (1 + CPI_y)",
+    "formula": "E<sub>real_t0</sub> = E<sub>nominal</sub> ÷ Π<sub>{y=t0+1}</sub><sup>T</sup> (1 + CPI<sub>y</sub>)",
     "units": "PLN/mies. brutto, ceny roku bazowego",
     "source": "FUS prognoza CPI, wariant bazowy",
     "placeholders": {
@@ -60,14 +61,14 @@ export const resultTooltips: Record<string, ResultTooltip> = {
       "Porównujemy pierwszą emeryturę nominalną do ostatniego miesięcznego wynagrodzenia nominalnego tuż przed przejściem.",
       "Pokazuje, jaki procent Twojej ostatniej pensji pokryje pierwsza emerytura. W Polsce średnio ok. 40% dla nowych emerytur, ale trend jest malejący."
     ],
-    "formula": "RR = (E_nominal ÷ Wynagrodzenie_ostatnie_nominalne) × 100%",
+    "formula": "RR = (E<sub>nominal</sub> ÷ Wynagrodzenie<sub>ostatnie_nominalne</sub>) × 100%",
     "units": "%",
     "source": "FUS, GUS – wynagrodzenia; założenia projektu",
     "placeholders": {
       "display": "{{replacement_rate}} %"
     },
     "notes": [
-      "Wariant alternatywny (realny) możliwy: E_real_t0 ÷ Wynagrodzenie_real_t0."
+      "Wariant alternatywny (realny) możliwy: E<sub>real_t0</sub> ÷ Wynagrodzenie<sub>real_t0</sub>."
     ]
   },
   "wplywL4": {
@@ -80,7 +81,7 @@ export const resultTooltips: Record<string, ResultTooltip> = {
       "Symulujemy dwa przebiegi: (A) bez absencji, (B) z przeciętną liczbą dni L4 według płci i wieku. W wariancie (B) zmniejszamy roczne składki proporcjonalnie do udziału dni L4 w roku i ponownie liczymy emeryturę.",
       "Prezentowana kwota to różnica: ile niższa jest Twoja emerytura przy ujęciu statystycznych L4."
     ],
-    "formula": "Δ_L4 = E_nominal_(bez_L4) − E_nominal_(ze_średnim_L4)",
+    "formula": "Δ<sub>L4</sub> = E<sub>nominal_(bez_L4)</sub> - E<sub>nominal_(ze_średnim_L4)</sub>",
     "units": "PLN/mies. brutto",
     "source": "Plik ‘pkt 4 i 5_absencja chorobowa.xlsx’, założenia projektu",
     "placeholders": {
@@ -101,7 +102,7 @@ export const resultTooltips: Record<string, ResultTooltip> = {
       "Dzielimy Twoją prognozowaną emeryturę nominalną przez prognozowaną średnią emeryturę krajową w roku przejścia.",
       "Gdy podasz kod pocztowy, możemy dodatkowo pokazać relację do średniej dla Twojego powiatu."
     ],
-    "formula": "Udział = E_nominal ÷ Średnia_emerytura_krajowa_T",
+    "formula": "Udział = E<sub>nominal</sub> ÷ Średnia_emerytura<sub>krajowa_T</sub>",
     "units": "PLN oraz %",
     "source": "FUS (średnie świadczenia), plik ‘pkt 6_emerytury_powiaty’ dla wariantu lokalnego",
     "placeholders": {

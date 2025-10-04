@@ -54,9 +54,10 @@ export function ResultCard({
                             <p key={index}>{paragraph}</p>
                         ))}
                         {tooltipData.formula && (
-                           <div className="p-3 bg-muted rounded-md text-xs font-code">
-                                {tooltipData.formula}
-                           </div>
+                           <div 
+                                className="p-3 bg-muted rounded-md text-xs font-code"
+                                dangerouslySetInnerHTML={{ __html: tooltipData.formula }}
+                           />
                         )}
                          <div className="text-xs text-muted-foreground space-y-1">
                             <p><span className="font-semibold">Jednostki:</span> {tooltipData.units}</p>
