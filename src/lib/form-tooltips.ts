@@ -42,5 +42,17 @@ export const formTooltips = {
   "scenariuszPracujDluzej": {
     "label": "Scenariusz „Pracuj dłużej”",
     "tooltip": "Włączenie tej opcji dodaje do symulacji dodatkowe lata pracy po osiągnięciu ustawowego wieku emerytalnego. Każdy rok pracy więcej zwiększa zgromadzony kapitał i skraca okres pobierania emerytury, co podnosi jej wysokość."
+  },
+  "ciazaL4": {
+    "label": "Zwolnienie lekarskie w ciąży",
+    "tooltip": "Okres pobierania zasiłku chorobowego w trakcie ciąży. Składki są wtedy naliczane od podstawy wymiaru zasiłku, co może obniżyć przyszłą emeryturę."
+  },
+  "urlopMacierzynski": {
+    "label": "Urlop macierzyński/rodzicielski",
+    "tooltip": "Standardowy okres urlopu (12 miesięcy). Składki emerytalne są finansowane z budżetu państwa i naliczane od kwoty zasiłku."
+  },
+  "urlopWychowawczy": {
+    "label": "Urlop wychowawczy",
+    "tooltip": "Okres opieki nad dzieckiem (maks. 36 miesięcy). Składki finansowane przez budżet państwa naliczane są od minimalnej podstawy, co wpływa na obniżenie przyszłego świadczenia."
   }
 }

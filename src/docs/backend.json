@@ -66,6 +66,18 @@
         "uwzglednijOFE": {
           "type": "boolean",
           "description": "A boolean indicating whether OFE is considered in the calculation."
+        },
+        "ciazaL4": {
+          "type": "number",
+          "description": "Duration of sick leave during pregnancy in months (0, 6, or 9)."
+        },
+        "urlopMacierzynski": {
+          "type": "number",
+          "description": "Duration of maternity/parental leave in months (0 or 12)."
+        },
+        "urlopWychowawczy": {
+          "type": "number",
+          "description": "Duration of childcare leave in months (0-36)."
         }
       },
       "required": [
@@ -82,7 +94,10 @@
         "prognozowanaEmerytura",
         "kwotaUrealniona",
         "przewidywanaStopaZastapienia",
-        "uwzglednijOFE"
+        "uwzglednijOFE",
+        "ciazaL4",
+        "urlopMacierzynski",
+        "urlopWychowawczy"
       ]
     },
     "User": {
