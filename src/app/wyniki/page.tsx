@@ -3,7 +3,7 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
+import { ArrowLeft, RefreshCw, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 import { SimulationResults } from '@/components/pension-vision/simulation-results';
 
@@ -19,12 +19,20 @@ export default function ResultsPage() {
               Wróć do formularza
             </Link>
           </Button>
-           <Button asChild variant="outline">
-            <Link href="/symulacja">
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Wykonaj nową symulację
-            </Link>
-          </Button>
+           <div className="flex gap-2">
+             <Button asChild variant="outline">
+              <Link href="/symulacja">
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Nowa symulacja
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link href="/dashboard">
+                <LayoutDashboard className="mr-2 h-4 w-4" />
+                Przejdź do Dashboardu
+              </Link>
+            </Button>
+           </div>
         </div>
         
         <SimulationResults />
