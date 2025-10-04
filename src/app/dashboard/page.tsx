@@ -36,14 +36,6 @@ export default function DashboardPage() {
         { label: 'Dashboard analityczny' }
       ]} />
       <main className="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="mb-6">
-          <Button asChild variant="ghost" className="pl-0">
-            <Link href="/wyniki">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Powrót do wyników
-            </Link>
-          </Button>
-        </div>
         
         <header className="mb-8">
           <h1 className="text-3xl md:text-4xl font-headline font-bold text-primary">
