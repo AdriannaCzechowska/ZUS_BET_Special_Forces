@@ -25,7 +25,7 @@ const parenthoodImpactData = {
     {
       id: "childcareLeave",
       label: "Urlop wychowawczy",
-      tooltip": "Na urlopie wychowawczym składki emerytalne również są opłacane z budżetu państwa, ale od minimalnej podstawy, co powoduje obniżenie przyszłej emerytury w porównaniu do pracy zarobkowej."
+      tooltip: "Na urlopie wychowawczym składki emerytalne również są opłacane z budżetu państwa, ale od minimalnej podstawy, co powoduje obniżenie przyszłej emerytury w porównaniu do pracy zarobkowej."
     },
     {
       id: "totalImpact",
