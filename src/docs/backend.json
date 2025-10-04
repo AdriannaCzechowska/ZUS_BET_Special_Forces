@@ -1,0 +1,163 @@
+{
+  "entities": {
+    "EmeryturaPrognoza": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EmeryturaPrognoza",
+      "type": "object",
+      "description": "Represents a user's pension projection based on input data and simulation parameters.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the EmeryturaPrognoza entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. Identifier of the user who generated this pension projection. (Relationship: User 1:N EmeryturaPrognoza)"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp indicating when the prognosis was generated.",
+          "format": "date-time"
+        },
+        "kwotaZwaloryzowanychSkladek": {
+          "type": "number",
+          "description": "The amount of revalorized contributions."
+        },
+        "zwaloryzowanyKapitalPoczatkowy": {
+          "type": "number",
+          "description": "The revalorized initial capital."
+        },
+        "srodkiOFE": {
+          "type": "number",
+          "description": "The amount of funds in OFE (Open Pension Fund) or other capital components."
+        },
+        "rokPrzechodzeniaNaEmeryture": {
+          "type": "number",
+          "description": "The year of retirement."
+        },
+        "wiek": {
+          "type": "number",
+          "description": "The age of the user."
+        },
+        "plec": {
+          "type": "string",
+          "description": "The gender of the user (M or K)."
+        },
+        "scenariuszPracaDluzej": {
+          "type": "boolean",
+          "description": "A boolean indicating whether the scenario includes working longer."
+        },
+        "prognozowanaEmerytura": {
+          "type": "number",
+          "description": "The projected pension amount."
+        },
+        "kwotaUrealniona": {
+          "type": "number",
+          "description": "The real (adjusted for inflation) amount."
+        },
+        "przewidywanaStopaZastapienia": {
+          "type": "number",
+          "description": "The predicted replacement rate."
+        },
+        "podwyzszonyWiek": {
+          "type": "number",
+          "description": "The elevated age in case of extended work scenario, can be null."
+        },
+        "uwzglednijOFE": {
+          "type": "boolean",
+          "description": "A boolean indicating whether OFE is considered in the calculation."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "timestamp",
+        "kwotaZwaloryzowanychSkladek",
+        "zwaloryzowanyKapitalPoczatkowy",
+        "srodkiOFE",
+        "rokPrzechodzeniaNaEmeryture",
+        "wiek",
+        "plec",
+        "scenariuszPracaDluzej",
+        "prognozowanaEmerytura",
+        "kwotaUrealniona",
+        "przewidywanaStopaZastapienia",
+        "uwzglednijOFE"
+      ]
+    },
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the PensionVision application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "creationDate": {
+          "type": "string",
+          "description": "Date and time the user account was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "creationDate"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile information.  Each user has a dedicated document.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/emeryturaPrognoses/{emeryturaPrognosisId}",
+        "definition": {
+          "entityName": "EmeryturaPrognoza",
+          "schema": {
+            "$ref": "#/backend/entities/EmeryturaPrognoza"
+          },
+          "description": "Stores pension projection data for a specific user. The 'userId' is used to enforce ownership, ensuring only the authenticated user can access their own pension projections.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user who owns this pension projection."
+            },
+            {
+              "name": "emeryturaPrognosisId",
+              "description": "The unique identifier for the pension projection document."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to be secure, scalable, and easily debuggable, adhering to the core principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), and QAPs (Rules are not Filters). It primarily leverages Path-Based ownership for user data.\n\nAuthorization Independence is achieved by avoiding `get()` calls in security rules. Since there are no collaborative documents, denormalization is not applicable here.\n\nStructural Segregation is applied by storing user-specific data (emeryturaPrognoses) under the `/users/{userId}` path, ensuring that all documents within a collection share the same security requirements. This approach simplifies security rules as it directly maps to ownership.\n\nAccess Modeling utilizes Path-Based ownership for the `EmeryturaPrognoza` entities. Each prognosis is stored under the user's document (`/users/{userId}/emeryturaPrognoses/{emeryturaPrognosisId}`), making ownership explicit and enabling simple security rules based on `request.auth.uid`.\n\nThe structure supports QAPs by using clear path-based ownership, which allows secure list operations. Rules can efficiently filter based on `request.auth.uid` to ensure users can only access their own prognosis data.\n\nThe design explicitly models state using dedicated collections."
+  }
+}
