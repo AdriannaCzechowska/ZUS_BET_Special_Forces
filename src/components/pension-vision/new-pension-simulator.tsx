@@ -13,6 +13,7 @@ import { SalaryHelper } from './salary-helper';
 import { CareerMonthsVisualizer } from './career-months-visualizer';
 import { HelpCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 
 type PeriodType = 'unpaid_leave' | 'maternity_leave' | 'parental_leave' | 'sick_leave' | 'childcare_leave' | 'unemployed' | 'foreign_work_no_contrib';
 
@@ -25,6 +26,15 @@ const periodConfig: { type: PeriodType; label: string; defaultDuration: number, 
     { type: 'unemployed', label: 'Bezrobocie', defaultDuration: 6, maxDuration: 24, description: "W czasie bezrobocia, gdy nie przysługuje zasiłek, składki emerytalne nie są odprowadzane i okres ten nie wpływa na wysokość przyszłej emerytury. Jeśli przysługuje zasiłek dla bezrobotnych, składki są odprowadzane, lecz naliczane od jego wysokości, co skutkuje niższymi wpłatami." },
     { type: 'foreign_work_no_contrib', label: 'Praca za granicą (bez składek w Polsce)', defaultDuration: 12, maxDuration: 60, description: "W przypadku pracy za granicą bez odprowadzania składek do polskiego systemu ubezpieczeń społecznych kapitał emerytalny w Polsce nie jest powiększany. Emerytura w Polsce może być wówczas niższa, chyba że okres zagranicznego zatrudnienia zostanie rozliczony na podstawie umów międzynarodowych." },
 ];
+
+const employmentTypes = {
+  'uop': 'Umowa o pracę: Składki emerytalne (19,52%) są obowiązkowe i w całości naliczane od Twojego wynagrodzenia brutto, co zapewnia najwyższy przyrost kapitału emerytalnego.',
+  'zlecenie': 'Umowa zlecenie: Składki są obowiązkowe, jeśli nie masz innego tytułu do ubezpieczenia (np. innej umowy o pracę z pensją min. minimalną). Ich brak lub niższa podstawa obniża przyszłą emeryturę.',
+  'b2b': 'Działalność gospodarcza / B2B: Najczęściej opłacasz składki od minimalnej podstawy (ok. 60% prognozowanego przeciętnego wynagrodzenia), co skutkuje znacznie niższymi wpłatami na konto emerytalne niż przy umowie o pracę z tym samym dochodem.',
+  'brak': 'Brak składek: Wykonywanie pracy bez umowy lub na umowę o dzieło (z wyjątkami) oznacza brak odprowadzanych składek emerytalnych. Ten okres nie powiększa Twojego kapitału na przyszłą emeryturę.',
+};
+type EmploymentType = keyof typeof employmentTypes;
+
 
 const FormSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="space-y-4 p-6 border rounded-lg bg-card shadow-sm">
@@ -60,6 +70,7 @@ const FormRadioGroup = ({ label, value, options, onValueChange }: { label: strin
           key={option.value}
           variant={value === option.value ? 'default' : 'outline'}
           onClick={() => onValueChange(option.value)}
+          type="button"
         >
           {option.label}
         </Button>
@@ -79,6 +90,7 @@ export function NewPensionSimulator() {
   const [retireYear, setRetireYear] = useState(currentYear + 30);
   const [salary, setSalary] = useState(6000);
   const [wariant, setWariant] = useState<1 | 2 | 3>(1);
+  const [employmentType, setEmploymentType] = useState<EmploymentType>('uop');
 
 
   const [leavePeriods, setLeavePeriods] = useState<Record<PeriodType, { enabled: boolean; durationMonths: number; startAge: number }>>(
@@ -164,12 +176,7 @@ export function NewPensionSimulator() {
                 </div>
                 </div>
             </FormSection>
-
-            <FormSection title="Twoja ścieżka kariery">
-                <FormSlider label="Kiedy zacząłeś pracę" value={startWorkYear} min={birthYear + 16} max={currentYear} step={1} onValueChange={setStartWorkYear} unit="" />
-                <FormSlider label="Kiedy planujesz skończyć pracę" value={retireYear} min={minRetireYear} max={birthYear + 100} step={1} onValueChange={setRetireYear} unit="" />
-            </FormSection>
-
+            
             <FormSection title="Jakie są Twoje średnie zarobki?">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <FormField label="Miesięczne wynagrodzenie brutto (PLN)">
@@ -177,6 +184,43 @@ export function NewPensionSimulator() {
                     </FormField>
                     <SalaryHelper onSalarySelect={setSalary} />
                 </div>
+            </FormSection>
+
+             <FormSection title="Forma zatrudnienia">
+                <RadioGroup value={employmentType} onValueChange={(v) => setEmploymentType(v as EmploymentType)} className="grid grid-cols-2 gap-4">
+                  <div>
+                    <RadioGroupItem value="uop" id="uop" className="peer sr-only" />
+                    <Label htmlFor="uop" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                      Umowa o pracę
+                    </Label>
+                  </div>
+                  <div>
+                    <RadioGroupItem value="zlecenie" id="zlecenie" className="peer sr-only" />
+                    <Label htmlFor="zlecenie" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                      Umowa zlecenie
+                    </Label>
+                  </div>
+                  <div>
+                    <RadioGroupItem value="b2b" id="b2b" className="peer sr-only" />
+                    <Label htmlFor="b2b" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                      Działalność / B2B
+                    </Label>
+                  </div>
+                  <div>
+                    <RadioGroupItem value="brak" id="brak" className="peer sr-only" />
+                    <Label htmlFor="brak" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                      Brak składek
+                    </Label>
+                  </div>
+                </RadioGroup>
+                <div className="mt-4 text-sm text-muted-foreground bg-gray-50 p-3 rounded-md border">
+                  {employmentTypes[employmentType]}
+                </div>
+             </FormSection>
+            
+            <FormSection title="Twoja ścieżka kariery">
+                <FormSlider label="Kiedy zacząłeś pracę" value={startWorkYear} min={birthYear + 16} max={currentYear} step={1} onValueChange={setStartWorkYear} unit="" />
+                <FormSlider label="Kiedy planujesz skończyć pracę" value={retireYear} min={minRetireYear} max={birthYear + 100} step={1} onValueChange={setRetireYear} unit="" />
             </FormSection>
         </div>
         
@@ -269,3 +313,5 @@ export function NewPensionSimulator() {
     </div>
   );
 }
+
+    
