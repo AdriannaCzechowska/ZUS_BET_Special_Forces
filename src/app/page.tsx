@@ -1,5 +1,4 @@
 'use client';
-import { Button } from '@/components/ui/button';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { PensionInput } from '@/components/pension-vision/pension-input';
@@ -23,13 +22,6 @@ export default function Home() {
              <div className="lg:hidden">
               <DailyFactAccordion />
             </div>
-            <Button
-              size="lg"
-              className="w-full rounded-2xl text-lg py-7"
-              aria-label="Przejdź do szczegółowej symulacji emerytalnej"
-            >
-              Przejdź do symulacji
-            </Button>
           </div>
         </div>
       </main>

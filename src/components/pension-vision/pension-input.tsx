@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,9 +26,8 @@ export function PensionInput() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form
+        <div
           className="flex flex-col sm:flex-row gap-4"
-          onSubmit={(e) => e.preventDefault()}
         >
           <div className="relative flex-grow">
             <Input
@@ -43,7 +43,15 @@ export function PensionInput() {
               PLN
             </span>
           </div>
-        </form>
+          <Button
+            size="lg"
+            className="rounded-2xl text-lg py-7 sm:py-4"
+            aria-label="Przejdź do szczegółowej symulacji emerytalnej"
+            asChild
+          >
+            <Link href="/symulacja">Przejdź do symulacji</Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
