@@ -12,7 +12,7 @@ const chartData = [
 ]
 
 const tooltips: Record<string, string> = {
-  minimalna: "<20/25 lat pracy – brak prawa do gwarantowanej minimalnej emerytury.",
+  minimalna: "Świadczeniobiorcy otrzymujący emeryturę w wysokości poniżej minimalnej wykazywali się niską aktywnością zawodową, nie przepracowali minimum 25 lat dla mężczyzn i 20 lat dla kobiet, w związku z tym nie nabyli prawa do gwarancji minimalnej emerytury.",
   srednia: "Obliczana na bazie: 19,52 % składki emerytalnej z wynagrodzenia brutto, waloryzacja roczna i kwartalna wg wskaźników MRPiPS.",
   najwyzsza: "Przykład: 43 000 zł brutto, woj. śląskie, ponad 55 lat pracy, brak przerw chorobowych.",
 }
