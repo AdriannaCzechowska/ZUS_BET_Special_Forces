@@ -153,98 +153,102 @@ export function NewPensionSimulator() {
 
   return (
     <div className="space-y-8">
-      <FormSection title="Jaką emeryturę chciałbyś mieć w przyszłości?">
-        <FormField label="Oczekiwana kwota emerytury (PLN netto)">
-          <Input type="number" value={desiredPension} onChange={e => setDesiredPension(Number(e.target.value))} className="max-w-xs text-lg" />
-        </FormField>
-      </FormSection>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div className="space-y-8">
+            <FormSection title="Jaką emeryturę chciałbyś mieć w przyszłości?">
+                <FormField label="Oczekiwana kwota emerytury (PLN netto)">
+                <Input type="number" value={desiredPension} onChange={e => setDesiredPension(Number(e.target.value))} className="max-w-xs text-lg" />
+                </FormField>
+            </FormSection>
 
-      <FormSection title="Podstawowe informacje">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <FormField label="Ile masz lat?">
-            <Input type="number" value={age} onChange={e => setAge(Number(e.target.value))} />
-          </FormField>
-          <FormRadioGroup
-            label="Jaką masz płeć?"
-            value={gender}
-            options={[{ value: 'K', label: 'Kobieta' }, { value: 'M', label: 'Mężczyzna' }]}
-            onValueChange={(v) => setGender(v as 'K' | 'M')}
-          />
-          <div className="flex items-center space-x-2">
-            <Switch id="tax-exempt" checked={isTaxExempt} onCheckedChange={setIsTaxExempt} />
-            <Label htmlFor="tax-exempt">Czy jesteś zwolniony z płacenia składek do 26 roku życia?</Label>
-          </div>
+            <FormSection title="Podstawowe informacje">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <FormField label="Ile masz lat?">
+                    <Input type="number" value={age} onChange={e => setAge(Number(e.target.value))} />
+                </FormField>
+                <FormRadioGroup
+                    label="Jaką masz płeć?"
+                    value={gender}
+                    options={[{ value: 'K', label: 'Kobieta' }, { value: 'M', label: 'Mężczyzna' }]}
+                    onValueChange={(v) => setGender(v as 'K' | 'M')}
+                />
+                <div className="flex items-center space-x-2">
+                    <Switch id="tax-exempt" checked={isTaxExempt} onCheckedChange={setIsTaxExempt} />
+                    <Label htmlFor="tax-exempt">Czy jesteś zwolniony z płacenia składek do 26 roku życia?</Label>
+                </div>
+                </div>
+            </FormSection>
+
+            <FormSection title="Twoja ścieżka kariery">
+                <FormSlider label="Kiedy zacząłeś pracę" value={startWorkYear} min={birthYear + 16} max={currentYear} step={1} onValueChange={setStartWorkYear} unit="" />
+                <FormSlider label="Kiedy planujesz skończyć pracę" value={retireYear} min={minRetireYear} max={birthYear + 100} step={1} onValueChange={setRetireYear} unit="" />
+            </FormSection>
+
+            <FormSection title="Jakie są Twoje średnie zarobki?">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <FormField label="Miesięczne wynagrodzenie brutto (PLN)">
+                        <Input type="number" value={salary} onChange={e => setSalary(Number(e.target.value))} />
+                    </FormField>
+                    <SalaryHelper onSalarySelect={setSalary} />
+                </div>
+            </FormSection>
         </div>
-      </FormSection>
+        
+        <div className="space-y-8">
+            <Accordion type="multiple" className="w-full space-y-4">
+                <AccordionItem value="leaves" className="border rounded-lg bg-card shadow-sm p-4">
+                <AccordionTrigger className="font-headline text-lg">Dodatkowe parametry zatrudnienia</AccordionTrigger>
+                <AccordionContent className="pt-4 space-y-4">
+                    {leavePeriods.map(period => (
+                        <div key={period.id} className='p-3 border rounded-lg bg-background/50 space-y-2'>
+                            <div className='flex justify-between items-center'>
+                                <Label className='font-semibold'>{periodLabels[period.type]}</Label>
+                                <Button variant="ghost" size="icon" className='text-destructive h-7 w-7' onClick={() => removeLeavePeriod(period.id)}>
+                                    <Trash2 className='h-4 w-4' />
+                                </Button>
+                            </div>
+                            <div className='grid grid-cols-3 gap-2'>
+                                <FormField label="Rok startu">
+                                    <Input type="number" value={period.startYear} onChange={e => updateLeavePeriod(period.id, 'startYear', Number(e.target.value))} />
+                                </FormField>
+                                <FormField label="Miesiąc startu">
+                                    <Input type="number" min="1" max="12" value={period.startMonth + 1} onChange={e => updateLeavePeriod(period.id, 'startMonth', Number(e.target.value) - 1)} />
+                                </FormField>
+                                <FormField label="Ile miesięcy">
+                                    <Input type="number" value={period.durationMonths} onChange={e => updateLeavePeriod(period.id, 'durationMonths', Number(e.target.value))} />
+                                </FormField>
+                            </div>
+                        </div>
+                    ))}
 
-      <FormSection title="Twoja ścieżka kariery">
-        <FormSlider label="Kiedy zacząłeś pracę" value={startWorkYear} min={birthYear + 16} max={currentYear} step={1} onValueChange={setStartWorkYear} unit="" />
-        <FormSlider label="Kiedy planujesz skończyć pracę" value={retireYear} min={minRetireYear} max={birthYear + 100} step={1} onValueChange={setRetireYear} unit="" />
-      </FormSection>
+                    <Select onValueChange={(value: PeriodType) => addLeavePeriod(value)}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Dodaj nowy okres przerwy..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {Object.entries(periodLabels).map(([type, label]) => (
+                                <SelectItem key={type} value={type}>{label}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
 
-      <FormSection title="Jakie są Twoje średnie zarobki?">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <FormField label="Miesięczne wynagrodzenie brutto (PLN)">
-                <Input type="number" value={salary} onChange={e => setSalary(Number(e.target.value))} />
-            </FormField>
-            <SalaryHelper onSalarySelect={setSalary} />
+                </AccordionContent>
+                </AccordionItem>
+            </Accordion>
+             <CareerMonthsVisualizer 
+                periods={careerPeriodsForVisualizer}
+                startYear={startWorkYear} 
+                retirementYear={retireYear}
+            />
         </div>
-      </FormSection>
-
+      </div>
+      
       <div className="text-center p-8 border-2 rounded-lg" style={{ borderColor: isGoalAchieved ? '#22c55e' : '#ef4444' }}>
         <h3 className="text-lg text-muted-foreground">Twoja szacowana wartość emerytury wynosi:</h3>
         <p className={cn('text-5xl font-bold font-headline my-2', isGoalAchieved ? 'text-green-500' : 'text-red-500')}>
           {calculatedPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
         </p>
       </div>
-
-      <Accordion type="multiple" className="w-full space-y-4">
-        <AccordionItem value="leaves" className="border rounded-lg bg-card shadow-sm p-4">
-          <AccordionTrigger className="font-headline text-lg">Dodatkowe parametry zatrudnienia</AccordionTrigger>
-          <AccordionContent className="pt-4 space-y-4">
-            {leavePeriods.map(period => (
-                <div key={period.id} className='p-3 border rounded-lg bg-background/50 space-y-2'>
-                    <div className='flex justify-between items-center'>
-                        <Label className='font-semibold'>{periodLabels[period.type]}</Label>
-                        <Button variant="ghost" size="icon" className='text-destructive h-7 w-7' onClick={() => removeLeavePeriod(period.id)}>
-                            <Trash2 className='h-4 w-4' />
-                        </Button>
-                    </div>
-                    <div className='grid grid-cols-3 gap-2'>
-                        <FormField label="Rok startu">
-                            <Input type="number" value={period.startYear} onChange={e => updateLeavePeriod(period.id, 'startYear', Number(e.target.value))} />
-                        </FormField>
-                         <FormField label="Miesiąc startu">
-                            <Input type="number" min="1" max="12" value={period.startMonth + 1} onChange={e => updateLeavePeriod(period.id, 'startMonth', Number(e.target.value) - 1)} />
-                        </FormField>
-                         <FormField label="Ile miesięcy">
-                            <Input type="number" value={period.durationMonths} onChange={e => updateLeavePeriod(period.id, 'durationMonths', Number(e.target.value))} />
-                        </FormField>
-                    </div>
-                </div>
-            ))}
-
-            <Select onValueChange={(value: PeriodType) => addLeavePeriod(value)}>
-                <SelectTrigger>
-                    <SelectValue placeholder="Dodaj nowy okres przerwy..." />
-                </SelectTrigger>
-                <SelectContent>
-                    {Object.entries(periodLabels).map(([type, label]) => (
-                        <SelectItem key={type} value={type}>{label}</SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-
-       <CareerMonthsVisualizer 
-          periods={careerPeriodsForVisualizer}
-          startYear={startWorkYear} 
-          retirementYear={retireYear}
-      />
-
     </div>
   );
 }
