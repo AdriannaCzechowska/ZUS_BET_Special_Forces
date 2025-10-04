@@ -10,6 +10,8 @@ import { ArrowLeft, RefreshCw, LayoutDashboard, Download } from 'lucide-react';
 import Link from 'next/link';
 import { SimulationResults } from '@/components/pension-vision/simulation-results';
 import { useToast } from '@/hooks/use-toast';
+import { RegionalQualityIndicator } from '@/components/pension-vision/regional-quality-indicator';
+import { Separator } from '@/components/ui/separator';
 
 
 function WynikiPageContent() {
@@ -91,8 +93,10 @@ function WynikiPageContent() {
            </div>
         </div>
         
-        <div ref={resultsRef}>
+        <div ref={resultsRef} className="space-y-8">
             <SimulationResults />
+            <Separator className="my-8"/>
+            <RegionalQualityIndicator />
         </div>
 
       </main>

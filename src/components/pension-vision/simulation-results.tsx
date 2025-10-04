@@ -109,7 +109,7 @@ function ResultsContent() {
 
 export function SimulationResults() {
   return (
-    <Suspense fallback={<div>Ładowanie...</div>}>
+    <Suspense>
       <ResultsContent />
     </Suspense>
   )
