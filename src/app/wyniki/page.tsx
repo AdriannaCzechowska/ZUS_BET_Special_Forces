@@ -14,8 +14,7 @@ import { RegionalQualityIndicator } from '@/components/pension-vision/regional-q
 import { Separator } from '@/components/ui/separator';
 import { ThirdPillarSimulator } from '@/components/pension-vision/third-pillar-simulator';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { Card, CardContent } from '@/components/ui/card';
-
+import { SideNav } from '@/components/layout/side-nav';
 
 function WynikiPageContent() {
   const { toast } = useToast();
@@ -65,6 +64,25 @@ function WynikiPageContent() {
     }
   };
 
+  const navItems = [
+    {
+        icon: <RefreshCw className="mr-2 h-4 w-4" />,
+        label: 'Nowa symulacja',
+        href: '/symulacja',
+        active: true
+    },
+    {
+        icon: <LayoutDashboard className="mr-2 h-4 w-4" />,
+        label: 'Przejdź do Dashboardu',
+        href: '/dashboard',
+    },
+    {
+        icon: <Download className="mr-2 h-4 w-4" />,
+        label: 'Pobierz raport',
+        onClick: handleDownloadReport
+    },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
@@ -82,36 +100,17 @@ function WynikiPageContent() {
             </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            <div ref={resultsRef} className="space-y-8 lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 items-start">
+            <div className="lg:col-span-1">
+                 <SideNav title="Akcje" items={navItems} />
+            </div>
+
+            <div ref={resultsRef} className="space-y-8 lg:col-span-3">
                 <SimulationResults />
                 <Separator className="my-8"/>
                 <ThirdPillarSimulator />
                 <Separator className="my-8"/>
                 <RegionalQualityIndicator />
-            </div>
-
-            <div className="lg:col-span-1 space-y-4">
-                 <Card className="shadow-lg semitransparent-panel">
-                    <CardContent className="p-4 flex flex-col gap-3">
-                        <Button asChild variant="outline" className="w-full justify-start text-base">
-                            <Link href="/symulacja">
-                                <RefreshCw className="mr-2 h-4 w-4" />
-                                Nowa symulacja
-                            </Link>
-                        </Button>
-                        <Button asChild className="w-full justify-start text-base">
-                            <Link href="/dashboard">
-                                <LayoutDashboard className="mr-2 h-4 w-4" />
-                                Przejdź do Dashboardu
-                            </Link>
-                        </Button>
-                        <Button onClick={handleDownloadReport} className="w-full justify-start text-base">
-                            <Download className="mr-2 h-4 w-4" />
-                            Pobierz raport
-                        </Button>
-                    </CardContent>
-                 </Card>
             </div>
         </div>
 
