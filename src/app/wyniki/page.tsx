@@ -14,6 +14,7 @@ import { RegionalQualityIndicator } from '@/components/pension-vision/regional-q
 import { Separator } from '@/components/ui/separator';
 import { ThirdPillarSimulator } from '@/components/pension-vision/third-pillar-simulator';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { Card, CardContent } from '@/components/ui/card';
 
 
 function WynikiPageContent() {
@@ -71,40 +72,47 @@ function WynikiPageContent() {
         { label: 'Symulator emerytalny', href: '/' },
         { label: 'Wyniki symulacji' }
       ]} />
-      <main className="flex-grow w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <Button asChild variant="ghost" className="pl-0 text-base">
-            <Link href="/symulacja">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Wróć do formularza
-            </Link>
-          </Button>
-           <div className="flex flex-wrap gap-2">
-             <Button asChild variant="outline">
-              <Link href="/symulacja">
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Nowa symulacja
-              </Link>
+      <main className="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="mb-6">
+             <Button asChild variant="ghost" className="pl-0 text-base">
+                <Link href="/symulacja">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Wróć do formularza
+                </Link>
             </Button>
-            <Button asChild>
-              <Link href="/dashboard">
-                <LayoutDashboard className="mr-2 h-4 w-4" />
-                Przejdź do Dashboardu
-              </Link>
-            </Button>
-             <Button onClick={handleDownloadReport}>
-              <Download className="mr-2 h-4 w-4" />
-              Pobierz raport
-            </Button>
-           </div>
         </div>
-        
-        <div ref={resultsRef} className="space-y-8">
-            <SimulationResults />
-            <Separator className="my-8"/>
-            <ThirdPillarSimulator />
-            <Separator className="my-8"/>
-            <RegionalQualityIndicator />
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <div ref={resultsRef} className="space-y-8 lg:col-span-2">
+                <SimulationResults />
+                <Separator className="my-8"/>
+                <ThirdPillarSimulator />
+                <Separator className="my-8"/>
+                <RegionalQualityIndicator />
+            </div>
+
+            <div className="lg:col-span-1 space-y-4">
+                 <Card className="shadow-lg semitransparent-panel">
+                    <CardContent className="p-4 flex flex-col gap-3">
+                        <Button asChild variant="outline" className="w-full justify-start text-base">
+                            <Link href="/symulacja">
+                                <RefreshCw className="mr-2 h-4 w-4" />
+                                Nowa symulacja
+                            </Link>
+                        </Button>
+                        <Button asChild className="w-full justify-start text-base">
+                            <Link href="/dashboard">
+                                <LayoutDashboard className="mr-2 h-4 w-4" />
+                                Przejdź do Dashboardu
+                            </Link>
+                        </Button>
+                        <Button onClick={handleDownloadReport} className="w-full justify-start text-base">
+                            <Download className="mr-2 h-4 w-4" />
+                            Pobierz raport
+                        </Button>
+                    </CardContent>
+                 </Card>
+            </div>
         </div>
 
       </main>
