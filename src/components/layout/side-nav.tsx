@@ -16,10 +16,11 @@ interface NavItem {
 interface SideNavProps {
     title: string;
     items: NavItem[];
+    children?: React.ReactNode;
     className?: string;
 }
 
-export function SideNav({ title, items, className }: SideNavProps) {
+export function SideNav({ title, items, children, className }: SideNavProps) {
     return (
         <div className={cn("border-l-4 border-primary", className)}>
             <h3 className="font-headline text-lg font-semibold px-4 pb-2">{title}</h3>
@@ -66,6 +67,7 @@ export function SideNav({ title, items, className }: SideNavProps) {
                         </Button>
                     )
                 })}
+                 {children}
             </nav>
         </div>
     )
