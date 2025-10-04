@@ -76,7 +76,7 @@ export function calculatePension(input: PensionInput): PensionOutput {
   let totalCapital = 0;
 
   for (let i = 0; i < efektywneLataPracy; i++) {
-    totalCapital = (totalCapital + rocznaSkladka) * params.ROCZNA_WALORYZACJA_SKLADEK;
+    totalCapital = totalCapital + (rocznaSkladka * params.ROCZNA_WALORYZACJA_SKLADEK);
   }
 
   // 2️⃣ Bonus za dłuższą pracę

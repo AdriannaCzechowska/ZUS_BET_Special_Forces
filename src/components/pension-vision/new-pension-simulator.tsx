@@ -14,14 +14,14 @@ import { CareerMonthsVisualizer } from './career-months-visualizer';
 
 type PeriodType = 'unpaid_leave' | 'maternity_leave' | 'parental_leave' | 'sick_leave' | 'childcare_leave' | 'unemployed' | 'foreign_work_no_contrib';
 
-const periodConfig: { type: PeriodType; label: string; defaultDuration: number, maxDuration: number }[] = [
-    { type: 'maternity_leave', label: 'Urlop macierzyński', defaultDuration: 12, maxDuration: 12 },
-    { type: 'parental_leave', label: 'Urlop rodzicielski', defaultDuration: 12, maxDuration: 36 },
-    { type: 'childcare_leave', label: 'Urlop wychowawczy', defaultDuration: 24, maxDuration: 36 },
-    { type: 'sick_leave', label: 'Zwolnienie L4', defaultDuration: 6, maxDuration: 24 },
-    { type: 'unpaid_leave', label: 'Urlop bezpłatny', defaultDuration: 3, maxDuration: 24 },
-    { type: 'unemployed', label: 'Bezrobocie', defaultDuration: 6, maxDuration: 24 },
-    { type: 'foreign_work_no_contrib', label: 'Praca za granicą (bez składek PL)', defaultDuration: 12, maxDuration: 60 },
+const periodConfig: { type: PeriodType; label: string; defaultDuration: number, maxDuration: number, description: string }[] = [
+    { type: 'maternity_leave', label: 'Urlop macierzyński', defaultDuration: 12, maxDuration: 12, description: "Składki finansowane z budżetu państwa, ale od niższej podstawy (zasiłek)." },
+    { type: 'parental_leave', label: 'Urlop rodzicielski', defaultDuration: 12, maxDuration: 36, description: "Składki opłacane przez budżet państwa, często od niższej podstawy niż pensja." },
+    { type: 'childcare_leave', label: 'Urlop wychowawczy', defaultDuration: 24, maxDuration: 36, description: "Składki od minimalnej podstawy, co znacząco obniża przyszłą emeryturę." },
+    { type: 'sick_leave', label: 'Zwolnienie L4', defaultDuration: 6, maxDuration: 24, description: "W trakcie L4 nie są odprowadzane składki emerytalne, co zmniejsza kapitał." },
+    { type: 'unpaid_leave', label: 'Urlop bezpłatny', defaultDuration: 3, maxDuration: 24, description: "Brak pracy i brak składek emerytalnych – dziura w kapitale." },
+    { type: 'unemployed', label: 'Bezrobocie', defaultDuration: 6, maxDuration: 24, description: "Okres bez odprowadzanych składek emerytalnych, co obniża świadczenie." },
+    { type: 'foreign_work_no_contrib', label: 'Praca za granicą (bez składek PL)', defaultDuration: 12, maxDuration: 60, description: "Okres bez składek w polskim systemie. Może dawać prawo do emerytury z innego kraju." },
 ];
 
 const FormSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
@@ -178,62 +178,62 @@ export function NewPensionSimulator() {
             </FormSection>
         </div>
         
-        <div className="space-y-8">
-             <div className="p-6 border rounded-lg bg-card shadow-sm space-y-4">
-                <h3 className="font-headline text-xl text-primary">Dodatkowe parametry zatrudnienia</h3>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {periodConfig.map((period) => (
-                        <div key={period.type} className="p-3 border rounded-lg bg-background/50 space-y-3">
-                             <div className="flex items-center justify-between">
-                                <Label htmlFor={`switch-${period.type}`} className="flex items-center gap-2 cursor-pointer text-sm font-medium">
-                                    <span>{period.label}</span>
-                                </Label>
-                                <Switch 
-                                    id={`switch-${period.type}`}
-                                    checked={leavePeriods[period.type].enabled}
-                                    onCheckedChange={(checked) => updateLeavePeriod(period.type, 'enabled', checked)}
-                                />
-                            </div>
-                            {leavePeriods[period.type].enabled && (
-                                <div className='space-y-4 pt-2'>
-                                    <div className='space-y-2'>
-                                        <div className='flex justify-between items-center'>
-                                                <Label className='text-xs'>Wiek rozpoczęcia:</Label>
-                                                <span className='text-xs font-bold'>{leavePeriods[period.type].startAge} lat</span>
-                                        </div>
-                                        <Slider
-                                            min={age}
-                                            max={retireYear - birthYear}
-                                            step={1}
-                                            value={[leavePeriods[period.type].startAge]}
-                                            onValueChange={(val) => updateLeavePeriod(period.type, 'startAge', val[0])}
-                                        />
-                                    </div>
-                                    <div className='space-y-2'>
-                                        <div className='flex justify-between items-center'>
-                                                <Label className='text-xs'>Długość:</Label>
-                                                <span className='text-xs font-bold'>{leavePeriods[period.type].durationMonths} mies.</span>
-                                        </div>
-                                        <Slider
-                                            min={1}
-                                            max={period.maxDuration}
-                                            step={1}
-                                            value={[leavePeriods[period.type].durationMonths]}
-                                            onValueChange={(val) => updateLeavePeriod(period.type, 'durationMonths', val[0])}
-                                        />
-                                    </div>
-                                </div>
-                            )}
+        <div className="p-6 border rounded-lg bg-card shadow-sm space-y-4">
+            <h3 className="font-headline text-xl text-primary">Scenariusze i przebieg kariery</h3>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {periodConfig.map((period) => (
+                    <div key={period.type} className="p-3 border rounded-lg bg-background/50 space-y-3">
+                         <div className="flex items-center justify-between">
+                            <Label htmlFor={`switch-${period.type}`} className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                                <span>{period.label}</span>
+                            </Label>
+                            <Switch 
+                                id={`switch-${period.type}`}
+                                checked={leavePeriods[period.type].enabled}
+                                onCheckedChange={(checked) => updateLeavePeriod(period.type, 'enabled', checked)}
+                            />
                         </div>
-                    ))}
-                 </div>
+                        {leavePeriods[period.type].enabled && (
+                            <div className='space-y-4 pt-2'>
+                                <p className="text-xs text-muted-foreground">{period.description}</p>
+                                <div className='space-y-2'>
+                                    <div className='flex justify-between items-center'>
+                                            <Label className='text-xs'>Wiek rozpoczęcia:</Label>
+                                            <span className='text-xs font-bold'>{leavePeriods[period.type].startAge} lat</span>
+                                    </div>
+                                    <Slider
+                                        min={age}
+                                        max={retireYear - birthYear}
+                                        step={1}
+                                        value={[leavePeriods[period.type].startAge]}
+                                        onValueChange={(val) => updateLeavePeriod(period.type, 'startAge', val[0])}
+                                    />
+                                </div>
+                                <div className='space-y-2'>
+                                    <div className='flex justify-between items-center'>
+                                            <Label className='text-xs'>Długość:</Label>
+                                            <span className='text-xs font-bold'>{leavePeriods[period.type].durationMonths} mies.</span>
+                                    </div>
+                                    <Slider
+                                        min={1}
+                                        max={period.maxDuration}
+                                        step={1}
+                                        value={[leavePeriods[period.type].durationMonths]}
+                                        onValueChange={(val) => updateLeavePeriod(period.type, 'durationMonths', val[0])}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                ))}
+             </div>
+             <div className="mt-4">
+                <CareerMonthsVisualizer 
+                    periods={careerPeriodsForVisualizer}
+                    startYear={startWorkYear} 
+                    retirementYear={retireYear}
+                />
             </div>
-
-             <CareerMonthsVisualizer 
-                periods={careerPeriodsForVisualizer}
-                startYear={startWorkYear} 
-                retirementYear={retireYear}
-            />
         </div>
       </div>
       
