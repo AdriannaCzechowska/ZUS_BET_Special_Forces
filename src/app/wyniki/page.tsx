@@ -23,6 +23,7 @@ import { ThirdPillarSimulator } from '@/components/pension-vision/third-pillar-s
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { SideNav } from '@/components/layout/side-nav';
 import { useSearchParams } from 'next/navigation';
+import { ParenthoodImpact } from '@/components/pension-vision/ParenthoodImpact';
 
 function WynikiPageContent() {
   const { toast } = useToast();
@@ -85,7 +86,7 @@ function WynikiPageContent() {
       const replacementRate = searchParams.get('replacementRate') || '0';
       const pensionWithoutL4 = searchParams.get('pensionWithoutL4') || '0';
       const grossSalary = searchParams.get('grossSalary') || '0';
-      const age = searchParams.get('age') || '0';
+      const age = searchпаrams.get('age') || '0';
       const gender = searchParams.get('gender') || 'N/A';
       const retirementYear = searchParams.get('retirementYear') || 'N/A';
 
@@ -190,6 +191,8 @@ function WynikiPageContent() {
                 <ThirdPillarSimulator />
                 <Separator className="my-8"/>
                 <RegionalQualityIndicator />
+                <Separator className="my-8"/>
+                <ParenthoodImpact />
             </div>
         </div>
 
