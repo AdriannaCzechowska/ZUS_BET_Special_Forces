@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 100%; /* White background */
     --foreground: 210 20% 20%;
     --card: 0 0% 100%;
     --card-foreground: 210 20% 20%;
@@ -63,7 +63,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-white font-body;
+    @apply bg-background font-body; /* Changed from bg-white */
     font-size: .875em;
     line-height: 1.2;
     color: #000;
