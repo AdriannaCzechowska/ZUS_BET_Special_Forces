@@ -23,6 +23,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { calculatePension, type PensionInput } from '@/lib/pension-calculator';
+import { Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { formTooltips } from '@/lib/form-tooltips';
 
 const currentYear = new Date().getFullYear();
 
@@ -55,6 +58,277 @@ const formSchema = z.object({
     message: `Minimalny wiek emerytalny dla Twojej płci to ${data.gender === 'K' ? 60 : 65} lat, co w Twoim przypadku oznacza przejście na emeryturę najwcześniej w ${currentYear - data.age + (data.gender === 'K' ? 60 : 65)}.`,
     path: ["retirementYear"],
 }));
+
+const FormTooltip = ({ fieldName }: { fieldName: keyof typeof formTooltips }) => {
+  const tooltipData = formTooltips[fieldName];
+  if (!tooltipData) return null;
+  
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button type="button" variant="ghost" size="icon" className="h-4 w-4 ml-1.5 cursor-help">
+            <Info className="h-3.5 w-3.5" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent className="max-w-xs text-sm">
+          <p className="font-bold mb-2">{tooltipData.label}</p>
+          <p>{tooltipData.tooltip}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )
+}
+
+function BasicInfoSection({ form }: { form: any }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <FormField
+        control={form.control}
+        name="age"
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex items-center">
+              <FormLabel>Obecny wiek</FormLabel>
+              <FormTooltip fieldName="obecnyWiek" />
+            </div>
+            <FormControl>
+              <Input type="number" placeholder="np. 30" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="gender"
+        render={({ field }) => (
+          <FormItem className="space-y-3">
+             <div className="flex items-center">
+              <FormLabel>Płeć</FormLabel>
+              <FormTooltip fieldName="plec" />
+            </div>
+            <FormControl>
+              <RadioGroup
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                className="flex items-center space-x-4 pt-2"
+              >
+                <FormItem className="flex items-center space-x-2 space-y-0">
+                  <FormControl>
+                    <RadioGroupItem value="K" />
+                  </FormControl>
+                  <FormLabel className="font-normal">Kobieta</FormLabel>
+                </FormItem>
+                <FormItem className="flex items-center space-x-2 space-y-0">
+                  <FormControl>
+                    <RadioGroupItem value="M" />
+                  </FormControl>
+                  <FormLabel className="font-normal">Mężczyzna</FormLabel>
+                </FormItem>
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+}
+
+function CapitalSection({ form }: { form: any }) {
+  return (
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <FormField
+        control={form.control}
+        name="grossSalary"
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex items-center">
+              <FormLabel>Obecne wynagrodzenie miesięczne brutto</FormLabel>
+              <FormTooltip fieldName="wynagrodzenieBrutto" />
+            </div>
+            <FormControl>
+              <Input type="number" placeholder="np. 6000" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="zusContributions"
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex items-center">
+              <FormLabel>Zwaloryzowane składki I filaru (opcjonalnie)</FormLabel>
+              <FormTooltip fieldName="zwaloryzowaneSkladki" />
+            </div>
+            <FormControl>
+              <Input type="number" placeholder="np. 150000" {...field} />
+            </FormControl>
+            <FormDescription>
+                Dane znajdziesz w Informacji o Stanie Konta Ubezpieczonego w ZUS (IOKU).
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="initialCapital"
+        render={({ field }) => (
+          <FormItem>
+             <div className="flex items-center">
+              <FormLabel>Zwaloryzowany kapitał początkowy (opcjonalnie)</FormLabel>
+              <FormTooltip fieldName="zwaloryzowanyKapitalPoczatkowy" />
+            </div>
+            <FormControl>
+              <Input type="number" placeholder="np. 30000" {...field} />
+            </FormControl>
+              <FormDescription>
+                Dotyczy osób, które pracowały przed 1999 r.
+            </FormDescription>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="ofeBalance"
+        render={({ field }) => (
+          <FormItem>
+             <div className="flex items-center">
+                <FormLabel>Środki z OFE / subkonta (opcjonalnie)</FormLabel>
+                <FormTooltip fieldName="srodkiOFE" />
+             </div>
+            <FormControl>
+              <Input type="number" placeholder="np. 20000" {...field} />
+            </FormControl>
+             <FormDescription>
+                Suma środków na subkoncie w ZUS i rachunku w OFE.
+            </FormDescription>
+          </FormItem>
+        )}
+      />
+     </div>
+  );
+}
+
+function WorkHistorySection({ form }: { form: any }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <FormField
+        control={form.control}
+        name="startYear"
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex items-center">
+              <FormLabel>Rok rozpoczęcia pracy</FormLabel>
+              <FormTooltip fieldName="rokRozpoczeciaPracy" />
+            </div>
+            <FormControl>
+              <Input type="number" placeholder="np. 2015" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="retirementYear"
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex items-center">
+              <FormLabel>Planowany rok przejścia na emeryturę</FormLabel>
+              <FormTooltip fieldName="rokPrzejsciaEmerytura" />
+            </div>
+            <FormControl>
+              <Input type="number" placeholder="np. 2055" {...field} />
+            </FormControl>
+            <FormDescription>
+                Symulacja zakłada pracę do końca stycznia danego roku.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+}
+
+function ScenariosSection({ form }: { form: any }) {
+  return (
+    <div className="space-y-4">
+       <FormField
+          control={form.control}
+          name="includeOFE"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>
+                  Uwzględnij środki z OFE / subkonta
+                </FormLabel>
+                <FormDescription>
+                   Zaznacz, aby do symulacji wliczyć środki zgromadzone w Otwartym Funduszu Emerytalnym i na subkoncie ZUS.
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+      <FormField
+          control={form.control}
+          name="includeL4"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>
+                  Uwzględnij potencjalne zwolnienia L4 (wkrótce)
+                </FormLabel>
+                <FormDescription>
+                  Zaznacz, jeśli symulacja ma uwzględnić statystyczną liczbę dni na zwolnieniu lekarskim w przyszłości.
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={form.control}
+          name="workLonger"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>
+                  Scenariusz "Pracuj dłużej"
+                </FormLabel>
+                <FormDescription>
+                  Zaznacz, aby zasymulować pracę o 1 rok dłużej po osiągnięciu ustawowego wieku emerytalnego.
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+    </div>
+  );
+}
 
 
 export function SimulationForm() {
@@ -162,207 +436,10 @@ export function SimulationForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <FormField
-                control={form.control}
-                name="age"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Obecny wiek</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="np. 30" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="gender"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>Płeć</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex items-center space-x-4 pt-2"
-                      >
-                        <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="K" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Kobieta</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="M" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Mężczyzna</FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="grossSalary"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Obecne wynagrodzenie miesięczne brutto</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="np. 6000" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="zusContributions"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Zwaloryzowane składki I filaru (opcjonalnie)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="np. 150000" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                        Dane znajdziesz w Informacji o Stanie Konta Ubezpieczonego w ZUS (IOKU).
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="initialCapital"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Zwaloryzowany kapitał początkowy (opcjonalnie)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="np. 30000" {...field} />
-                    </FormControl>
-                      <FormDescription>
-                        Dotyczy osób, które pracowały przed 1999 r.
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="ofeBalance"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Środki z OFE / subkonta (opcjonalnie)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="np. 20000" {...field} />
-                    </FormControl>
-                     <FormDescription>
-                        Suma środków na subkoncie w ZUS i rachunku w OFE.
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="startYear"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Rok rozpoczęcia pracy</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="np. 2015" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="retirementYear"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Planowany rok przejścia na emeryturę</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="np. 2055" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                        Symulacja zakłada pracę do końca stycznia danego roku.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="space-y-4">
-               <FormField
-                  control={form.control}
-                  name="includeOFE"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          Uwzględnij środki z OFE / subkonta
-                        </FormLabel>
-                        <FormDescription>
-                           Zaznacz, aby do symulacji wliczyć środki zgromadzone w Otwartym Funduszu Emerytalnym i na subkoncie ZUS.
-                        </FormDescription>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              <FormField
-                  control={form.control}
-                  name="includeL4"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          Uwzględnij potencjalne zwolnienia L4
-                        </FormLabel>
-                        <FormDescription>
-                          Zaznacz, jeśli symulacja ma uwzględnić statystyczną liczbę dni na zwolnieniu lekarskim w przyszłości.
-                        </FormDescription>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={form.control}
-                  name="workLonger"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          Scenariusz "Pracuj dłużej"
-                        </FormLabel>
-                        <FormDescription>
-                          Zaznacz, aby zasymulować pracę o 1 rok dłużej po osiągnięciu ustawowego wieku emerytalnego.
-                        </FormDescription>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-            </div>
+            <BasicInfoSection form={form} />
+            <CapitalSection form={form} />
+            <WorkHistorySection form={form} />
+            <ScenariosSection form={form} />
             <Button type="submit" size="lg" className="w-full">Oblicz symulację</Button>
           </form>
         </Form>
