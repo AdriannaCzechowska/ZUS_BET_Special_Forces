@@ -3,6 +3,7 @@
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, type ChartConfig } from "@/components/ui/chart"
+import { Separator } from "../ui/separator"
 
 const chartData = [
   { category: "Poniżej minimalnej", value: 1780.96, key: "minimalna" },
@@ -11,9 +12,9 @@ const chartData = [
 ]
 
 const tooltips: Record<string, string> = {
-  minimalna: "Świadczeniobiorcy z niską aktywnością zawodową (poniżej 20 lat dla kobiet, 25 lat dla mężczyzn), którzy nie nabyli prawa do gwarantowanej emerytury minimalnej.",
-  srednia: "Aktualny średni poziom świadczeń emerytalnych w Polsce wypłacanych przez ZUS. Poziom ten jest mocno zróżnicowany regionalnie i w zależności od płci.",
-  najwyzsza: "Najwyższa zarejestrowana emerytura w Polsce, wypłacana osobie, która pracowała przez ponad 62 lata bez przerw na zwolnienia lekarskie.",
+  minimalna: "<20/25 lat pracy – brak prawa do gwarantowanej minimalnej emerytury.",
+  srednia: "Obliczana na bazie: 19,52 % składki emerytalnej z wynagrodzenia brutto, waloryzacja roczna i kwartalna wg wskaźników MRPiPS.",
+  najwyzsza: "Przykład: 43 000 zł brutto, woj. śląskie, ponad 55 lat pracy, brak przerw chorobowych.",
 }
 
 const chartConfig = {
@@ -88,9 +89,13 @@ export function PensionChart() {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex-col items-start gap-4">
         <p className="text-xs text-muted-foreground text-center w-full">
           Obecna średnia stopa zastąpienia to ok. <span className="font-semibold text-foreground">40%</span> ostatniego wynagrodzenia.
+        </p>
+        <Separator />
+        <p className="text-xs text-muted-foreground text-center w-full">
+          Wskaźniki waloryzacji składek ogłasza MRPiPS w Monitorze Polskim – aktualizacja co 1 czerwca.
         </p>
       </CardFooter>
     </Card>

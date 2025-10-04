@@ -11,6 +11,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Info } from "lucide-react";
 
 export function PensionInput() {
   const [amount, setAmount] = useState("");
@@ -18,9 +27,29 @@ export function PensionInput() {
   return (
     <Card className="overflow-hidden shadow-lg semitransparent-panel">
       <CardHeader>
-        <CardTitle className="font-headline text-2xl md:text-3xl">
-          Jaką emeryturę chcesz otrzymywać?
-        </CardTitle>
+        <div className="flex items-center gap-2">
+          <CardTitle className="font-headline text-2xl md:text-3xl">
+            Jaką emeryturę chcesz otrzymywać?
+          </CardTitle>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground">
+                <Info className="h-5 w-5" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="font-headline text-2xl">Jak ZUS oblicza emeryturę?</DialogTitle>
+                <DialogDescription className="text-base pt-4 text-left">
+                  Twoja emerytura = (zwaloryzowany kapitał początkowy + zwaloryzowane składki I filaru + środki z subkonta/OFE) ÷ przewidywane dalsze trwanie życia (w miesiącach wg GUS).
+                </DialogDescription>
+              </DialogHeader>
+              <Button variant="link" asChild className="p-0 justify-start -mt-2">
+                  <Link href="#">Dowiedz się więcej o waloryzacji składek</Link>
+              </Button>
+            </DialogContent>
+          </Dialog>
+        </div>
         <CardDescription>
           Wpisz kwotę netto („na rękę”), którą chciałbyś otrzymywać co miesiąc na emeryturze, aby rozpocząć symulację.
         </CardDescription>
@@ -45,7 +74,7 @@ export function PensionInput() {
           </div>
           <Button
             size="lg"
-            className="rounded-2xl text-lg py-7 sm:py-4"
+            className="rounded-2xl text-lg py-7 sm:py-4 bg-accent text-accent-foreground hover:bg-accent/90"
             aria-label="Przejdź do szczegółowej symulacji emerytalnej"
             asChild
           >
