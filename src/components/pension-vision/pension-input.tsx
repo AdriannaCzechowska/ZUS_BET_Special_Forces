@@ -35,10 +35,10 @@ export function PensionInput() {
   };
 
   return (
-    <Card className="overflow-hidden shadow-lg semitransparent-panel">
+    <Card className="overflow-hidden shadow-none border">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <CardTitle className="font-headline text-2xl md:text-3xl">
+          <CardTitle className="font-bold text-2xl md:text-3xl">
             Jaką emeryturę chcesz otrzymywać?
           </CardTitle>
           <Dialog>
@@ -49,7 +49,7 @@ export function PensionInput() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle className="font-headline text-2xl">Jak ZUS oblicza emeryturę?</DialogTitle>
+                <DialogTitle className="font-bold text-2xl">Jak ZUS oblicza emeryturę?</DialogTitle>
                 <DialogDescription className="text-base pt-4 text-left">
                   Twoja emerytura = (zwaloryzowany kapitał początkowy + zwaloryzowane składki I filaru + środki z subkonta/OFE) ÷ przewidywane dalsze trwanie życia (w miesiącach wg GUS).
                 </DialogDescription>
@@ -75,7 +75,7 @@ export function PensionInput() {
               placeholder="np. 4500"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="pr-16 text-lg h-14 rounded-xl"
+              className="pr-16 text-lg h-14 rounded-md"
               aria-label="Docelowa kwota emerytury"
             />
             <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground font-semibold">
@@ -84,7 +84,7 @@ export function PensionInput() {
           </div>
           <Button
             size="lg"
-            className="rounded-2xl text-lg py-7 sm:py-4 bg-accent text-accent-foreground hover:bg-accent/90"
+            className="rounded-md text-lg py-7 sm:py-4 bg-accent text-black font-bold hover:bg-accent/90"
             aria-label="Przejdź do szczegółowej symulacji emerytalnej"
             onClick={handleGoToSimulation}
           >

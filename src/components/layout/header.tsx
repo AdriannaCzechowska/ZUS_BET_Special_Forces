@@ -1,14 +1,31 @@
 import { cn } from "@/lib/utils";
 
+const ZusLogo = () => (
+    <svg width="80" height="40" viewBox="0 0 105 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-10 w-auto">
+        <path d="M0.388,41.011c0,0,16.896-4.992,23.364-21.785C25.228,14.733,21.06,1.294,36.42,0.183c0,0-15.012,3.328-15.792,15.823   c-0.78,12.495,1.56,17.291-3.516,22.955C12.244,44.627,0.388,41.011,0.388,41.011z" fill="#008033"/>
+        <path d="M30.42,51.817c0,0,1.956-18.799-13.26-27.471C2.1,15.676-4.684,5.438,9.756,0.575c0,0,0.78,16.444,14.04,22.178   c13.26,5.733,10.548,22.955,10.548,22.955L30.42,51.817z" fill="#008033"/>
+        <path d="M54.216,41.011c0,0-16.896-4.992-23.364-21.785C29.376,14.733,33.54,1.294,18.18,0.183c0,0,15.012,3.328,15.792,15.823   c0.78,12.495-1.56,17.291,3.516,22.955C42.356,44.627,54.216,41.011,54.216,41.011z" fill="#008033"/>
+        <path d="M69.036,25.474c1.051,0,1.921-0.854,1.921-1.905s-0.87-1.906-1.921-1.906c-1.052,0-1.922,0.855-1.922,1.906   S67.984,25.474,69.036,25.474z M69.316,20.015h1.226v-1.126h-1.226V20.015z M69.036,26.479c-1.602,0-2.91-1.293-2.91-2.889h0.979   c0,1.066,0.879,1.93,1.931,1.93s1.931-0.864,1.931-1.93c0-1.065-0.879-1.93-1.931-1.93c-0.437,0-0.835,0.145-1.159,0.392   l-0.34-0.83c0.449-0.23,0.963-0.366,1.5-0.366c1.602,0,2.91,1.293,2.91,2.89C71.946,25.186,70.638,26.479,69.036,26.479z    M68.756,20.015h0.56V16.96h1.226v-0.979H68.756V20.015z" fill="#008033"/>
+        <path d="M76.956,21.849v4.63h-0.979v-4.593l-2.671,3.136v-0.81l2.94-3.41h0.71V21.849z M76.956,16.96h-3.924v-0.979h8.841v0.979h-3.938   v8.038h-0.979V16.96z" fill="#008033"/>
+        <path d="M89.706,24.168l-1.39-3.219h-2.18v3.219h-0.979V15.981h3.323c1.783,0,2.914,1.004,2.914,2.464   c0,1.218-0.78,2.072-1.979,2.332l1.597,3.391H89.706z M87.115,20.057h0.999c1.077,0,1.794-0.561,1.794-1.503   c0-0.905-0.66-1.467-1.745-1.467h-1.048V20.057z" fill="#008033"/>
+        <path d="M104.336,21.849v4.63h-0.979v-4.593l-2.671,3.136v-0.81l2.94-3.41h0.71V21.849z M104.336,16.96h-3.923v-0.979h8.84v0.979h-3.938   v8.038h-0.979V16.96z" fill="#008033"/>
+    </svg>
+);
+
 export function Header() {
   return (
-    <header className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-40">
-      <div className="container mx-auto px-4 h-16 sm:h-20 flex items-center justify-center relative">
-        <h1 className={cn(
-          "text-xl sm:text-2xl font-headline font-semibold"
-        )}>
-          Symulator Emerytalny
-        </h1>
+    <header className="bg-white text-black shadow-md sticky top-0 z-40 border-b-4 border-primary">
+      <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <ZusLogo />
+          <div>
+            <h1 className="text-sm font-semibold text-primary tracking-wider">ZAKŁAD UBEZPIECZEŃ SPOŁECZNYCH</h1>
+            <h2 className="text-2xl font-bold">Symulator Emerytalny</h2>
+          </div>
+        </div>
+        <button className="bg-accent text-black font-bold py-2 px-4 rounded-md text-sm hover:bg-accent/90">
+            Zaloguj do PUE/eZUS
+        </button>
       </div>
     </header>
   );

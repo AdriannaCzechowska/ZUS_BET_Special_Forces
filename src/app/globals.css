@@ -8,20 +8,20 @@ body {
 
 @layer base {
   :root {
-    --background: 210 40% 98%; /* Jasnoszary/Błękitny */
+    --background: 210 40% 98%; /* Jasnoszary/Błękitny - Not used, will be overridden */
     --foreground: 210 20% 20%;
     --card: 0 0% 100%;
     --card-foreground: 210 20% 20%;
     --popover: 0 0% 100%;
     --popover-foreground: 210 20% 20%;
-    --primary: 147 100% 25%;  /* #008033 - Ciemniejszy zielony dla lepszego kontrastu */
+    --primary: 147 100% 25%;  /* #008033 - ZUS Green */
     --primary-foreground: 0 0% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 210 10% 20%;
     --muted: 215 25% 90%;
     --muted-foreground: 215 15% 45%;
-    --accent: 33 100% 65%; /* #FFB34F */
-    --accent-foreground: 205 100% 22%; /* #00416E */
+    --accent: 33 100% 65%; /* #FFB34F - ZUS Orange */
+    --accent-foreground: 205 100% 22%; /* #00416E - Will be black for contrast */
     --destructive: 0 84% 60%; /* #F05E5E */
     --destructive-foreground: 0 0% 98%;
     --border: 214 32% 91%;
@@ -32,7 +32,7 @@ body {
     --chart-3: 33 100% 65%; /* #FFB34F */
     --chart-4: 0 84% 60%; /* #F05E5E */
     --chart-5: 215 25% 80%; /* #BEC3CE */
-    --radius: 0.5rem;
+    --radius: 0.3rem; /* Reduced border radius for a more formal look */
   }
   .dark {
     --background: 205 40% 10%;
@@ -48,7 +48,7 @@ body {
     --muted: 215 25% 25%;
     --muted-foreground: 215 15% 65%;
     --accent: 33 100% 65%;
-    --accent-foreground: 205 100% 22%;
+    --accent-foreground: 0 0% 0%; /* Black text on accent */
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
     --border: 210 40% 20%;
@@ -67,12 +67,13 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-white text-black; /* Set body background to white and text to black */
+    font-family: Arial, sans-serif; /* Set font to Arial */
   }
 }
 
 @layer components {
   .semitransparent-panel {
-    @apply bg-card/80 backdrop-blur-sm;
+    @apply bg-card/100; /* Remove transparency */
   }
 }
