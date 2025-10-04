@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Header } from '@/components/layout/header';
@@ -12,7 +12,7 @@ import { SimulationResults } from '@/components/pension-vision/simulation-result
 import { useToast } from '@/hooks/use-toast';
 
 
-export default function ResultsPage() {
+function WynikiPageContent() {
   const { toast } = useToast();
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -99,4 +99,12 @@ export default function ResultsPage() {
       <Footer />
     </div>
   );
+}
+
+export default function WynikiPage() {
+    return (
+        <Suspense fallback={<div>Ładowanie...</div>}>
+            <WynikiPageContent />
+        </Suspense>
+    )
 }

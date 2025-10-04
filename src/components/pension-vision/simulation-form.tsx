@@ -3,7 +3,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { addDocumentNonBlocking, useFirebase } from '@/firebase';
+import { collection, serverTimestamp } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +27,7 @@ const currentYear = new Date().getFullYear();
 
 const formSchema = z.object({
   age: z.coerce.number().min(18, 'Wiek musi być większy niż 18 lat.').max(65, 'Wiek nie może przekraczać 65 lat.'),
-  gender: z.enum(['female', 'male'], {
+  gender: z.enum(['K', 'M'], {
     required_error: 'Musisz wybrać płeć.',
   }),
   grossSalary: z.coerce.number().min(0, 'Wynagrodzenie nie może być ujemne.'),
@@ -35,17 +37,21 @@ const formSchema = z.object({
     .max(currentYear, `Rok rozpoczęcia pracy nie może być w przyszłości.`),
   endYear: z.coerce.number().min(currentYear, 'Planowany rok zakończenia pracy nie może być w przeszłości.'),
   zusBalance: z.coerce.number().min(0, 'Środki nie mogą być ujemne.').optional(),
+  initialCapital: z.coerce.number().min(0, 'Kapitał nie może być ujemny.').optional(),
+  ofeBalance: z.coerce.number().min(0, 'Środki nie mogą być ujemne.').optional(),
   includeL4: z.boolean().default(false).optional(),
+  workLonger: z.boolean().default(false).optional(),
+  includeOFE: z.boolean().default(true).optional(),
 }).refine(data => data.endYear > data.startYear, {
     message: "Rok zakończenia pracy musi być późniejszy niż rok rozpoczęcia.",
     path: ["endYear"],
 }).refine(data => {
-    const retirementAge = data.gender === 'female' ? 60 : 65;
+    const retirementAge = data.gender === 'K' ? 60 : 65;
     const retirementYearByAge = (currentYear - data.age) + retirementAge;
     // This is a simplified validation. A more precise one would use birth date.
     return data.endYear >= retirementYearByAge;
 }, data => ({
-    message: `Minimalny wiek emerytalny dla Twojej płci to ${data.gender === 'female' ? 60 : 65} lat.`,
+    message: `Minimalny wiek emerytalny dla Twojej płci to ${data.gender === 'K' ? 60 : 65} lat.`,
     path: ["endYear"],
 }));
 
@@ -53,28 +59,83 @@ const formSchema = z.object({
 export function SimulationForm() {
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { firestore, user } = useFirebase();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       age: 25,
-      gender: 'female',
+      gender: 'K',
       grossSalary: 5000,
       startYear: currentYear - 3,
       endYear: currentYear + 35,
       includeL4: false,
+      workLonger: false,
+      includeOFE: true,
+      zusBalance: 150000,
+      initialCapital: 30000,
+      ofeBalance: 20000,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: "Symulacja zakończona!",
-      description: "Twoje wyniki są gotowe. Przekierowuję...",
-    });
-    // Here you would typically pass the data to the results page
-    // For now, we just navigate there
-    router.push('/wyniki');
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!user || !firestore) {
+      toast({
+        variant: "destructive",
+        title: "Błąd",
+        description: "Nie można zapisać symulacji. Użytkownik niezalogowany.",
+      });
+      return;
+    }
+    
+    // Mock output data, in a real app this would be calculated
+    const prognozowanaEmerytura = values.grossSalary * 0.4;
+    const kwotaUrealniona = prognozowanaEmerytura * 0.8;
+    const przewidywanaStopaZastapienia = 0.38;
+
+    const prognosisData = {
+      userId: user.uid,
+      timestamp: serverTimestamp(),
+      kwotaZwaloryzowanychSkladek: values.zusBalance || 0,
+      zwaloryzowanyKapitalPoczatkowy: values.initialCapital || 0,
+      srodkiOFE: values.ofeBalance || 0,
+      rokPrzechDzieNaEmeryture: values.endYear,
+      wiek: values.age,
+      plec: values.gender,
+      scenariuszPracaDluzej: values.workLonger || false,
+      prognozowanaEmerytura,
+      kwotaUrealniona,
+      przewidywanaStopaZastapienia,
+      podwyzszonyWiek: null, // Placeholder
+      uwzglednijOFE: values.includeOFE || false,
+    };
+    
+    try {
+      const prognosesCol = collection(firestore, `users/${user.uid}/emeryturaPrognoses`);
+      const docRef = await addDocumentNonBlocking(prognosesCol, prognosisData);
+      
+      toast({
+        title: "Symulacja zapisana!",
+        description: "Twoje wyniki są gotowe. Przekierowuję...",
+      });
+
+      const params = new URLSearchParams();
+      params.set('id', docRef.id);
+      params.set('realPension', prognozowanaEmerytura.toString());
+      params.set('realisticPension', kwotaUrealniona.toString());
+      params.set('replacementRate', (przewidywanaStopaZastapienia * 100).toString());
+      params.set('pensionWithoutL4', (prognozowanaEmerytura * 1.05).toString()); // Mock value
+      const expectedPension = searchParams.get('expectedPension');
+      if (expectedPension) {
+          params.set('expectedPension', expectedPension);
+      }
+
+      router.push(`/wyniki?${params.toString()}`);
+
+    } catch (e) {
+      // Error is handled by the non-blocking update function via the global error emitter
+    }
   }
 
   return (
@@ -116,13 +177,13 @@ export function SimulationForm() {
                       >
                         <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="female" />
+                            <RadioGroupItem value="K" />
                           </FormControl>
                           <FormLabel className="font-normal">Kobieta</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="male" />
+                            <RadioGroupItem value="M" />
                           </FormControl>
                           <FormLabel className="font-normal">Mężczyzna</FormLabel>
                         </FormItem>
@@ -150,7 +211,7 @@ export function SimulationForm() {
                 name="zusBalance"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Środki na koncie i subkoncie ZUS (opcjonalnie)</FormLabel>
+                    <FormLabel>Zwaloryzowane składki I filaru (opcjonalnie)</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="np. 150000" {...field} />
                     </FormControl>
@@ -158,6 +219,30 @@ export function SimulationForm() {
                         Jeśli nie znasz tej kwoty, pozostaw pole puste.
                     </FormDescription>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="initialCapital"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Zwaloryzowany kapitał początkowy (opcjonalnie)</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="np. 30000" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="ofeBalance"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Środki z OFE / subkonta (opcjonalnie)</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="np. 20000" {...field} />
+                    </FormControl>
                   </FormItem>
                 )}
               />
@@ -191,28 +276,52 @@ export function SimulationForm() {
                 )}
               />
             </div>
-             <FormField
-                control={form.control}
-                name="includeL4"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>
-                        Uwzględnij potencjalne zwolnienia L4
-                      </FormLabel>
-                      <FormDescription>
-                        Zaznacz, jeśli symulacja ma uwzględnić statystyczną liczbę dni na zwolnieniu lekarskim.
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
+            <div className="space-y-4">
+              <FormField
+                  control={form.control}
+                  name="includeL4"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          Uwzględnij potencjalne zwolnienia L4
+                        </FormLabel>
+                        <FormDescription>
+                          Zaznacz, jeśli symulacja ma uwzględnić statystyczną liczbę dni na zwolnieniu lekarskim.
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="workLonger"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          Scenariusz "Pracuj dłużej"
+                        </FormLabel>
+                        <FormDescription>
+                          Zaznacz, aby zasymulować pracę po osiągnięciu wieku emerytalnego.
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+            </div>
             <Button type="submit" size="lg" className="w-full">Oblicz symulację</Button>
           </form>
         </Form>

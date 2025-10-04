@@ -1,12 +1,22 @@
-import type {Metadata} from 'next';
+'use client';
+import { useEffect } from 'react';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
-import { FirebaseClientProvider } from '@/firebase';
+import { FirebaseClientProvider, useAuth } from '@/firebase';
+import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
 
-export const metadata: Metadata = {
-  title: 'PensionVision',
-  description: 'Symulator Emerytalny',
-};
+function AuthHandler({ children }: { children: React.ReactNode }) {
+  const auth = useAuth();
+  useEffect(() => {
+    // Initiate anonymous sign-in as soon as the Auth service is available.
+    if (auth) {
+      initiateAnonymousSignIn(auth);
+    }
+  }, [auth]);
+
+  return <>{children}</>;
+}
+
 
 export default function RootLayout({
   children,
@@ -23,7 +33,9 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <FirebaseClientProvider>
-          {children}
+          <AuthHandler>
+            {children}
+          </AuthHandler>
         </FirebaseClientProvider>
         <Toaster />
       </body>

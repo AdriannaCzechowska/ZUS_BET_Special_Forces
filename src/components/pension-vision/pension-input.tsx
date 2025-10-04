@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,9 +20,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Info } from "lucide-react";
+import Link from "next/link";
 
 export function PensionInput() {
   const [amount, setAmount] = useState("");
+  const router = useRouter();
+
+  const handleGoToSimulation = () => {
+    const params = new URLSearchParams();
+    if (amount) {
+      params.set('expectedPension', amount);
+    }
+    router.push(`/symulacja?${params.toString()}`);
+  };
 
   return (
     <Card className="overflow-hidden shadow-lg semitransparent-panel">
@@ -76,9 +86,9 @@ export function PensionInput() {
             size="lg"
             className="rounded-2xl text-lg py-7 sm:py-4 bg-accent text-accent-foreground hover:bg-accent/90"
             aria-label="Przejdź do szczegółowej symulacji emerytalnej"
-            asChild
+            onClick={handleGoToSimulation}
           >
-            <Link href="/symulacja">Przejdź do symulacji</Link>
+            Przejdź do symulacji
           </Button>
         </div>
       </CardContent>
