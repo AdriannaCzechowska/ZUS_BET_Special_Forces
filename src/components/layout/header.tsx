@@ -1,12 +1,9 @@
 import { cn } from "@/lib/utils";
 import { ChevronDown, Search } from "lucide-react";
+import Image from 'next/image';
 
 const ZusLogo = () => (
-    <svg width="80" height="40" viewBox="0 0 105 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-12 w-auto">
-        <path d="M0.388,41.011c0,0,16.896-4.992,23.364-21.785C25.228,14.733,21.06,1.294,36.42,0.183c0,0-15.012,3.328-15.792,15.823   c-0.78,12.495,1.56,17.291-3.516,22.955C12.244,44.627,0.388,41.011,0.388,41.011z" fill="#008033"/>
-        <path d="M30.42,51.817c0,0,1.956-18.799-13.26-27.471C2.1,15.676-4.684,5.438,9.756,0.575c0,0,0.78,16.444,14.04,22.178   c13.26,5.733,10.548,22.955,10.548,22.955L30.42,51.817z" fill="#008033"/>
-        <path d="M54.216,41.011c0,0-16.896-4.992-23.364-21.785C29.376,14.733,33.54,1.294,18.18,0.183c0,0,15.012,3.328,15.792,15.823   c0.78,12.495-1.56,17.291,3.516,22.955C42.356,44.627,54.216,41.011,54.216,41.011z" fill="#008033"/>
-    </svg>
+    <Image src="/logo_zus_darker_with_text.svg" alt="Zakład Ubezpieczeń Społecznych" width={180} height={40} className="h-12 w-auto" />
 );
 
 const HearingIcon = () => (
@@ -55,9 +52,6 @@ export function Header() {
         <div className="h-20 flex items-center justify-between">
             <div className="flex items-center gap-4">
                 <ZusLogo />
-                <div className="border-l pl-4">
-                    <h1 className="text-sm font-semibold text-primary tracking-wider leading-tight">ZAKŁAD<br />UBEZPIECZEŃ<br />SPOŁECZNYCH</h1>
-                </div>
             </div>
 
             <div className="flex items-center gap-4 text-sm">
