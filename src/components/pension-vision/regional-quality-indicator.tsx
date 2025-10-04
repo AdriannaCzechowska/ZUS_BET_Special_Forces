@@ -136,7 +136,7 @@ export function RegionalQualityIndicator() {
                    <p className="text-lg">
                         Twoja prognozowana emerytura realna: <span className="font-bold">{realisticPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</span>
                     </p>
-                    <p className="text-muted-foreground">
+                    <div className="text-muted-foreground">
                         Lokalny koszyk seniora w powiecie {result.county}: <span className="font-bold text-foreground">{result.basket_cost.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</span>
                         <TooltipProvider>
                             <Tooltip>
@@ -150,7 +150,7 @@ export function RegionalQualityIndicator() {
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
-                    </p>
+                    </div>
 
                     <p className={cn(
                         "font-semibold text-xl",
