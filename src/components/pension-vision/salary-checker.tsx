@@ -105,7 +105,7 @@ export function SalaryChecker() {
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Wybierz stanowisko..." />
-                        </SelectTrigger>
+                        </Trigger>
                       </FormControl>
                       <SelectContent>
                         {positions.map(pos => (

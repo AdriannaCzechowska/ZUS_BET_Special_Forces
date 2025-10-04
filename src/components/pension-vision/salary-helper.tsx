@@ -27,7 +27,7 @@ interface SalaryResult {
 
 interface SalaryHelperProps {
   // eslint-disable-next-line no-unused-vars
-  onSalarySelect: (salary: number, options?: { shouldValidate?: boolean }) => void;
+  onSalarySelect: (salary: number) => void;
 }
 
 export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
@@ -43,7 +43,7 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
   });
 
   const handleQuickSet = (salary: number) => {
-    onSalarySelect(salary, { shouldValidate: false });
+    onSalarySelect(salary);
   };
 
   const onSubmit = async (data: FormData) => {
@@ -56,7 +56,7 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
         throw new Error('Nie udało się pobrać danych. Spróbuj ponownie.');
       }
       const salaryResult: SalaryResult = await response.json();
-      onSalarySelect(salaryResult.salary, { shouldValidate: true });
+      onSalarySelect(salaryResult.salary);
     } catch (e: any) {
       setError(e.message || 'Wystąpił nieoczekiwany błąd.');
     } finally {
@@ -65,15 +65,10 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
   };
 
   return (
-    <Card className="bg-muted/40 border-dashed">
-      <CardContent className="p-4 space-y-4">
-        <div className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-accent" />
-            <h4 className="font-semibold text-sm">Szybkie uzupełnienie</h4>
-        </div>
+    <div className="space-y-2">
         <div className="flex flex-wrap gap-2">
             <Button size="sm" variant="outline" onClick={() => handleQuickSet(MINIMUM_WAGE)} type="button">
-                Płaca minimalna
+                Minimalna krajowa
             </Button>
             <Button size="sm" variant="outline" onClick={() => handleQuickSet(NATIONAL_AVERAGE_SALARY)} type="button">
                 Średnia krajowa
@@ -81,13 +76,13 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
         </div>
         
         <Form {...form}>
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <FormField
                 control={form.control}
                 name="region"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex-1">
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-9">
@@ -110,7 +105,7 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
                 control={form.control}
                 name="position"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex-1">
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-9">
@@ -132,12 +127,11 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
             </div>
             <Button type="button" onClick={form.handleSubmit(onSubmit)} disabled={isLoading} size="sm" className="w-full">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Wstaw średnią dla stanowiska
+              Użyj średniej dla stanowiska
             </Button>
           </div>
         </Form>
         {error && <p className="text-xs text-destructive mt-2">{error}</p>}
-      </CardContent>
-    </Card>
+      </div>
   );
 }
