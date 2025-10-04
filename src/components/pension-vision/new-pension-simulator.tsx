@@ -95,18 +95,16 @@ export function NewPensionSimulator() {
   }, [age, gender]);
 
   const birthYear = useMemo(() => currentYear - age, [age]);
-
-  const careerPeriodsForVisualizer = useMemo(() => {
-    return leavePeriods.map(p => {
-        const startDate = new Date(p.startYear, p.startMonth);
-        const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + p.durationMonths, 0); // 0 makes it the last day of previous month
-        return {
-            type: p.type as any, // Cast to fit visualizer types
-            start: { year: p.startYear, month: p.startMonth },
-            end: { year: endDate.getFullYear(), month: endDate.getMonth() }
-        }
-    })
-  }, [leavePeriods]);
+  
+  const careerPeriodsForVisualizer = leavePeriods.map(p => {
+    const startDate = new Date(p.startYear, p.startMonth);
+    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + p.durationMonths, 0); // 0 makes it the last day of previous month
+    return {
+        type: p.type as any, // Cast to fit visualizer types
+        start: { year: p.startYear, month: p.startMonth },
+        end: { year: endDate.getFullYear(), month: endDate.getMonth() }
+    }
+  });
 
 
   const calculatedPension = useMemo(() => {
@@ -250,5 +248,3 @@ export function NewPensionSimulator() {
     </div>
   );
 }
-
-    

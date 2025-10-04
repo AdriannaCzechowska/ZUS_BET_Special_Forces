@@ -2,13 +2,17 @@
 import { cn } from "@/lib/utils";
 import { ChevronDown, Search } from "lucide-react";
 import Image from 'next/image';
+import { useState } from 'react';
+import { useAuthContext } from '@/context/AuthContext';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { LoginModal } from '@/components/auth/LoginModal';
 
 const ZusLogo = () => (
     <Image src="/logo_zus_darker_with_text.svg" alt="Zakład Ubezpieczeń Społecznych" width={180} height={40} className="h-12 w-auto" />
 );
 
 const HearingIcon = () => (
-    <img src="/gluchy.png" alt="Hearing" className="h-10 w-10 object-contain"/>
+    <img src="/gluchy.png" alt='Hearing' className="h-10 w-10 object-contain"/>
 )
 
 const WheelchairIcon = () => (
@@ -24,6 +28,9 @@ const EUFlagIcon = () => (
 )
 
 export function Header() {
+  const { isAdmin, logout } = useAuthContext();
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
   return (
     <header className="bg-white text-black sticky top-0 z-40 border-b">
       <div className="container mx-auto px-4">
@@ -34,6 +41,7 @@ export function Header() {
 
             <div className="flex items-center gap-4 text-sm">
                 <a href="#" className="hover:underline">Kontakt</a>
+                {isAdmin && <span className="text-xs font-bold text-primary">Tryb admina</span>}
                 <div className="flex items-center gap-1">
                     <span>PL</span>
                     <ChevronDown className="h-4 w-4"/>
@@ -45,7 +53,23 @@ export function Header() {
                 </div>
                 <div className="flex items-center gap-2 border-l pl-4">
                     <a href="#" className="border border-gray-400 rounded-sm px-3 py-1.5 hover:bg-gray-100">Zarejestruj w PUE/eZUS</a>
-                    <a href="#" className="bg-accent text-black font-bold border border-accent rounded-sm px-3 py-1.5 hover:bg-accent/90">Zaloguj do PUE/eZUS</a>
+                     {isAdmin ? (
+                        <button
+                            onClick={logout}
+                            className="bg-destructive text-white font-bold border border-destructive rounded-sm px-3 py-1.5 hover:bg-destructive/90"
+                        >
+                            Wyloguj
+                        </button>
+                    ) : (
+                        <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
+                            <DialogTrigger asChild>
+                                <button className="bg-accent text-black font-bold border border-accent rounded-sm px-3 py-1.5 hover:bg-accent/90">
+                                    Zaloguj do PUE/eZUS
+                                </button>
+                            </DialogTrigger>
+                            <LoginModal setOpen={setIsLoginOpen} />
+                        </Dialog>
+                    )}
                 </div>
                 <div className="flex items-center gap-4 border-l pl-4">
                     <a href="#" className="flex flex-col items-center text-primary">
@@ -78,6 +102,3 @@ export function Header() {
     </header>
   );
 }
-
-    
-

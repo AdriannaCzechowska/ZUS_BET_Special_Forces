@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useRef } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { stringify }from 'csv-stringify/browser/esm/sync';
@@ -24,12 +24,14 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { SideNav } from '@/components/layout/side-nav';
 import { useSearchParams } from 'next/navigation';
 import { ParenthoodImpact } from '@/components/pension-vision/ParenthoodImpact';
+import { useAuthContext } from '@/context/AuthContext';
 
 function WynikiPageContent() {
   const { toast } = useToast();
   const resultsRef = useRef<HTMLDivElement>(null);
   const postcodeRef = useRef<string>('');
   const searchParams = useSearchParams();
+  const { isAdmin } = useAuthContext();
 
   const handleDownloadReport = async () => {
     toast({
@@ -168,9 +170,11 @@ function WynikiPageContent() {
                             <DropdownMenuItem onClick={handleDownloadReport}>
                                 Pobierz jako PDF
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleDownloadCsv}>
-                                Pobierz jako CSV (Excel)
-                            </DropdownMenuItem>
+                            {isAdmin && (
+                                <DropdownMenuItem onClick={handleDownloadCsv}>
+                                    Pobierz jako CSV (Excel)
+                                </DropdownMenuItem>
+                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                  </SideNav>
