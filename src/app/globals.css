@@ -62,14 +62,11 @@
   * {
     @apply border-border;
   }
-  body, h1, h2, h3, h4, h5, h6 {
-    font-family: "Lato Regular", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  body {
+    @apply bg-white font-body;
     font-size: .875em;
     line-height: 1.2;
     color: #000;
-  }
-  body {
-    @apply bg-white;
   }
 }
 
