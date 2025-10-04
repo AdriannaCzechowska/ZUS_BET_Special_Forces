@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils';
 import { calculatePension } from '@/lib/pension-calculator';
 import { SalaryHelper } from './salary-helper';
 import { CareerMonthsVisualizer } from './career-months-visualizer';
+import { HelpCircle } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 type PeriodType = 'unpaid_leave' | 'maternity_leave' | 'parental_leave' | 'sick_leave' | 'childcare_leave' | 'unemployed' | 'foreign_work_no_contrib';
 
@@ -18,7 +20,7 @@ const periodConfig: { type: PeriodType; label: string; defaultDuration: number, 
     { type: 'maternity_leave', label: 'Urlop macierzyński', defaultDuration: 12, maxDuration: 12, description: "Składki finansowane z budżetu państwa, ale od niższej podstawy (zasiłek)." },
     { type: 'parental_leave', label: 'Urlop rodzicielski', defaultDuration: 12, maxDuration: 36, description: "Składki opłacane przez budżet państwa, często od niższej podstawy niż pensja." },
     { type: 'childcare_leave', label: 'Urlop wychowawczy', defaultDuration: 24, maxDuration: 36, description: "Składki od minimalnej podstawy, co znacząco obniża przyszłą emeryturę." },
-    { type: 'sick_leave', label: 'Zwolnienie L4', defaultDuration: 6, maxDuration: 24, description: "W trakcie L4 nie są odprowadzane składki emerytalne, co zmniejsza kapitał." },
+    { type: 'sick_leave', label: 'Zwolnienie chorobowe', defaultDuration: 6, maxDuration: 24, description: "W trakcie zwolnienia nie są odprowadzane składki emerytalne, co zmniejsza kapitał." },
     { type: 'unpaid_leave', label: 'Urlop bezpłatny', defaultDuration: 3, maxDuration: 24, description: "Brak pracy i brak składek emerytalnych – dziura w kapitale." },
     { type: 'unemployed', label: 'Bezrobocie', defaultDuration: 6, maxDuration: 24, description: "Okres bez odprowadzanych składek emerytalnych, co obniża świadczenie." },
     { type: 'foreign_work_no_contrib', label: 'Praca za granicą (bez składek PL)', defaultDuration: 12, maxDuration: 60, description: "Okres bez składek w polskim systemie. Może dawać prawo do emerytury z innego kraju." },
@@ -186,6 +188,18 @@ export function NewPensionSimulator() {
                          <div className="flex items-center justify-between">
                             <Label htmlFor={`switch-${period.type}`} className="flex items-center gap-2 cursor-pointer text-sm font-medium">
                                 <span>{period.label}</span>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button type="button" variant="ghost" size="icon" className="h-4 w-4 ml-1 cursor-help">
+                                        <HelpCircle className="h-4 w-4" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p className="max-w-xs">{period.description}</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
                             </Label>
                             <Switch 
                                 id={`switch-${period.type}`}
@@ -195,7 +209,6 @@ export function NewPensionSimulator() {
                         </div>
                         {leavePeriods[period.type].enabled && (
                             <div className='space-y-4 pt-2'>
-                                <p className="text-xs text-muted-foreground">{period.description}</p>
                                 <div className='space-y-2'>
                                     <div className='flex justify-between items-center'>
                                             <Label className='text-xs'>Wiek rozpoczęcia:</Label>
