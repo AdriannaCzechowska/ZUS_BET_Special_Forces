@@ -1,3 +1,4 @@
+'use client'
 import { cn } from "@/lib/utils";
 import { ChevronDown, Search } from "lucide-react";
 import Image from 'next/image';
@@ -7,7 +8,7 @@ const ZusLogo = () => (
 );
 
 const HearingIcon = () => (
-    <img src="/gluchy.png" alt = "Hearing" className = "h-5 w-5"/>
+    <img src="/gluchy.png" alt='Hearing' className="h-auto w-auto"/>
 )
 
 const WheelchairIcon = () => (
@@ -98,3 +99,5 @@ export function Header() {
     </header>
   );
 }
+
+    
