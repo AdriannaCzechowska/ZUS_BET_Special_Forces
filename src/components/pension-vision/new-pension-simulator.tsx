@@ -121,7 +121,7 @@ export function NewPensionSimulator() {
       });
 
 
-  const calculatedPension = useMemo(() => {
+  const pensionResult = useMemo(() => {
     const totalLeaveMonths = Object.values(leavePeriods)
         .filter(p => p.enabled)
         .reduce((sum, period) => sum + period.durationMonths, 0);
@@ -129,7 +129,7 @@ export function NewPensionSimulator() {
     const retirementAge = retireYear - birthYear;
     const extraWorkYears = Math.max(0, retirementAge - (gender === 'K' ? 60 : 65));
 
-    const result = calculatePension({
+    return calculatePension({
       wiek: age,
       plec: gender,
       pensjaBrutto: salary,
@@ -139,10 +139,9 @@ export function NewPensionSimulator() {
       przerwyWLacznychMiesiacach: totalLeaveMonths,
       wariant: wariant
     });
-    return result.prognozowanaEmerytura;
   }, [age, gender, salary, startWorkYear, retireYear, leavePeriods, birthYear, wariant]);
 
-  const isGoalAchieved = calculatedPension >= desiredPension;
+  const isGoalAchieved = pensionResult.kwotaUrealniona >= desiredPension;
 
   const updateLeavePeriod = (type: PeriodType, field: 'enabled' | 'durationMonths' | 'startAge', value: boolean | number) => {
      setLeavePeriods(produce(draft => {
@@ -154,6 +153,11 @@ export function NewPensionSimulator() {
     <div className="space-y-8">
        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <div className="space-y-8">
+            <FormSection title="Jaką emeryturę chciałbyś mieć w przyszłości?">
+                 <FormField label="Oczekiwana miesięczna emerytura (netto PLN)">
+                    <Input type="number" value={desiredPension} onChange={e => setDesiredPension(Number(e.target.value))} />
+                </FormField>
+            </FormSection>
            
             <FormSection title="Podstawowe informacje">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -182,7 +186,7 @@ export function NewPensionSimulator() {
                 </div>
             </FormSection>
 
-             <FormSection title="Forma zatrudnienia">
+            <FormSection title="Forma zatrudnienia">
                 <RadioGroup value={employmentType} onValueChange={(v) => setEmploymentType(v as EmploymentType)} className="grid grid-cols-2 gap-4">
                   <div>
                     <RadioGroupItem value="uop" id="uop" className="peer sr-only" />
@@ -216,7 +220,7 @@ export function NewPensionSimulator() {
             
             <FormSection title="Twoja ścieżka kariery">
                 <FormSlider label="Kiedy zacząłeś pracę" value={startWorkYear} min={birthYear + 16} max={currentYear} step={1} onValueChange={setStartWorkYear} unit="" />
-                <FormSlider label="Kiedy planujesz skończyć pracę" value={retireYear} min={minRetireYear} max={birthYear + 100} step={1} onValueChange={setRetireYear} unit="" />
+                <FormSlider label="Kiedy planujesz skończyć pracę" value={retireYear} min={minRetireYear} max={birthYear + 75} step={1} onValueChange={setRetireYear} unit="" />
             </FormSection>
         </div>
         
@@ -280,7 +284,7 @@ export function NewPensionSimulator() {
                     </div>
                 ))}
              </div>
-             <div className="mt-4">
+            <div className="mt-4">
                 <h3 className="font-headline text-xl text-primary mb-4">Przebieg kariery zawodowej</h3>
                 <CareerMonthsVisualizer 
                     periods={careerPeriodsForVisualizer}
@@ -303,7 +307,10 @@ export function NewPensionSimulator() {
       <div className="text-center p-8 border-2 rounded-lg mt-8" style={{ borderColor: isGoalAchieved ? '#22c55e' : '#ef4444' }}>
         <h3 className="text-lg text-muted-foreground">Twoja szacowana wartość emerytury wynosi:</h3>
         <p className={cn('text-5xl font-bold font-headline my-2', isGoalAchieved ? 'text-green-500' : 'text-red-500')}>
-          {calculatedPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
+          {pensionResult.kwotaUrealniona.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          (Wartość urealniona. Rzeczywista kwota w roku emerytury: {pensionResult.prognozowanaEmerytura.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })})
         </p>
       </div>
     </div>
