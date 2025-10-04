@@ -17,13 +17,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 type PeriodType = 'unpaid_leave' | 'maternity_leave' | 'parental_leave' | 'sick_leave' | 'childcare_leave' | 'unemployed' | 'foreign_work_no_contrib';
 
 const periodConfig: { type: PeriodType; label: string; defaultDuration: number, maxDuration: number, description: string }[] = [
-    { type: 'maternity_leave', label: 'Urlop macierzyński', defaultDuration: 12, maxDuration: 12, description: "Składki finansowane z budżetu państwa, ale od niższej podstawy (zasiłek)." },
-    { type: 'parental_leave', label: 'Urlop rodzicielski', defaultDuration: 12, maxDuration: 36, description: "Składki opłacane przez budżet państwa, często od niższej podstawy niż pensja." },
-    { type: 'childcare_leave', label: 'Urlop wychowawczy', defaultDuration: 24, maxDuration: 36, description: "Składki od minimalnej podstawy, co znacząco obniża przyszłą emeryturę." },
-    { type: 'sick_leave', label: 'Zwolnienie chorobowe', defaultDuration: 6, maxDuration: 24, description: "W trakcie zwolnienia nie są odprowadzane składki emerytalne, co zmniejsza kapitał." },
-    { type: 'unpaid_leave', label: 'Urlop bezpłatny', defaultDuration: 3, maxDuration: 24, description: "Brak pracy i brak składek emerytalnych – dziura w kapitale." },
-    { type: 'unemployed', label: 'Bezrobocie', defaultDuration: 6, maxDuration: 24, description: "Okres bez odprowadzanych składek emerytalnych, co obniża świadczenie." },
-    { type: 'foreign_work_no_contrib', label: 'Praca za granicą (bez składek PL)', defaultDuration: 12, maxDuration: 60, description: "Okres bez składek w polskim systemie. Może dawać prawo do emerytury z innego kraju." },
+    { type: 'maternity_leave', label: 'Urlop macierzyński', defaultDuration: 12, maxDuration: 12, description: "W okresie urlopu macierzyńskiego składki emerytalne są finansowane z budżetu państwa i naliczane od zasiłku macierzyńskiego, który zazwyczaj jest niższy od wynagrodzenia. Powoduje to wolniejszy przyrost kapitału emerytalnego niż podczas pracy na etacie z pełną pensją." },
+    { type: 'parental_leave', label: 'Urlop rodzicielski', defaultDuration: 12, maxDuration: 36, description: "W czasie urlopu rodzicielskiego składki są również opłacane z budżetu państwa i obliczane od zasiłku rodzicielskiego. Zazwyczaj jest on niższy od wynagrodzenia, co skutkuje mniejszymi wpłatami na konto emerytalne." },
+    { type: 'childcare_leave', label: 'Urlop wychowawczy', defaultDuration: 24, maxDuration: 36, description: "Podczas urlopu wychowawczego składki emerytalne są finansowane z budżetu państwa, lecz naliczane od minimalnej podstawy, znacznie niższej od typowego wynagrodzenia. Skutkuje to wolniejszym wzrostem kapitału emerytalnego." },
+    { type: 'sick_leave', label: 'Zwolnienie chorobowe', defaultDuration: 6, maxDuration: 24, description: "W okresie zwolnienia chorobowego składki emerytalne naliczane są od zasiłku chorobowego, który zwykle wynosi 80% wynagrodzenia. Oznacza to niższe wpłaty na konto emerytalne niż przy pełnej pensji." },
+    { type: 'unpaid_leave', label: 'Urlop bezpłatny', defaultDuration: 3, maxDuration: 24, description: "Podczas urlopu bezpłatnego składki emerytalne nie są odprowadzane. Okres ten nie powiększa kapitału emerytalnego." },
+    { type: 'unemployed', label: 'Bezrobocie', defaultDuration: 6, maxDuration: 24, description: "W czasie bezrobocia, gdy nie przysługuje zasiłek, składki emerytalne nie są odprowadzane i okres ten nie wpływa na wysokość przyszłej emerytury. Jeśli przysługuje zasiłek dla bezrobotnych, składki są odprowadzane, lecz naliczane od jego wysokości, co skutkuje niższymi wpłatami." },
+    { type: 'foreign_work_no_contrib', label: 'Praca za granicą (bez składek w Polsce)', defaultDuration: 12, maxDuration: 60, description: "W przypadku pracy za granicą bez odprowadzania składek do polskiego systemu ubezpieczeń społecznych kapitał emerytalny w Polsce nie jest powiększany. Emerytura w Polsce może być wówczas niższa, chyba że okres zagranicznego zatrudnienia zostanie rozliczony na podstawie umów międzynarodowych." },
 ];
 
 const FormSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
@@ -241,6 +241,7 @@ export function NewPensionSimulator() {
                 ))}
              </div>
              <div className="mt-4">
+                <h3 className="font-headline text-xl text-primary mb-4">Przebieg kariery zawodowej</h3>
                 <CareerMonthsVisualizer 
                     periods={careerPeriodsForVisualizer}
                     startYear={startWorkYear} 
