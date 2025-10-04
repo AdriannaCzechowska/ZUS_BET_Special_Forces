@@ -10,6 +10,7 @@ import { getRegionalData, RegionalData } from '@/lib/regional-data';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
+import { Separator } from '../ui/separator';
 
 function Gauge({ value }: { value: number }) {
     const percentage = Math.min(Math.max(value * 100, 0), 150);
@@ -71,7 +72,7 @@ export function RegionalQualityIndicator() {
 
         const basket_cost_county = data.avgPension * 1.05;
         const ratio = realisticPension / basket_cost_county;
-        let status = 'red';
+        let status = 'green';
         if (ratio >= 1.0) {
             status = 'green';
         } else if (ratio >= 0.8) {
@@ -131,29 +132,34 @@ export function RegionalQualityIndicator() {
         {result && (
             <div className="text-center pt-4 space-y-4">
                 <Gauge value={result.ratio} />
-
-                <div className="max-w-md mx-auto space-y-2">
-                   <p className="text-lg">
-                        Twoja prognozowana emerytura realna: <span className="font-bold">{realisticPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</span>
-                    </p>
-                    <div className="text-muted-foreground">
-                        Lokalny koszyk seniora w powiecie {result.county}: <span className="font-bold text-foreground">{result.basket_cost.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</span>
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-6 w-6 ml-1 inline-flex items-center justify-center">
-                                        <Info className="h-4 w-4 text-muted-foreground" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p className="max-w-xs">Koszyk jest szacowany na podstawie średniej emerytury w danym powiecie (dane GUS) i może nie odzwierciedlać w pełni realnych kosztów.</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                <div className="max-w-md mx-auto space-y-4 pt-4">
+                    <div className='bg-background/50 p-4 rounded-lg border'>
+                         <p className="text-muted-foreground">Twoja prognozowana emerytura realna</p>
+                        <p className="text-2xl font-bold font-headline">{realisticPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
+                    </div>
+                     <div className='bg-background/50 p-4 rounded-lg border'>
+                         <div className="text-muted-foreground flex items-center justify-center gap-1">
+                            <span>Lokalny koszyk seniora w powiecie {result.county}</span>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="h-6 w-6 ml-1 inline-flex items-center justify-center">
+                                            <Info className="h-4 w-4 text-muted-foreground" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <div className="max-w-xs">Koszyk jest szacowany na podstawie średniej emerytury w danym powiecie (dane GUS) i może nie odzwierciedlać w pełni realnych kosztów.</div>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                         </div>
+                        <p className="text-2xl font-bold font-headline">{result.basket_cost.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
                     </div>
 
+                    <Separator />
+
                     <p className={cn(
-                        "font-semibold text-xl",
+                        "font-semibold text-lg",
                         result.status === 'green' && 'text-primary',
                         result.status === 'yellow' && 'text-yellow-500',
                         result.status === 'red' && 'text-destructive',
