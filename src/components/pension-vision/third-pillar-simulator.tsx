@@ -6,9 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Slider } from '@/components/ui/slider';
 import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
-import { Target } from 'lucide-react';
+import { Target, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import { Info } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '../ui/button';
+import { ThirdPillarComparison } from './third-pillar-comparison';
 
 const lifeExpectancy = {
     K: 266, // 60 lat
@@ -87,17 +89,16 @@ export function ThirdPillarSimulator() {
         <div>
           <div className="flex justify-between items-center mb-2">
             <Label htmlFor="ppk-slider" className="font-semibold">Twoja składka PPK: {ppkEmployeeRate[0]}%</Label>
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                        <Info className="h-3.5 w-3.5" />
-                        <span>Jak to działa?</span>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" align="end">
-                        <p className="max-w-xs">Twoja składka (0-4%) + 1.5% od pracodawcy + dopłaty od państwa. Całość jest inwestowana.</p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                         <Info className="h-4 w-4" />
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl">
+                   <ThirdPillarComparison ppkRate={ppkEmployeeRate[0]} />
+                </DialogContent>
+            </Dialog>
           </div>
           <Slider
             id="ppk-slider"

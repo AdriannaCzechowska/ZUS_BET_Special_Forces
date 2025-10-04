@@ -23,6 +23,7 @@ import { ThirdPillarSimulator } from '@/components/pension-vision/third-pillar-s
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { SideNav } from '@/components/layout/side-nav';
 import { useSearchParams } from 'next/navigation';
+import { ParenthoodImpact } from '@/components/pension-vision/ParenthoodImpact';
 
 function WynikiPageContent() {
   const { toast } = useToast();
@@ -190,6 +191,8 @@ function WynikiPageContent() {
                 <ThirdPillarSimulator />
                 <Separator className="my-8"/>
                 <RegionalQualityIndicator />
+                <Separator className="my-8"/>
+                <ParenthoodImpact />
             </div>
         </div>
 
