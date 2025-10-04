@@ -1,4 +1,4 @@
-import { Youtube, Linkedin, Rss, Twitter } from "lucide-react";
+import { Youtube, Linkedin, Rss, ArrowUp } from "lucide-react";
 import Link from "next/link";
 
 const XIcon = () => (
@@ -9,50 +9,70 @@ const XIcon = () => (
 )
 
 const SocialLink = ({ icon, text, href }: { icon: React.ReactNode, text: string, href: string }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white hover:underline">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white hover:underline">
         <div className="bg-white text-primary rounded-full p-1.5 flex items-center justify-center">
             {icon}
         </div>
         <span>{text}</span>
     </a>
-)
+);
+
+const FooterLink = ({ text }: { text: string }) => (
+  <li className="flex items-center">
+    <span className="text-white/80 mr-2">&gt;</span>
+    <span className="hover:underline cursor-pointer">{text}</span>
+  </li>
+);
 
 export function Footer() {
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+  
   return (
     <footer className="bg-primary text-white mt-auto">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="flex flex-col md:flex-row justify-between gap-8">
           
-          <div className="md:col-span-1">
-            <div className="grid grid-cols-2 gap-8">
-                <ul className="space-y-3">
-                    <li><span className="hover:underline cursor-pointer">&gt; Zamówienia publiczne</span></li>
-                    <li><span className="hover:underline cursor-pointer">&gt; Praca w ZUS</span></li>
-                    <li><span className="hover:underline cursor-pointer">&gt; Praca dla lekarzy</span></li>
-                </ul>
-                <ul className="space-y-3">
-                    <li><span className="hover:underline cursor-pointer">&gt; Konkursy ofert</span></li>
-                    <li><span className="hover:underline cursor-pointer">&gt; Mienie zbędne</span></li>
-                    <li><span className="hover:underline cursor-pointer">&gt; Mapa serwisu</span></li>
-                </ul>
-            </div>
+          <div className="w-full md:w-1/3">
+            <ul className="space-y-3">
+              <FooterLink text="Zamówienia publiczne" />
+              <FooterLink text="Praca w ZUS" />
+              <FooterLink text="Praca dla lekarzy" />
+              <FooterLink text="Konkursy ofert" />
+              <FooterLink text="Mienie zbędne" />
+              <FooterLink text="Mapa serwisu" />
+            </ul>
           </div>
 
-          <div className="md:col-span-2">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                <div className="space-y-4">
-                    <span className="block hover:underline cursor-pointer">Deklaracja dostępności</span>
-                    <span className="block hover:underline cursor-pointer">Ustawienia plików cookies</span>
+          <div className="w-full md:w-2/3 flex flex-col md:flex-row justify-between gap-8">
+             <div className="flex-grow space-y-6">
+                <div className="flex items-center gap-6">
+                    <span className="hover:underline cursor-pointer">Deklaracja dostępności</span>
+                    <span className="text-white/50">|</span>
+                    <span className="hover:underline cursor-pointer">Ustawienia plików cookies</span>
                 </div>
-                 <div className="space-y-4 col-span-2">
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <SocialLink href="#" icon={<Youtube className="h-5 w-5" />} text="Elektroniczny ZUS" />
-                        <SocialLink href="#" icon={<Linkedin className="h-5 w-5" />} text="Linkedin" />
-                        <SocialLink href="#" icon={<XIcon />} text="X" />
-                        <SocialLink href="#" icon={<Rss className="h-5 w-5" />} text="Kanał RSS" />
-                    </div>
-                 </div>
-            </div>
+                 <div className="flex items-center flex-wrap gap-x-6 gap-y-4">
+                    <SocialLink href="#" icon={<Youtube className="h-5 w-5" />} text="Elektroniczny ZUS" />
+                    <span className="text-white/50 hidden sm:inline">|</span>
+                    <SocialLink href="#" icon={<Linkedin className="h-5 w-5" />} text="Linkedin" />
+                    <span className="text-white/50 hidden sm:inline">|</span>
+                    <SocialLink href="#" icon={<XIcon />} text="X" />
+                     <span className="text-white/50 hidden sm:inline">|</span>
+                    <SocialLink href="#" icon={<Rss className="h-5 w-5" />} text="Kanał RSS" />
+                </div>
+             </div>
+              <div className="flex-shrink-0">
+                  <button onClick={scrollToTop} className="flex items-center gap-2 text-white hover:underline">
+                      <span>Do góry</span>
+                      <div className="h-8 w-8 rounded-full border border-white flex items-center justify-center">
+                          <ArrowUp className="h-5 w-5" />
+                      </div>
+                  </button>
+              </div>
           </div>
         </div>
       </div>
