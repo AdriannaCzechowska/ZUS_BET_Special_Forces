@@ -81,7 +81,7 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
         </div>
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -130,11 +130,11 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
                 )}
               />
             </div>
-            <Button type="submit" disabled={isLoading} size="sm" className="w-full">
+            <Button type="button" onClick={form.handleSubmit(onSubmit)} disabled={isLoading} size="sm" className="w-full">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Wstaw średnią dla stanowiska
             </Button>
-          </form>
+          </div>
         </Form>
         {error && <p className="text-xs text-destructive mt-2">{error}</p>}
       </CardContent>
