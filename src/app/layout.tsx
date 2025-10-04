@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { FirebaseClientProvider, useAuth } from '@/firebase';
 import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
+import { inter, playfair_display } from './fonts';
 
 function AuthHandler({ children }: { children: React.ReactNode }) {
   const auth = useAuth();
@@ -24,12 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="pl" className={`${inter.variable} ${playfair_display.variable}`}>
       <body>
         <FirebaseClientProvider>
           <AuthHandler>
