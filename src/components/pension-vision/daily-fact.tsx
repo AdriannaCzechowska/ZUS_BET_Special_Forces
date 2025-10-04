@@ -46,7 +46,7 @@ function FactContent() {
 
 export function DailyFactCard() {
     return (
-        <Card className="bg-card shadow-lg">
+        <Card className="bg-card shadow-lg semitransparent-panel">
             <CardHeader>
                 <CardTitle className="font-headline text-2xl">Ciekawostka dnia</CardTitle>
             </CardHeader>
@@ -59,7 +59,7 @@ export function DailyFactCard() {
 
 export function DailyFactAccordion() {
     return (
-         <Accordion type="single" collapsible className="w-full rounded-lg border bg-card shadow-lg px-6">
+         <Accordion type="single" collapsible className="w-full rounded-lg border bg-card shadow-lg px-6 semitransparent-panel">
             <AccordionItem value="item-1" className="border-b-0">
                 <AccordionTrigger className="font-headline text-xl hover:no-underline py-4">
                     Ciekawostka dnia

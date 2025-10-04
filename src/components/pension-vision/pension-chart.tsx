@@ -57,7 +57,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export function PensionChart() {
   return (
-    <Card className="shadow-lg">
+    <Card className="shadow-lg semitransparent-panel">
       <CardHeader>
         <CardTitle className="font-headline text-2xl">Porównaj swoje oczekiwania</CardTitle>
         <CardDescription>Zobacz, jak Twoja wymarzona emerytura wypada na tle obecnych realiów w Polsce.</CardDescription>

@@ -15,7 +15,7 @@ export function PensionInput() {
   const [amount, setAmount] = useState("");
 
   return (
-    <Card className="overflow-hidden shadow-lg">
+    <Card className="overflow-hidden shadow-lg semitransparent-panel">
       <CardHeader>
         <CardTitle className="font-headline text-2xl md:text-3xl">
           Jaką emeryturę chcesz otrzymywać?
