@@ -22,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { calculatePension, type PensionInput } from '@/lib/pension-calculator';
 
 const currentYear = new Date().getFullYear();
 
@@ -89,10 +90,17 @@ export function SimulationForm() {
       return;
     }
     
-    // Mock output data, in a real app this would be calculated
-    const prognozowanaEmerytura = values.grossSalary * 0.4;
-    const kwotaUrealniona = prognozowanaEmerytura * 0.8;
-    const przewidywanaStopaZastapienia = 0.38;
+    const calculationInput: PensionInput = {
+      kwotaZwaloryzowanychSkladek: values.zusContributions || 0,
+      zwaloryzowanyKapitalPoczatkowy: values.initialCapital || 0,
+      srodkiOFE: values.ofeBalance || 0,
+      wiek: values.age,
+      plec: values.gender,
+      uwzglednijOFE: values.includeOFE || false,
+    };
+
+    const { prognozowanaEmerytura, kwotaUrealniona, przewidywanaStopaZastapienia } = calculatePension(calculationInput);
+
 
     const prognosisData = {
       userId: user.uid,
@@ -283,6 +291,28 @@ export function SimulationForm() {
               />
             </div>
             <div className="space-y-4">
+               <FormField
+                  control={form.control}
+                  name="includeOFE"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-background/50">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          Uwzględnij środki z OFE / subkonta
+                        </FormLabel>
+                        <FormDescription>
+                           Zaznacz, aby do symulacji wliczyć środki zgromadzone w Otwartym Funduszu Emerytalnym i na subkoncie ZUS.
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
               <FormField
                   control={form.control}
                   name="includeL4"
