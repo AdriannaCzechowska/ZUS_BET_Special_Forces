@@ -1,5 +1,8 @@
 'use client';
 
+import { useRef } from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
@@ -11,14 +14,50 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function ResultsPage() {
   const { toast } = useToast();
+  const resultsRef = useRef<HTMLDivElement>(null);
 
-  const handleDownloadReport = () => {
+  const handleDownloadReport = async () => {
     toast({
       title: "Generowanie raportu...",
       description: "Twój raport w formacie PDF jest przygotowywany i wkrótce się pobierze.",
     });
-    // Placeholder for actual PDF generation logic
-    console.log("Rozpoczęto generowanie raportu.");
+
+    if (!resultsRef.current) {
+        console.error("Nie znaleziono elementu do wygenerowania raportu.");
+        toast({
+            variant: "destructive",
+            title: "Błąd",
+            description: "Nie można wygenerować raportu. Spróbuj ponownie.",
+        });
+        return;
+    }
+
+    try {
+        const canvas = await html2canvas(resultsRef.current, {
+            scale: 2, // Zwiększenie skali dla lepszej jakości
+            useCORS: true,
+            backgroundColor: null, 
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        
+        const pdf = new jsPDF({
+            orientation: 'p',
+            unit: 'px',
+            format: [canvas.width, canvas.height]
+        });
+
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save("raport-emerytalny.pdf");
+
+    } catch (error) {
+        console.error("Błąd podczas generowania PDF:", error);
+        toast({
+            variant: "destructive",
+            title: "Błąd generowania raportu",
+            description: "Wystąpił problem podczas tworzenia pliku PDF.",
+        });
+    }
   };
 
   return (
@@ -52,7 +91,9 @@ export default function ResultsPage() {
            </div>
         </div>
         
-        <SimulationResults />
+        <div ref={resultsRef}>
+            <SimulationResults />
+        </div>
 
       </main>
       <Footer />
