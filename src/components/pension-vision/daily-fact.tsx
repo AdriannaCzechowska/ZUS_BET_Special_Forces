@@ -13,7 +13,7 @@ function FactContent() {
     return (
         <div className="space-y-4">
              <div className="flex items-start justify-between gap-4">
-                <p className="text-sm text-muted-foreground flex-grow">
+                <p className="text-sm text-foreground flex-grow">
                     {fact || 'Ładowanie ciekawostki...'}
                 </p>
                 <TooltipProvider>
@@ -46,7 +46,7 @@ function FactContent() {
 
 export function DailyFactCard() {
     return (
-        <Card className="bg-muted shadow-lg">
+        <Card className="bg-card shadow-lg">
             <CardHeader>
                 <CardTitle className="font-headline text-2xl">Ciekawostka dnia</CardTitle>
             </CardHeader>

@@ -11,9 +11,9 @@ const chartData = [
 ]
 
 const tooltips: Record<string, string> = {
-  minimalna: "Świadczeniobiorcy z niskim stażem pracy (<20 lat dla kobiet, <25 lat dla mężczyzn), którzy nie mają prawa do gwarantowanej emerytury minimalnej.",
-  srednia: "Aktualny średni poziom świadczeń emerytalnych w Polsce wypłacanych przez ZUS.",
-  najwyzsza: "Najwyższa zarejestrowana emerytura w Polsce, wypłacana w województwie śląskim.",
+  minimalna: "Świadczeniobiorcy z niską aktywnością zawodową (poniżej 20 lat dla kobiet, 25 lat dla mężczyzn), którzy nie nabyli prawa do gwarantowanej emerytury minimalnej.",
+  srednia: "Aktualny średni poziom świadczeń emerytalnych w Polsce wypłacanych przez ZUS. Poziom ten jest mocno zróżnicowany regionalnie i w zależności od płci.",
+  najwyzsza: "Najwyższa zarejestrowana emerytura w Polsce, wypłacana osobie, która pracowała przez ponad 62 lata bez przerw na zwolnienia lekarskie.",
 }
 
 const chartConfig = {
@@ -47,7 +47,7 @@ const CustomTooltip = ({ active, payload }: any) => {
               {data.category}
             </p>
         </div>
-        <p className="text-xs text-muted-foreground">{tooltips[data.key]}</p>
+        <p className="text-xs text-foreground/80">{tooltips[data.key]}</p>
       </div>
     );
   }
@@ -59,8 +59,8 @@ export function PensionChart() {
   return (
     <Card className="shadow-lg">
       <CardHeader>
-        <CardTitle className="font-headline text-2xl">Porównaj do innych świadczeń</CardTitle>
-        <CardDescription>Twoje oczekiwania na tle obecnych realiów emerytalnych w Polsce.</CardDescription>
+        <CardTitle className="font-headline text-2xl">Porównaj swoje oczekiwania</CardTitle>
+        <CardDescription>Zobacz, jak Twoja wymarzona emerytura wypada na tle obecnych realiów w Polsce.</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
@@ -75,6 +75,7 @@ export function PensionChart() {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
+              className="text-xs"
             />
             <YAxis hide={true} domain={[0, (dataMax: number) => dataMax * 1.1]}/>
             <ChartTooltip cursor={false} content={<CustomTooltip />} />
@@ -89,7 +90,7 @@ export function PensionChart() {
       </CardContent>
       <CardFooter>
         <p className="text-xs text-muted-foreground text-center w-full">
-          Średnia stopa zastąpienia obecnie: <span className="font-semibold text-foreground">40%</span> ostatniego wynagrodzenia.
+          Obecna średnia stopa zastąpienia to ok. <span className="font-semibold text-foreground">40%</span> ostatniego wynagrodzenia.
         </p>
       </CardFooter>
     </Card>
