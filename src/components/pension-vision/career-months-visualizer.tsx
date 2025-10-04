@@ -96,18 +96,17 @@ export function CareerMonthsVisualizer({ periods, startYear, retirementYear }: C
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-1">
+        <div className="space-y-px">
           {years.map(year => (
-            <div key={year} className="flex items-center gap-2">
-              <div className="w-12 text-sm font-medium text-muted-foreground text-right">{year}</div>
-              <div className="grid grid-cols-12 gap-0.5 flex-grow">
+            <div key={year} className="flex items-center">
+              <div className="grid grid-cols-12 gap-px w-full">
                 {Array.from({ length: 12 }).map((_, monthIndex) => {
                   const status = getMonthStatus(year, monthIndex);
                   return (
                     <TooltipProvider key={monthIndex} delayDuration={0}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className={cn("h-4 w-4 rounded-sm", colorMap[status.type] || 'bg-gray-200')} />
+                          <div className={cn("h-3 w-3 rounded-sm", colorMap[status.type] || 'bg-gray-200')} />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p className="font-semibold">{year} – {monthNames[monthIndex]}</p>
