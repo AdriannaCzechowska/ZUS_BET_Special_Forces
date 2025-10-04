@@ -16,11 +16,11 @@ function Gauge({ value }: { value: number }) {
     const percentage = Math.min(Math.max(value * 100, 0), 150);
     const rotation = (percentage / 100) * 180 - 90;
 
-    let colorClass = 'bg-destructive';
+    let colorClass = 'bg-destructive'; // #F05E5E
     if (percentage >= 100) {
-        colorClass = 'bg-primary';
+        colorClass = 'bg-primary'; // #00416E
     } else if (percentage >= 80) {
-        colorClass = 'bg-yellow-500';
+        colorClass = 'bg-accent'; // #FFB34F
     }
 
     return (
@@ -72,7 +72,7 @@ export function RegionalQualityIndicator() {
 
         const basket_cost_county = data.avgPension * 1.05;
         const ratio = realisticPension / basket_cost_county;
-        let status = 'green';
+        let status = 'red';
         if (ratio >= 1.0) {
             status = 'green';
         } else if (ratio >= 0.8) {
@@ -161,7 +161,7 @@ export function RegionalQualityIndicator() {
                     <p className={cn(
                         "font-semibold text-lg",
                         result.status === 'green' && 'text-primary',
-                        result.status === 'yellow' && 'text-yellow-500',
+                        result.status === 'yellow' && 'text-accent',
                         result.status === 'red' && 'text-destructive',
                     )}>
                         {result.status === 'green' && `Pokrywasz ${(result.ratio * 100).toFixed(0)}% kosztów życia – nadwyżka +${(realisticPension - result.basket_cost).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}/m-c`}

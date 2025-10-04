@@ -29,7 +29,7 @@ export function DashboardResults({ data }: DashboardResultsProps) {
           title="Wysokość rzeczywista"
           value={data.realPension}
           unit="PLN"
-          icon={<TrendingUp className="text-green-500" />}
+          icon={<TrendingUp className="text-[hsl(var(--chart-1))]" />}
           description="Prognoza brutto bez uwzględnienia inflacji i waloryzacji."
           variant="primary"
         />
@@ -37,7 +37,7 @@ export function DashboardResults({ data }: DashboardResultsProps) {
           title="Wysokość urealniona"
           value={data.realisticPension}
           unit="PLN"
-          icon={<TrendingDown className="text-orange-500" />}
+          icon={<TrendingDown className="text-accent" />}
           description="Prognoza brutto uwzględniająca przewidywaną inflację."
           variant="secondary"
         />

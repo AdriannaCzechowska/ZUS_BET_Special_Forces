@@ -56,7 +56,7 @@ function ResultsContent() {
           title="Wysokość rzeczywista"
           value={realPension}
           unit="PLN"
-          icon={<TrendingUp className="text-green-500" />}
+          icon={<TrendingUp className="text-[hsl(var(--chart-1))]" />}
           description={resultTooltips.wysokoscRzeczywista.shortHint}
           variant="primary"
           tooltipData={resultTooltips.wysokoscRzeczywista}
@@ -65,7 +65,7 @@ function ResultsContent() {
           title="Wysokość urealniona"
           value={realisticPension}
           unit="PLN"
-          icon={<TrendingDown className="text-orange-500" />}
+          icon={<TrendingDown className="text-accent" />}
           description={resultTooltips.wysokoscUrealniona.shortHint}
           variant="secondary"
           tooltipData={resultTooltips.wysokoscUrealniona}
@@ -115,7 +115,7 @@ function ResultsContent() {
 
 export function SimulationResults() {
   return (
-    <Suspense>
+    <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
       <ResultsContent />
     </Suspense>
   )

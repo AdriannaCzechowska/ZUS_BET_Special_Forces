@@ -23,15 +23,15 @@ const chartConfig = {
   },
   minimalna: {
     label: "Poniżej minimalnej",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(var(--chart-4))", // red
   },
   srednia: {
     label: "Średnia obecna",
-    color: "hsl(var(--chart-2))",
+    color: "hsl(var(--chart-2))", // blue
   },
   najwyzsza: {
     label: "Najwyższa w PL",
-    color: "hsl(var(--chart-3))",
+    color: "hsl(var(--chart-1))", // green
   },
 } satisfies ChartConfig
 
