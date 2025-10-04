@@ -9,31 +9,29 @@ import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { calculatePension } from '@/lib/pension-calculator';
 import { SalaryHelper } from './salary-helper';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { CareerMonthsVisualizer } from './career-months-visualizer';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Trash2 } from 'lucide-react';
+import { Baby, Briefcase, FileText, Globe, HeartHandshake, Home, School, Plane, Wallet, BookOpen } from 'lucide-react';
 
 type PeriodType = 'unpaid_leave' | 'maternity_leave' | 'parental_leave' | 'sick_leave' | 'childcare_leave' | 'unemployed' | 'foreign_work_no_contrib';
 
 interface LeavePeriod {
   id: string;
   type: PeriodType;
+  enabled: boolean;
   startYear: number;
-  startMonth: number; // 0-11
+  startMonth: number; 
   durationMonths: number;
 }
 
-const periodLabels: Record<PeriodType, string> = {
-    unpaid_leave: "Urlop bezpłatny",
-    maternity_leave: "Urlop macierzyński",
-    parental_leave: "Urlop rodzicielski",
-    sick_leave: "Zwolnienie lekarskie (L4)",
-    childcare_leave: "Urlop wychowawczy",
-    unemployed: "Okres bezrobocia",
-    foreign_work_no_contrib: "Praca za granicą (bez składek PL)",
-};
-
+const periodConfig: { type: PeriodType; label: string; icon: React.ReactNode, defaultDuration: number, maxDuration: number }[] = [
+    { type: 'maternity_leave', label: 'Urlop macierzyński', icon: <Baby />, defaultDuration: 12, maxDuration: 12 },
+    { type: 'parental_leave', label: 'Urlop rodzicielski', icon: <Baby />, defaultDuration: 12, maxDuration: 36 },
+    { type: 'childcare_leave', label: 'Urlop wychowawczy', icon: <HeartHandshake />, defaultDuration: 24, maxDuration: 36 },
+    { type: 'sick_leave', label: 'Zwolnienie L4', icon: <FileText />, defaultDuration: 6, maxDuration: 24 },
+    { type: 'unpaid_leave', label: 'Urlop bezpłatny', icon: <Wallet />, defaultDuration: 3, maxDuration: 24 },
+    { type: 'unemployed', label: 'Bezrobocie', icon: <Home />, defaultDuration: 6, maxDuration: 24 },
+    { type: 'foreign_work_no_contrib', label: 'Praca za granicą (bez składek PL)', icon: <Plane />, defaultDuration: 12, maxDuration: 60 },
+];
 
 const FormSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="space-y-4 p-6 border rounded-lg bg-card shadow-sm">
@@ -88,7 +86,11 @@ export function NewPensionSimulator() {
   const [retireYear, setRetireYear] = useState(currentYear + 30);
   const [salary, setSalary] = useState(6000);
 
-  const [leavePeriods, setLeavePeriods] = useState<LeavePeriod[]>([]);
+  const [leavePeriods, setLeavePeriods] = useState<Record<PeriodType, { enabled: boolean; durationMonths: number }>>(
+    () => Object.fromEntries(
+        periodConfig.map(p => [p.type, { enabled: false, durationMonths: p.defaultDuration }])
+    ) as Record<PeriodType, { enabled: boolean; durationMonths: number }>
+  );
 
   const minRetireYear = useMemo(() => {
     return currentYear + (gender === 'K' ? 60 : 65) - age;
@@ -96,19 +98,37 @@ export function NewPensionSimulator() {
 
   const birthYear = useMemo(() => currentYear - age, [age]);
   
-  const careerPeriodsForVisualizer = leavePeriods.map(p => {
-    const startDate = new Date(p.startYear, p.startMonth);
-    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + p.durationMonths, 0); // 0 makes it the last day of previous month
-    return {
-        type: p.type as any, // Cast to fit visualizer types
-        start: { year: p.startYear, month: p.startMonth },
-        end: { year: endDate.getFullYear(), month: endDate.getMonth() }
-    }
-  });
+  const careerPeriodsForVisualizer = useMemo(() => {
+     let currentSimYear = startWorkYear;
+     let currentSimMonth = 0;
+
+    return Object.entries(leavePeriods)
+      .filter(([, period]) => period.enabled)
+      .map(([type, period]) => {
+          const startDate = new Date(currentSimYear, currentSimMonth);
+          const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + period.durationMonths, 0);
+
+          const periodData = {
+              type: type as PeriodType,
+              start: { year: startDate.getFullYear(), month: startDate.getMonth() },
+              end: { year: endDate.getFullYear(), month: endDate.getMonth() }
+          }
+          
+          // Move cursor for next period
+          const nextStartDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1);
+          currentSimYear = nextStartDate.getFullYear();
+          currentSimMonth = nextStartDate.getMonth();
+
+          return periodData;
+      });
+  }, [leavePeriods, startWorkYear]);
 
 
   const calculatedPension = useMemo(() => {
-    const totalLeaveMonths = leavePeriods.reduce((sum, period) => sum + period.durationMonths, 0);
+    const totalLeaveMonths = Object.values(leavePeriods)
+        .filter(p => p.enabled)
+        .reduce((sum, period) => sum + period.durationMonths, 0);
+
     const retirementAge = retireYear - birthYear;
     const extraWorkYears = Math.max(0, retirementAge - (gender === 'K' ? 60 : 65));
 
@@ -126,34 +146,15 @@ export function NewPensionSimulator() {
 
   const isGoalAchieved = calculatedPension >= desiredPension;
 
-  const addLeavePeriod = (type: PeriodType) => {
-    setLeavePeriods(produce(draft => {
-        draft.push({
-            id: Date.now().toString(),
-            type: type,
-            startYear: currentYear + 1,
-            startMonth: 0,
-            durationMonths: 12,
-        });
-    }));
-  };
-
-  const removeLeavePeriod = (id: string) => {
-    setLeavePeriods(currentPeriods => currentPeriods.filter(p => p.id !== id));
-  };
-  
-  const updateLeavePeriod = <K extends keyof LeavePeriod>(id: string, field: K, value: LeavePeriod[K]) => {
+  const updateLeavePeriod = (type: PeriodType, field: 'enabled' | 'durationMonths', value: boolean | number) => {
      setLeavePeriods(produce(draft => {
-        const period = draft.find(p => p.id === id);
-        if (period) {
-            period[field] = value;
-        }
+        (draft[type] as any)[field] = value;
     }));
   };
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <div className="space-y-8">
             <FormSection title="Jaką emeryturę chciałbyś mieć w przyszłości?">
                 <FormField label="Oczekiwana kwota emerytury (PLN netto)">
@@ -195,46 +196,42 @@ export function NewPensionSimulator() {
         </div>
         
         <div className="space-y-8">
-            <Accordion type="multiple" className="w-full space-y-4">
-                <AccordionItem value="leaves" className="border rounded-lg bg-card shadow-sm p-4">
-                <AccordionTrigger className="font-headline text-lg">Dodatkowe parametry zatrudnienia</AccordionTrigger>
-                <AccordionContent className="pt-4 space-y-4">
-                    {leavePeriods.map(period => (
-                        <div key={period.id} className='p-3 border rounded-lg bg-background/50 space-y-2'>
-                            <div className='flex justify-between items-center'>
-                                <Label className='font-semibold'>{periodLabels[period.type]}</Label>
-                                <Button variant="ghost" size="icon" className='text-destructive h-7 w-7' onClick={() => removeLeavePeriod(period.id)}>
-                                    <Trash2 className='h-4 w-4' />
-                                </Button>
+             <div className="p-6 border rounded-lg bg-card shadow-sm space-y-4">
+                <h3 className="font-headline text-xl text-primary">Dodatkowe parametry zatrudnienia</h3>
+                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {periodConfig.map((period) => (
+                        <div key={period.type} className="p-3 border rounded-lg bg-background/50 space-y-3">
+                             <div className="flex items-center justify-between">
+                                <Label htmlFor={`switch-${period.type}`} className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                                    {period.icon}
+                                    <span>{period.label}</span>
+                                </Label>
+                                <Switch 
+                                    id={`switch-${period.type}`}
+                                    checked={leavePeriods[period.type].enabled}
+                                    onCheckedChange={(checked) => updateLeavePeriod(period.type, 'enabled', checked)}
+                                />
                             </div>
-                            <div className='grid grid-cols-3 gap-2'>
-                                <FormField label="Rok startu">
-                                    <Input type="number" value={period.startYear} onChange={e => updateLeavePeriod(period.id, 'startYear', Number(e.target.value))} />
-                                </FormField>
-                                <FormField label="Miesiąc startu">
-                                    <Input type="number" min="1" max="12" value={period.startMonth + 1} onChange={e => updateLeavePeriod(period.id, 'startMonth', Number(e.target.value) - 1)} />
-                                </FormField>
-                                <FormField label="Ile miesięcy">
-                                    <Input type="number" value={period.durationMonths} onChange={e => updateLeavePeriod(period.id, 'durationMonths', Number(e.target.value))} />
-                                </FormField>
-                            </div>
+                            {leavePeriods[period.type].enabled && (
+                                <div className='space-y-2'>
+                                    <div className='flex justify-between items-center'>
+                                            <Label className='text-xs'>Długość:</Label>
+                                            <span className='text-xs font-bold'>{leavePeriods[period.type].durationMonths} mies.</span>
+                                    </div>
+                                    <Slider
+                                        min={1}
+                                        max={period.maxDuration}
+                                        step={1}
+                                        value={[leavePeriods[period.type].durationMonths]}
+                                        onValueChange={(val) => updateLeavePeriod(period.type, 'durationMonths', val[0])}
+                                    />
+                                </div>
+                            )}
                         </div>
                     ))}
+                 </div>
+            </div>
 
-                    <Select onValueChange={(value: PeriodType) => addLeavePeriod(value)}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Dodaj nowy okres przerwy..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {Object.entries(periodLabels).map(([type, label]) => (
-                                <SelectItem key={type} value={type}>{label}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-
-                </AccordionContent>
-                </AccordionItem>
-            </Accordion>
              <CareerMonthsVisualizer 
                 periods={careerPeriodsForVisualizer}
                 startYear={startWorkYear} 
@@ -243,7 +240,7 @@ export function NewPensionSimulator() {
         </div>
       </div>
       
-      <div className="text-center p-8 border-2 rounded-lg" style={{ borderColor: isGoalAchieved ? '#22c55e' : '#ef4444' }}>
+      <div className="text-center p-8 border-2 rounded-lg mt-8" style={{ borderColor: isGoalAchieved ? '#22c55e' : '#ef4444' }}>
         <h3 className="text-lg text-muted-foreground">Twoja szacowana wartość emerytury wynosi:</h3>
         <p className={cn('text-5xl font-bold font-headline my-2', isGoalAchieved ? 'text-green-500' : 'text-red-500')}>
           {calculatedPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
