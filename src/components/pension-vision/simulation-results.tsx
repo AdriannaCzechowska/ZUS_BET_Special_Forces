@@ -4,9 +4,10 @@ import { useSearchParams } from 'next/navigation';
 import { ResultCard } from './result-card';
 import { ExpectationGap } from './expectation-gap';
 import { PostponementComparison } from './postponement-comparison';
-import { AlertCircle, TrendingUp, TrendingDown, Info, BarChart, Percent, Briefcase } from 'lucide-react';
+import { Info, TrendingUp, TrendingDown, Percent, Briefcase, BarChart } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { Suspense } from 'react';
+import { resultTooltips } from '@/lib/result-tooltips';
 
 function ResultsContent() {
   const searchParams = useSearchParams();
@@ -56,16 +57,18 @@ function ResultsContent() {
           value={realPension}
           unit="PLN"
           icon={<TrendingUp className="text-green-500" />}
-          description="Prognozowana kwota brutto, bez uwzględnienia inflacji i przyszłej waloryzacji składek."
+          description={resultTooltips.wysokoscRzeczywista.shortHint}
           variant="primary"
+          tooltipData={resultTooltips.wysokoscRzeczywista}
         />
         <ResultCard
           title="Wysokość urealniona"
           value={realisticPension}
           unit="PLN"
           icon={<TrendingDown className="text-orange-500" />}
-          description="Prognozowana kwota brutto, uwzględniająca prognozowaną inflację. To bardziej realistyczna kwota."
+          description={resultTooltips.wysokoscUrealniona.shortHint}
           variant="secondary"
+          tooltipData={resultTooltips.wysokoscUrealniona}
         />
       </div>
 
@@ -77,21 +80,24 @@ function ResultsContent() {
           value={replacementRate}
           unit="%"
           icon={<Percent />}
-          description="Stosunek Twojej pierwszej emerytury do ostatniego wynagrodzenia. Średnia w Polsce to ok. 40%."
+          description={resultTooltips.stopaZastapienia.shortHint}
+          tooltipData={resultTooltips.stopaZastapienia}
         />
         <ResultCard
           title="Wpływ zwolnień L4"
           value={pensionWithoutL4}
           unit="PLN"
           icon={<Briefcase />}
-          description={`Twoja emerytura bez uwzględniania statystycznych okresów chorobowych byłaby o ${(pensionWithoutL4 - realPension).toFixed(2)} PLN wyższa.`}
+          description={resultTooltips.wplywL4.shortHint}
+          tooltipData={resultTooltips.wplywL4}
         />
         <ResultCard
           title="Porównanie do średniej"
           value={avgPensionInRetirementYear}
           unit="PLN"
           icon={<BarChart />}
-          description={`Twoje świadczenie stanowi ${((realPension / avgPensionInRetirementYear) * 100).toFixed(0)}% prognozowanej średniej emerytury w Twoim roku przejścia na emeryturę.`}
+          description={resultTooltips.porownanieDoSredniej.shortHint}
+          tooltipData={resultTooltips.porownanieDoSredniej}
         />
       </div>
 
