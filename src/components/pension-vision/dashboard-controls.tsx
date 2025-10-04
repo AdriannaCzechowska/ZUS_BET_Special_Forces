@@ -88,7 +88,7 @@ function FutureProjections({
     setFutureSalaryGrowth,
     zusIndexationRate,
     setZusIndexationRate,
-}{
+}: {
     futureSalaryGrowth: number;
     setFutureSalaryGrowth: (value: number) => void;
     zusIndexationRate: number;
