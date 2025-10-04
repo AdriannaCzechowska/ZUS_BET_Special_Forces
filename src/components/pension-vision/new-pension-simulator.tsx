@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { calculatePension } from '@/lib/pension-calculator';
 import { SalaryHelper } from './salary-helper';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { CareerMonthsChart } from './career-months-chart';
 
 const FormSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="space-y-4 p-6 border rounded-lg bg-card shadow-sm">
@@ -70,6 +71,14 @@ export function NewPensionSimulator() {
   const [childcareLeaveMonths, setChildcareLeaveMonths] = useState(0);
   const [unemploymentMonths, setUnemploymentMonths] = useState(0);
   const [workAbroadMonths, setWorkAbroadMonths] = useState(0);
+
+  const careerEvents = [
+      { year: 2026, month: 1, duration: 9, type: 'sickness' as const, label: 'Zwolnienie lekarskie' },
+      { year: 2027, month: 1, duration: 12, type: 'maternity' as const, label: 'Urlop macierzyński' },
+      { year: 2028, month: 1, duration: 24, type: 'childcare' as const, label: 'Urlop wychowawczy' },
+      { year: 2035, month: 6, duration: 6, type: 'unemployment' as const, label: 'Okres bezrobocia'},
+  ];
+
 
   const minRetireYear = useMemo(() => {
     return currentYear + (gender === 'K' ? 60 : 65) - age;
@@ -157,6 +166,12 @@ export function NewPensionSimulator() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+
+       <CareerMonthsChart 
+          startYear={startWorkYear} 
+          endYear={retireYear}
+          events={careerEvents}
+      />
 
     </div>
   );
