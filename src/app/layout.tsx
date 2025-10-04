@@ -28,7 +28,7 @@ export default function RootLayout({
       <head>
         {/* Removing custom Google Fonts to use Arial as per ZUS style */}
       </head>
-      <body className="font-body antialiased">
+      <body>
         <FirebaseClientProvider>
           <AuthHandler>
             {children}

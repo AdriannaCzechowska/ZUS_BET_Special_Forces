@@ -2,13 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer base {
   :root {
-    --background: 210 40% 98%; /* Jasnoszary/Błękitny - Not used, will be overridden */
+    --background: 0 0% 100%;
     --foreground: 210 20% 20%;
     --card: 0 0% 100%;
     --card-foreground: 210 20% 20%;
@@ -21,7 +17,7 @@ body {
     --muted: 215 25% 90%;
     --muted-foreground: 215 15% 45%;
     --accent: 33 100% 65%; /* #FFB34F - ZUS Orange */
-    --accent-foreground: 205 100% 22%; /* #00416E - Will be black for contrast */
+    --accent-foreground: 0 0% 0%; /* Black text on accent */
     --destructive: 0 84% 60%; /* #F05E5E */
     --destructive-foreground: 0 0% 98%;
     --border: 214 32% 91%;
@@ -66,9 +62,14 @@ body {
   * {
     @apply border-border;
   }
+  body, h1, h2, h3, h4, h5, h6 {
+    font-family: "Lato Regular", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+    font-size: .875em;
+    line-height: 1.2;
+    color: #000;
+  }
   body {
-    @apply bg-white text-black; /* Set body background to white and text to black */
-    font-family: Arial, sans-serif; /* Set font to Arial */
+    @apply bg-white;
   }
 }
 
