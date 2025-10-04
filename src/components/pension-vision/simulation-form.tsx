@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -40,7 +41,6 @@ const formSchema = z.object({
     path: ["endYear"],
 }).refine(data => {
     const retirementAge = data.gender === 'female' ? 60 : 65;
-    const workDuration = data.endYear - data.startYear;
     const retirementYearByAge = (currentYear - data.age) + retirementAge;
     // This is a simplified validation. A more precise one would use birth date.
     return data.endYear >= retirementYearByAge;
@@ -52,10 +52,13 @@ const formSchema = z.object({
 
 export function SimulationForm() {
   const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       age: 25,
+      gender: 'female',
       grossSalary: 5000,
       startYear: currentYear - 3,
       endYear: currentYear + 35,
@@ -66,9 +69,12 @@ export function SimulationForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     toast({
-      title: "Symulacja w toku!",
-      description: "Twoje dane zostały przesłane do analizy. Wyniki pojawią się wkrótce.",
+      title: "Symulacja zakończona!",
+      description: "Twoje wyniki są gotowe. Przekierowuję...",
     });
+    // Here you would typically pass the data to the results page
+    // For now, we just navigate there
+    router.push('/wyniki');
   }
 
   return (
