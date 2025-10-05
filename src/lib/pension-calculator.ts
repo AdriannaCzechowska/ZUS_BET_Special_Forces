@@ -24,7 +24,7 @@ const lifeExpectancy = {
 };
 
 const SKLADKA_EMERYTALNA_RATE = 0.1952;
-const BONUS_ZA_DLUZSZA_PRACE = 1.02; 
+const BONUS_ZA_DLUZSZA_PRACE = 1.00; // aktualnie nie uzywane
 const MINIMALNA_PODSTAWA_B2B = 4694.40;
 const MINIMALNA_EMERYTURA = 1878.91;
 

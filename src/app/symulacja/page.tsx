@@ -115,7 +115,7 @@ export default function SimulationPage() {
             ["Czy uwzględniał okresy choroby", simulatorState.leavePeriods.some(p => p.type === 'sick_leave') ? 'Tak' : 'Nie'],
             ["Emerytura rzeczywista", pensionResult.prognozowanaEmerytura],
             ["Emerytura urealniona", pensionResult.kwotaUrealniona],
-            ["Kod pocztowy", "Brak Danych"], // This page doesn't have postcode input
+            ["Kod pocztowy", simulatorState.postcode || "Brak Danych"],
         ];
 
       const csvContent = stringify([headers, ...data], { delimiter: ';' });

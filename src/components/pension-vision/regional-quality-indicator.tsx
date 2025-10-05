@@ -1,15 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { MapPin, Info, ArrowRight } from 'lucide-react';
+import { MapPin, Info } from 'lucide-react';
 import { getRegionalData } from '@/lib/regional-data';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
 import { Separator } from '../ui/separator';
+import { Button } from '../ui/button';
 
 function Gauge({ value }: { value: number }) {
     const percentage = Math.min(Math.max(value * 100, 0), 150);
@@ -51,9 +51,14 @@ export function RegionalQualityIndicator({ realisticPension, onPostcodeChange }:
   const [result, setResult] = useState<{ ratio: number; status: string; county: string; basket_cost: number; avg_pension_county: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleCheck = () => {
+  useEffect(() => {
+    onPostcodeChange(postcode);
     if (!/^\d{2}-\d{3}$/.test(postcode)) {
-        setError("Wprowadź poprawny kod pocztowy (format: XX-XXX).");
+        if (postcode.length > 0) {
+             setError("Wprowadź poprawny kod pocztowy (format: XX-XXX).");
+        } else {
+            setError(null);
+        }
         setResult(null);
         return;
     }
@@ -61,9 +66,8 @@ export function RegionalQualityIndicator({ realisticPension, onPostcodeChange }:
     setIsLoading(true);
     setError(null);
     setResult(null);
-    onPostcodeChange(postcode);
     
-    setTimeout(() => {
+    const timer = setTimeout(() => {
         const data = getRegionalData(postcode);
         if (!data) {
             setError("Nie znaleziono danych dla podanego kodu pocztowego.");
@@ -89,7 +93,10 @@ export function RegionalQualityIndicator({ realisticPension, onPostcodeChange }:
         });
         setIsLoading(false);
     }, 500); // Simulate API call
-  };
+
+    return () => clearTimeout(timer);
+
+  }, [postcode, realisticPension, onPostcodeChange]);
   
   if (!realisticPension) {
     return null;
@@ -111,16 +118,9 @@ export function RegionalQualityIndicator({ realisticPension, onPostcodeChange }:
             <Input 
                 placeholder="Wpisz swój kod pocztowy (np. 00-001)"
                 value={postcode}
-                onChange={(e) => {
-                    setPostcode(e.target.value);
-                    onPostcodeChange(e.target.value);
-                }}
+                onChange={(e) => setPostcode(e.target.value)}
                 className="max-w-xs"
             />
-            <Button onClick={handleCheck} disabled={isLoading}>
-                {isLoading ? "Sprawdzanie..." : "Sprawdź"}
-                <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
         </div>
         
         {error && <p className="text-sm font-medium text-destructive">{error}</p>}
