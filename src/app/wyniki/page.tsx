@@ -77,53 +77,6 @@ function WynikiPageContent() {
     }
   };
 
-  const handleDownloadCsv = () => {
-    toast({
-      title: "Generowanie pliku CSV...",
-      description: "Twój plik jest przygotowywany do pobrania.",
-    });
-    
-    try {
-        const now = new Date();
-        const headers = [
-            "Parametr",
-            "Wartość"
-        ];
-        const data = [
-            ["Data użycia", now.toLocaleDateString('pl-PL')],
-            ["Godzina użycia", now.toLocaleTimeString('pl-PL')],
-            ["Emerytura oczekiwana", searchParams.get('expectedPension') || 'Brak'],
-            ["Wiek", searchParams.get('age') || 'Brak'],
-            ["Płeć", searchParams.get('gender') === 'K' ? 'Kobieta' : 'Mężczyzna'],
-            ["Wysokość wynagrodzenia", searchParams.get('grossSalary') || 'Brak'],
-            ["Czy uwzględniał okresy choroby", searchParams.get('includeL4') === 'true' ? 'Tak' : 'Nie'],
-            ["Wysokość zgromadzonych środków na koncie i Subkoncie", 'N/A (nowy model)'],
-            ["Emerytura rzeczywista", searchParams.get('realPension') || 'Brak'],
-            ["Emerytura urealniona", searchParams.get('realisticPension') || 'Brak'],
-            ["Kod pocztowy", postcodeRef.current || 'Brak Danych'],
-        ];
-
-      const csvContent = stringify([headers, ...data], { delimiter: ';' });
-      const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "raport-emerytalny.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-    } catch(error) {
-        console.error("Błąd podczas generowania CSV:", error);
-        toast({
-            variant: "destructive",
-            title: "Błąd generowania pliku",
-            description: "Wystąpił problem podczas tworzenia pliku CSV.",
-        });
-    }
-  }
-
-
   const navItems = [
     {
         icon: <RefreshCw className="mr-2 h-4 w-4" />,
@@ -170,11 +123,6 @@ function WynikiPageContent() {
                             <DropdownMenuItem onClick={handleDownloadReport}>
                                 Pobierz jako PDF
                             </DropdownMenuItem>
-                            {isAdmin && (
-                                <DropdownMenuItem onClick={handleDownloadCsv}>
-                                    Pobierz jako CSV (Excel)
-                                </DropdownMenuItem>
-                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                  </SideNav>

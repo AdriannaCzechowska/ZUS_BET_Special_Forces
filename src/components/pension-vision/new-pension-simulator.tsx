@@ -1,7 +1,5 @@
-
-
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { produce } from 'immer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -36,15 +34,29 @@ const employmentTypes = {
   'b2b': 'Działalność gospodarcza / B2B: Najczęściej opłacasz składki od minimalnej podstawy (ok. 60% prognozowanego przeciętnego wynagrodzenia), co skutkuje znacznie niższymi wpłatami na konto emerytalne niż przy umowie o pracę z tym samym dochodem.',
   'brak': 'Brak składek: Wykonywanie pracy bez umowy lub na umowę o dzieło (z wyjątkami) oznacza brak odprowadzanych składek emerytalnych. Ten okres nie powiększa Twojego kapitału na przyszłą emeryturę.',
 };
-type EmploymentType = keyof typeof employmentTypes;
+export type EmploymentType = keyof typeof employmentTypes;
 
-interface LeavePeriod {
+export interface LeavePeriod {
   id: string;
   type: PeriodType;
   durationMonths: number;
   startAge: number;
   startMonth: number; // 1-12
 }
+
+export interface SimulatorState {
+    desiredPension: number;
+    age: number;
+    gender: 'K' | 'M';
+    isTaxExempt: boolean;
+    startWorkYear: number;
+    retireYear: number;
+    salary: number;
+    wariant: 1 | 2 | 3;
+    employmentType: EmploymentType;
+    leavePeriods: LeavePeriod[];
+}
+
 
 const months = [
     { value: 1, label: 'Styczeń' }, { value: 2, label: 'Luty' }, { value: 3, label: 'Marzec' },
@@ -99,7 +111,11 @@ const FormRadioGroup = ({ label, value, options, onValueChange }: { label: strin
 
 const currentYear = new Date().getFullYear();
 
-export function NewPensionSimulator() {
+interface NewPensionSimulatorProps {
+    onStateChange: (state: SimulatorState) => void;
+}
+
+export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps) {
   const [desiredPension, setDesiredPension] = useState(4000);
   const [age, setAge] = useState(30);
   const [gender, setGender] = useState<'K' | 'M'>('K');
@@ -117,6 +133,13 @@ export function NewPensionSimulator() {
   }, [age, gender]);
 
   const birthYear = useMemo(() => currentYear - age, [age]);
+
+  useEffect(() => {
+    const currentState: SimulatorState = {
+        desiredPension, age, gender, isTaxExempt, startWorkYear, retireYear, salary, wariant, employmentType, leavePeriods
+    };
+    onStateChange(currentState);
+  }, [desiredPension, age, gender, isTaxExempt, startWorkYear, retireYear, salary, wariant, employmentType, leavePeriods, onStateChange]);
 
   const careerPeriodsForVisualizer = leavePeriods
       .map((period) => {
