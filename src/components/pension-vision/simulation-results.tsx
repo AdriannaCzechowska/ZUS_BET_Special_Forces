@@ -65,20 +65,18 @@ function ResultsContent() {
           value={realPension}
           unit="PLN"
           icon={<TrendingUp className="text-[hsl(var(--chart-1))]" />}
-          description={resultTooltips.wysokoscRzeczywista.shortHint}
+          description={`Nominalna kwota w roku przejścia. Odpowiada to stopie zastąpienia ${nominalReplacementRate.toFixed(2)}%.`}
           variant="primary"
           tooltipData={resultTooltips.wysokoscRzeczywista}
-          subValue={`Stopa zastąpienia: ${nominalReplacementRate.toFixed(2)}%`}
         />
         <ResultCard
           title="Wysokość urealniona"
           value={realisticPension}
           unit="PLN"
           icon={<TrendingDown className="text-accent" />}
-          description={resultTooltips.wysokoscUrealniona.shortHint}
+          description={`Wartość w dzisiejszych cenach. Odpowiada to stopie zastąpienia ${replacementRate.toFixed(2)}%.`}
           variant="secondary"
           tooltipData={resultTooltips.wysokoscUrealniona}
-          subValue={`Stopa zastąpienia: ${replacementRate.toFixed(2)}%`}
         />
       </div>
 

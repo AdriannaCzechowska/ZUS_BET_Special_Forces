@@ -16,7 +16,6 @@ interface ResultCardProps {
   icon?: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'default';
   tooltipData?: ResultTooltip;
-  subValue?: string;
 }
 
 export function ResultCard({
@@ -27,7 +26,6 @@ export function ResultCard({
   icon,
   variant = 'default',
   tooltipData,
-  subValue,
 }: ResultCardProps) {
   return (
     <Card className={cn(
@@ -84,9 +82,6 @@ export function ResultCard({
           {value.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           <span className="text-lg ml-1 font-body text-muted-foreground">{unit}</span>
         </div>
-        {subValue && (
-            <p className="font-semibold text-sm text-muted-foreground">{subValue}</p>
-        )}
         <p className="text-xs text-muted-foreground mt-2 flex-grow">
           {description}
         </p>
