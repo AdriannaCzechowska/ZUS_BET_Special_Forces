@@ -13,10 +13,8 @@ const chartData = [
   { category: "Średnia obecna", value: 3845.54, key: "srednia" },
   { category: "Lekarz", value: salaryData['Lekarz'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "lekarz" },
   { category: "Programista", value: salaryData['Programista'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "programista" },
-  { category: "Pracownik biurowy", value: salaryData['Pracownik biurowy'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "biurowy" },
   { category: "Kierowca zawodowy", value: salaryData['Kierowca zawodowy'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "kierowca" },
   { category: "Księgowa", value: salaryData['Księgowa'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "ksiegowa" },
-  { category: "Najwyższa w PL", value: 43412, key: "najwyzsza" },
 ]
 
 const tooltips: Record<string, string> = {
@@ -44,13 +42,8 @@ const chartConfig = {
   },
   lekarz: { label: "Lekarz", color: "#6495ED" },
   programista: { label: "Programista", color: "#8A2BE2" },
-  biurowy: { label: "Pracownik biurowy", color: "#DEB887" },
   kierowca: { label: "Kierowca zawodowy", color: "#A52A2A" },
   ksiegowa: { label: "Księgowa", color: "#7FFF00" },
-  najwyzsza: {
-    label: "Najwyższa w PL",
-    color: "hsl(var(--chart-1))", // green
-  },
 } satisfies ChartConfig
 
 const CustomTooltip = ({ active, payload }: any) => {
