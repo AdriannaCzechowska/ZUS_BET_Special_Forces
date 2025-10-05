@@ -165,8 +165,8 @@ function ShoppingSimulator() {
             </Card>
           </div>
 
-          <div className="space-y-8">
-            <Card className="bg-primary/5 border-primary/20 sticky top-24">
+          <div className="space-y-8 lg:sticky lg:top-24">
+            <Card className="bg-primary/5 border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Wallet /> Portfel
