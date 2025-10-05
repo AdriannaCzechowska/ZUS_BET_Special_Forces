@@ -37,6 +37,7 @@ const products: Product[] = [
     { id: 'vacation', name: 'Wakacje', price: 1500, icon: <Plane className="h-8 w-8" /> },
     { id: 'grandchild', name: 'Prezent dla wnuka', price: 100, icon: <Gift className="h-8 w-8" /> },
     { id: 'phone', name: 'Telefon', price: 1500, icon: <Smartphone className="h-8 w-8" /> },
+    { id: 'washing_machine', name: 'Pralka', price: 1500, icon: <WashingMachine className="h-8 w-8" /> },
     { id: 'fridge', name: 'Lodówka', price: 2000, icon: <Refrigerator className="h-8 w-8" /> },
     { id: 'cosmetics', name: 'Kosmetyki', price: 150, icon: <SprayCan className="h-8 w-8" /> },
     { id: 'theatre_cinema', name: 'Teatr/Kino', price: 50, icon: <Clapperboard className="h-8 w-8" /> },
@@ -46,6 +47,11 @@ const products: Product[] = [
     { id: 'insurance', name: 'Ubezpieczenie', price: 150, icon: <ShieldCheck className="h-8 w-8" /> },
     { id: 'investment', name: 'Inwestycje', price: 200, icon: <TrendingUp className="h-8 w-8" /> },
 ];
+
+const singlePurchaseItems = new Set([
+  'rent', 'electricity', 'water', 'garbage', 'gas', 'internet', 'mobile',
+  'tv', 'food', 'vacation', 'phone', 'washing_machine', 'fridge', 'insurance', 'fuel'
+]);
 
 function ShoppingSimulator() {
   const searchParams = useSearchParams();
@@ -70,6 +76,15 @@ function ShoppingSimulator() {
   }
 
   const addToCart = (product: Product) => {
+    if (singlePurchaseItems.has(product.id) && cart.some(item => item.id === product.id)) {
+      toast({
+        variant: "destructive",
+        title: "Produkt już w koszyku",
+        description: `Możesz dodać "${product.name}" tylko raz.`,
+      });
+      return;
+    }
+
     if (balance < product.price) {
       toast({
         variant: "destructive",
