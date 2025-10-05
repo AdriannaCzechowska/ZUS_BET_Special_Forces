@@ -78,10 +78,8 @@ function ShoppingSimulator() {
       });
       return;
     }
-    setBalance(draft => {
-        draft -= product.price
-        triggerBalanceAnimation();
-    });
+    setBalance(draft => draft - product.price);
+    triggerBalanceAnimation();
 
     setCart(draft => {
       draft.push(product);
@@ -93,10 +91,8 @@ function ShoppingSimulator() {
   };
 
   const removeFromCart = (productToRemove: Product, indexToRemove: number) => {
-    setBalance(draft => {
-        draft += productToRemove.price
-        triggerBalanceAnimation();
-    });
+    setBalance(draft => draft + productToRemove.price);
+    triggerBalanceAnimation();
     setCart(draft => {
       draft.splice(indexToRemove, 1);
     });
