@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useState, useRef, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useImmer } from 'use-immer';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -52,8 +52,14 @@ const singlePurchaseItems = new Set([
   'tv', 'food', 'vacation', 'phone', 'fridge', 'insurance', 'fuel'
 ]);
 
+const mandatoryItems = new Set([
+  'rent', 'electricity', 'water', 'garbage', 'gas', 'food'
+]);
+
+
 function ShoppingSimulator() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { toast } = useToast();
   const initialBalance = Number(searchParams.get('realisticPension') || '3500');
 
@@ -117,10 +123,22 @@ function ShoppingSimulator() {
   };
   
   const finishShopping = () => {
+    const missingItems = Array.from(mandatoryItems).filter(
+      (mandatoryId) => !cart.some((cartItem) => cartItem.id === mandatoryId)
+    );
+
+    if (missingItems.length > 0) {
+      const missingItemNames = missingItems.map(id => products.find(p => p.id === id)?.name).join(', ');
       toast({
-          title: 'Podsumowanie zakupów',
-          description: `Wydano ${totalCost.toLocaleString('pl-PL')} zł. Pozostało Ci ${balance.toLocaleString('pl-PL')} zł.`,
+        variant: "destructive",
+        title: 'Zapomniałeś o obowiązkowych opłatach!',
+        description: `Nie zapłaciłeś za: ${missingItemNames}. Uzupełnij koszyk, aby kontynuować.`,
+        duration: 5000,
       });
+      return;
+    }
+    
+    router.push(`/podsumowanie-zakupow?totalCost=${totalCost}&balance=${balance}`);
   }
 
   return (
