@@ -37,7 +37,6 @@ const products: Product[] = [
     { id: 'vacation', name: 'Wakacje', price: 1500, icon: <Plane className="h-8 w-8" /> },
     { id: 'grandchild', name: 'Prezent dla wnuka', price: 100, icon: <Gift className="h-8 w-8" /> },
     { id: 'phone', name: 'Telefon', price: 1500, icon: <Smartphone className="h-8 w-8" /> },
-    { id: 'washing_machine', name: 'Pralka', price: 1500, icon: <WashingMachine className="h-8 w-8" /> },
     { id: 'fridge', name: 'Lodówka', price: 2000, icon: <Refrigerator className="h-8 w-8" /> },
     { id: 'cosmetics', name: 'Kosmetyki', price: 150, icon: <SprayCan className="h-8 w-8" /> },
     { id: 'theatre_cinema', name: 'Teatr/Kino', price: 50, icon: <Clapperboard className="h-8 w-8" /> },
