@@ -4,11 +4,12 @@ import { useRef, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { stringify } from 'csv-stringify/browser/esm/sync';
+import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { NewPensionSimulator, type SimulatorState } from '@/components/pension-vision/new-pension-simulator';
 import { Button } from '@/components/ui/button';
-import { Download, ChevronDown } from 'lucide-react';
+import { Download, ChevronDown, Lightbulb } from 'lucide-react';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthContext } from '@/context/AuthContext';
@@ -150,7 +151,7 @@ export default function SimulationPage() {
         <div ref={simulatorRef} className="bg-background">
             <NewPensionSimulator onStateChange={setSimulatorState} />
         </div>
-        <div className="mt-12 text-center">
+        <div className="mt-12 text-center flex justify-center items-center gap-4">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button size="lg">
@@ -170,6 +171,13 @@ export default function SimulationPage() {
                     )}
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            <Button asChild size="lg" variant="outline">
+                <Link href="/na-co-wystarcza">
+                    <Lightbulb className="mr-2 h-4 w-4" />
+                    Na co to wystarcza
+                </Link>
+            </Button>
         </div>
       </main>
       <Footer />
