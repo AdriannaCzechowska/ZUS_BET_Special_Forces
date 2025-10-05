@@ -146,9 +146,10 @@ export function NewPensionSimulator() {
       rokPrzejsciaNaEmeryture: retireYear,
       dodatkoweLataPracy: extraWorkYears,
       przerwyWLacznychMiesiacach: totalLeaveMonths,
-      wariant: wariant
+      wariant: wariant,
+      employmentType: employmentType,
     });
-  }, [age, gender, salary, startWorkYear, retireYear, leavePeriods, birthYear, wariant]);
+  }, [age, gender, salary, startWorkYear, retireYear, leavePeriods, birthYear, wariant, employmentType]);
 
   const isGoalAchieved = pensionResult.kwotaUrealniona >= desiredPension;
 

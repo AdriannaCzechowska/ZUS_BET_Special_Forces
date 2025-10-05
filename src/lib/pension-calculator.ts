@@ -7,7 +7,8 @@ export interface PensionInput {
   rokPrzejsciaNaEmeryture: number;
   dodatkoweLataPracy: number;
   przerwyWLacznychMiesiacach: number;
-  wariant: 1 | 2 | 3; // nowy parametr - wariant prognozy
+  wariant: 1 | 2 | 3;
+  employmentType: 'uop' | 'zlecenie' | 'b2b' | 'brak';
 }
 
 export interface PensionOutput {
@@ -25,6 +26,7 @@ const lifeExpectancy = {
 // Stałe ogólne
 const SKLADKA_EMERYTALNA_RATE = 0.1952;
 const BONUS_ZA_DLUZSZA_PRACE = 1.02; // realistyczny efekt wydłużenia pracy
+const MINIMALNA_PODSTAWA_B2B = 4694.40;
 
 // Parametry wg wariantów ZUS FUS20
 const VARIANT_PARAMS = {
@@ -52,13 +54,36 @@ export function calculatePension(input: PensionInput): PensionOutput {
   const {
     wiek,
     plec,
-    pensjaBrutto,
+    pensjaBrutto: initialPensjaBrutto,
     rokRozpoczeciaPracy,
     rokPrzejsciaNaEmeryture,
     dodatkoweLataPracy,
     przerwyWLacznychMiesiacach,
     wariant,
+    employmentType,
   } = input;
+
+  let pensjaBrutto = initialPensjaBrutto;
+  let skladkaRate = SKLADKA_EMERYTALNA_RATE;
+
+  switch (employmentType) {
+    case 'uop':
+    case 'zlecenie':
+      // Użyj pensji brutto podanej przez użytkownika
+      skladkaRate = 0.1952;
+      break;
+    case 'b2b':
+      // Użyj stałej podstawy dla B2B, ale nie niższej niż minimum
+      pensjaBrutto = Math.max(5203.80, MINIMALNA_PODSTAWA_B2B);
+      skladkaRate = 0.1952;
+      break;
+    case 'brak':
+      // Brak składek
+      pensjaBrutto = 0;
+      skladkaRate = 0;
+      break;
+  }
+
 
   const params = VARIANT_PARAMS[wariant];
   const currentYear = new Date().getFullYear();
@@ -72,7 +97,7 @@ export function calculatePension(input: PensionInput): PensionOutput {
 
   // 1️⃣ Kapitał zgromadzony z waloryzacją i ściągalnością składek
   const rocznaSkladka =
-    pensjaBrutto * 12 * SKLADKA_EMERYTALNA_RATE * params.SCIAGALNOSC_SKLADEK;
+    pensjaBrutto * 12 * skladkaRate * params.SCIAGALNOSC_SKLADEK;
   let totalCapital = 0;
 
   for (let i = 0; i < efektywneLataPracy; i++) {
@@ -100,7 +125,7 @@ export function calculatePension(input: PensionInput): PensionOutput {
   const kwotaUrealniona = prognozowanaEmerytura / skumulowanaInflacja;
 
   // 5️⃣ Ostatnie wynagrodzenie przed emeryturą
-  const ostatniaPensja = pensjaBrutto * Math.pow(params.ROCZNY_WZROST_PENSJI, lataDoEmerytury);
+  const ostatniaPensja = initialPensjaBrutto * Math.pow(params.ROCZNY_WZROST_PENSJI, lataDoEmerytury);
   const przewidywanaStopaZastapienia =
     ostatniaPensja > 0 ? kwotaUrealniona / ostatniaPensja : 0;
 
