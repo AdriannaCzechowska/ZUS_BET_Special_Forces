@@ -65,7 +65,7 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
         <div className="flex flex-wrap gap-2">
             <Button size="sm" variant="outline" onClick={() => handleQuickSet(MINIMUM_WAGE)} type="button">
                 Minimalna krajowa
@@ -77,12 +77,12 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
         
         <Form {...form}>
           <div className="space-y-2">
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="grid sm:grid-cols-2 gap-2">
               <FormField
                 control={form.control}
                 name="region"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
+                  <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-9">
@@ -105,7 +105,7 @@ export function SalaryHelper({ onSalarySelect }: SalaryHelperProps) {
                 control={form.control}
                 name="position"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
+                  <FormItem>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-9">
