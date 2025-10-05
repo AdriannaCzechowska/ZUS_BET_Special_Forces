@@ -13,13 +13,13 @@ function FactContent() {
     return (
         <div className="space-y-4">
              <div className="flex items-start justify-between gap-4">
-                <p className="text-sm text-foreground flex-grow">
+                <p className="text-sm flex-grow">
                     {fact || 'Ładowanie ciekawostki...'}
                 </p>
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={refreshFact} aria-label="Odśwież ciekawostkę">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 hover:bg-white/10" onClick={refreshFact} aria-label="Odśwież ciekawostkę">
                                 <RefreshCw className="h-4 w-4" />
                             </Button>
                         </TooltipTrigger>
@@ -31,7 +31,7 @@ function FactContent() {
             </div>
             <TooltipProvider>
                 <Tooltip>
-                    <TooltipTrigger className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+                    <TooltipTrigger className="flex items-center gap-1.5 text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">
                         <Info className="h-3.5 w-3.5" />
                         <span>Źródło danych</span>
                     </TooltipTrigger>
@@ -46,7 +46,7 @@ function FactContent() {
 
 export function DailyFactCard() {
     return (
-        <Card className="bg-card shadow-lg semitransparent-panel">
+        <Card className="bg-primary text-primary-foreground shadow-lg">
             <CardHeader>
                 <CardTitle className="font-headline text-2xl">Ciekawostka dnia</CardTitle>
             </CardHeader>

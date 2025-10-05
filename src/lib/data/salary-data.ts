@@ -40,7 +40,7 @@ export const salaryData: Record<string, { national_average: number; regions: Rec
             'podlaskie': 7200,
         }
     },
-    'Nauczyciel': {
+    'Pracownik biurowy': {
         national_average: 5200,
         regions: {
             'mazowieckie': 6000,
