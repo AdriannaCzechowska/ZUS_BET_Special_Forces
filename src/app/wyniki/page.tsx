@@ -17,7 +17,6 @@ import { ArrowLeft, RefreshCw, LayoutDashboard, Download, ChevronDown } from 'lu
 import Link from 'next/link';
 import { SimulationResults } from '@/components/pension-vision/simulation-results';
 import { useToast } from '@/hooks/use-toast';
-import { RegionalQualityIndicator } from '@/components/pension-vision/regional-quality-indicator';
 import { Separator } from '@/components/ui/separator';
 import { ThirdPillarSimulator } from '@/components/pension-vision/third-pillar-simulator';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
@@ -29,7 +28,6 @@ import { useAuthContext } from '@/context/AuthContext';
 function WynikiPageContent() {
   const { toast } = useToast();
   const resultsRef = useRef<HTMLDivElement>(null);
-  const postcodeRef = useRef<string>('');
   const searchParams = useSearchParams();
   const { isAdmin } = useAuthContext();
 
@@ -132,8 +130,6 @@ function WynikiPageContent() {
                 <SimulationResults />
                 <Separator className="my-8"/>
                 <ThirdPillarSimulator />
-                <Separator className="my-8"/>
-                <RegionalQualityIndicator onPostcodeChange={(pc) => postcodeRef.current = pc} />
                 <Separator className="my-8"/>
                 <ParenthoodImpact />
             </div>

@@ -14,6 +14,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { RegionalQualityIndicator } from './regional-quality-indicator';
+import { Separator } from '../ui/separator';
 
 
 type PeriodType = 'unpaid_leave' | 'maternity_leave' | 'parental_leave' | 'sick_leave' | 'childcare_leave' | 'unemployed' | 'foreign_work_no_contrib';
@@ -55,6 +57,7 @@ export interface SimulatorState {
     wariant: 1 | 2 | 3;
     employmentType: EmploymentType;
     leavePeriods: LeavePeriod[];
+    postcode: string;
 }
 
 
@@ -127,6 +130,7 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
   const [employmentType, setEmploymentType] = useState<EmploymentType>('uop');
   const [leavePeriods, setLeavePeriods] = useState<LeavePeriod[]>([]);
   const [newPeriodType, setNewPeriodType] = useState<PeriodType | ''>('');
+  const [postcode, setPostcode] = useState('');
   
   const minRetireYear = useMemo(() => {
     return currentYear + (gender === 'K' ? 60 : 65) - age;
@@ -136,10 +140,10 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
 
   useEffect(() => {
     const currentState: SimulatorState = {
-        desiredPension, age, gender, isTaxExempt, startWorkYear, retireYear, salary, wariant, employmentType, leavePeriods
+        desiredPension, age, gender, isTaxExempt, startWorkYear, retireYear, salary, wariant, employmentType, leavePeriods, postcode
     };
     onStateChange(currentState);
-  }, [desiredPension, age, gender, isTaxExempt, startWorkYear, retireYear, salary, wariant, employmentType, leavePeriods, onStateChange]);
+  }, [desiredPension, age, gender, isTaxExempt, startWorkYear, retireYear, salary, wariant, employmentType, leavePeriods, postcode, onStateChange]);
 
   const careerPeriodsForVisualizer = leavePeriods
       .map((period) => {
@@ -409,6 +413,11 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
             </div>
         </div>
       </div>
+      
+      <Separator className="my-8"/>
+
+      <RegionalQualityIndicator realisticPension={pensionResult.kwotaUrealniona} onPostcodeChange={setPostcode} />
+
     </div>
   );
 }

@@ -1,12 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MapPin, Info, ArrowRight } from 'lucide-react';
-import { getRegionalData, RegionalData } from '@/lib/regional-data';
+import { getRegionalData } from '@/lib/regional-data';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
@@ -42,17 +41,15 @@ function Gauge({ value }: { value: number }) {
 }
 
 interface RegionalQualityIndicatorProps {
+    realisticPension: number;
     onPostcodeChange: (postcode: string) => void;
 }
 
-export function RegionalQualityIndicator({ onPostcodeChange }: RegionalQualityIndicatorProps) {
-  const searchParams = useSearchParams();
+export function RegionalQualityIndicator({ realisticPension, onPostcodeChange }: RegionalQualityIndicatorProps) {
   const [postcode, setPostcode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<{ ratio: number; status: string; county: string; basket_cost: number; avg_pension_county: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  const realisticPension = Number(searchParams.get('realisticPension') || '0');
 
   const handleCheck = () => {
     if (!/^\d{2}-\d{3}$/.test(postcode)) {
@@ -114,7 +111,10 @@ export function RegionalQualityIndicator({ onPostcodeChange }: RegionalQualityIn
             <Input 
                 placeholder="Wpisz swój kod pocztowy (np. 00-001)"
                 value={postcode}
-                onChange={(e) => setPostcode(e.target.value)}
+                onChange={(e) => {
+                    setPostcode(e.target.value);
+                    onPostcodeChange(e.target.value);
+                }}
                 className="max-w-xs"
             />
             <Button onClick={handleCheck} disabled={isLoading}>
