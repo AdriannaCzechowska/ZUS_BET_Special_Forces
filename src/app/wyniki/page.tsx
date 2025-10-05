@@ -191,6 +191,13 @@ function WynikiPageContent() {
             </div>
         </div>
 
+        <div className="mt-12 text-center">
+            <Button size="lg" onClick={handleDownloadReport}>
+                <Download className="mr-2 h-4 w-4" />
+                Pobierz jako PDF
+            </Button>
+        </div>
+
       </main>
       <Footer />
     </div>
