@@ -4,10 +4,18 @@ import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis, Responsive
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, type ChartConfig } from "@/components/ui/chart"
 import { Separator } from "../ui/separator"
+import { salaryData } from "@/lib/data/salary-data";
+
+const REPLACEMENT_RATE_ESTIMATE = 0.4; // 40%
 
 const chartData = [
   { category: "Poniżej minimalnej", value: 1780.96, key: "minimalna" },
   { category: "Średnia obecna", value: 3845.54, key: "srednia" },
+  { category: "Lekarz", value: salaryData['Lekarz'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "lekarz" },
+  { category: "Programista", value: salaryData['Programista'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "programista" },
+  { category: "Pracownik biurowy", value: salaryData['Pracownik biurowy'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "biurowy" },
+  { category: "Kierowca zawodowy", value: salaryData['Kierowca zawodowy'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "kierowca" },
+  { category: "Księgowa", value: salaryData['Księgowa'].national_average * REPLACEMENT_RATE_ESTIMATE, key: "ksiegowa" },
   { category: "Najwyższa w PL", value: 43412, key: "najwyzsza" },
 ]
 
@@ -15,6 +23,11 @@ const tooltips: Record<string, string> = {
   minimalna: "Świadczeniobiorcy otrzymujący emeryturę w wysokości poniżej minimalnej wykazywali się niską aktywnością zawodową, nie przepracowali minimum 25 lat dla mężczyzn i 20 lat dla kobiet, w związku z tym nie nabyli prawa do gwarancji minimalnej emerytury.",
   srednia: "Obliczana na bazie: 19,52 % składki emerytalnej z wynagrodzenia brutto, waloryzacja roczna i kwartalna wg wskaźników MRPiPS.",
   najwyzsza: "Przykład: 43 000 zł brutto, woj. śląskie, ponad 55 lat pracy, brak przerw chorobowych.",
+  lekarz: `Szacowana emerytura dla lekarza przy średnich zarobkach ${salaryData['Lekarz'].national_average} zł i stopie zastąpienia 40%.`,
+  programista: `Szacowana emerytura dla programisty przy średnich zarobkach ${salaryData['Programista'].national_average} zł i stopie zastąpienia 40%.`,
+  biurowy: `Szacowana emerytura dla pracownika biurowego przy średnich zarobkach ${salaryData['Pracownik biurowy'].national_average} zł i stopie zastąpienia 40%.`,
+  kierowca: `Szacowana emerytura dla kierowcy zawodowego przy średnich zarobkach ${salaryData['Kierowca zawodowy'].national_average} zł i stopie zastąpienia 40%.`,
+  ksiegowa: `Szacowana emerytura dla księgowej przy średnich zarobkach ${salaryData['Księgowa'].national_average} zł i stopie zastąpienia 40%.`,
 }
 
 const chartConfig = {
@@ -29,6 +42,11 @@ const chartConfig = {
     label: "Średnia obecna",
     color: "hsl(var(--chart-2))", // blue
   },
+  lekarz: { label: "Lekarz", color: "hsl(var(--chart-5))" },
+  programista: { label: "Programista", color: "hsl(var(--chart-5))" },
+  biurowy: { label: "Pracownik biurowy", color: "hsl(var(--chart-5))" },
+  kierowca: { label: "Kierowca zawodowy", color: "hsl(var(--chart-5))" },
+  ksiegowa: { label: "Księgowa", color: "hsl(var(--chart-5))" },
   najwyzsza: {
     label: "Najwyższa w PL",
     color: "hsl(var(--chart-1))", // green
@@ -77,6 +95,7 @@ export function PensionChart() {
                     tickMargin={10}
                     axisLine={false}
                     className="text-xs"
+                    interval={0}
                 />
                 <YAxis hide={true} />
                 <ChartTooltip cursor={false} content={<CustomTooltip />} />
