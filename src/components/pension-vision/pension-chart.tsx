@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis, ResponsiveContainer } from "recharts"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, type ChartConfig } from "@/components/ui/chart"
 import { Separator } from "../ui/separator"
@@ -60,33 +60,36 @@ export function PensionChart() {
   return (
     <Card className="shadow-lg semitransparent-panel">
       <CardHeader>
-        <CardTitle className="font-headline text-2xl">Porównaj swoje oczekiwania</CardTitle>
+        <CardTitle className="font-headline text-2xl">Twoja emerytura na tle rzeczywistości</CardTitle>
         <CardDescription>Zobacz, jak Twoja wymarzona emerytura wypada na tle obecnych realiów w Polsce.</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
-          <BarChart 
-            data={chartData} 
-            accessibilityLayer 
-            margin={{ top: 30, right: 10, left: 10, bottom: 5 }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="category"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              className="text-xs"
-            />
-            <YAxis hide={true} domain={[0, (dataMax: number) => dataMax * 1.1]}/>
-            <ChartTooltip cursor={false} content={<CustomTooltip />} />
-            <Bar dataKey="value" radius={8}>
-                <LabelList dataKey="value" position="top" offset={12} className="fill-foreground font-semibold" formatter={(value: number) => `${Math.round(value).toLocaleString('pl-PL')} zł`} />
-                {chartData.map((entry) => (
-                    <Cell key={entry.category} fill={chartConfig[entry.key as keyof typeof chartConfig].color} />
-                ))}
-            </Bar>
-          </BarChart>
+            <BarChart
+                data={chartData}
+                layout="vertical"
+                accessibilityLayer
+                margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
+            >
+                <CartesianGrid horizontal={false} />
+                <YAxis
+                    dataKey="category"
+                    type="category"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    className="text-xs"
+                    width={110}
+                />
+                <XAxis type="number" hide={true} domain={[0, (dataMax: number) => dataMax * 1.1]} />
+                <ChartTooltip cursor={false} content={<CustomTooltip />} />
+                <Bar dataKey="value" radius={8}>
+                    <LabelList dataKey="value" position="right" offset={8} className="fill-foreground font-semibold" formatter={(value: number) => `${Math.round(value).toLocaleString('pl-PL')} zł`} />
+                    {chartData.map((entry) => (
+                        <Cell key={entry.category} fill={chartConfig[entry.key as keyof typeof chartConfig].color} />
+                    ))}
+                </Bar>
+            </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-4">
