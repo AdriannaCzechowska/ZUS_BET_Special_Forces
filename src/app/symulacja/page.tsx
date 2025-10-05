@@ -24,6 +24,8 @@ function SimulationPageContent() {
   const { isAdmin } = useAuthContext();
   const searchParams = useSearchParams();
 
+  const expectedPension = searchParams.get('expectedPension');
+
   const handleDownloadPdf = async () => {
     toast({
       title: "Generowanie raportu PDF...",
@@ -109,7 +111,7 @@ function SimulationPageContent() {
         const data = [
             ["Data użycia", now.toLocaleDateString('pl-PL')],
             ["Godzina użycia", now.toLocaleTimeString('pl-PL')],
-            ["Emerytura oczekiwana", searchParams.get('expectedPension') || 'Brak'],
+            ["Emerytura oczekiwana", expectedPension || 'Brak'],
             ["Wiek", simulatorState.age],
             ["Płeć", simulatorState.gender === 'K' ? 'Kobieta' : 'Mężczyzna'],
             ["Wysokość wynagrodzenia", simulatorState.salary],
@@ -150,6 +152,14 @@ function SimulationPageContent() {
       wariant: simulatorState.wariant,
       employmentType: simulatorState.employmentType,
   }).kwotaUrealniona : 0;
+  
+  const linkParams = new URLSearchParams();
+  if (realisticPension) {
+    linkParams.set('realisticPension', realisticPension.toString());
+  }
+  if (expectedPension) {
+    linkParams.set('expectedPension', expectedPension);
+  }
 
   return (
      <>
@@ -159,7 +169,10 @@ function SimulationPageContent() {
       ]} />
       <main className="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <div ref={simulatorRef} className="bg-background">
-            <NewPensionSimulator onStateChange={setSimulatorState} />
+            <NewPensionSimulator 
+              onStateChange={setSimulatorState} 
+              initialDesiredPension={expectedPension ? Number(expectedPension) : undefined} 
+            />
         </div>
         <div className="mt-12 text-center flex justify-center items-center gap-4">
             <DropdownMenu>
@@ -183,7 +196,7 @@ function SimulationPageContent() {
             </DropdownMenu>
 
             <Button asChild size="lg" variant="outline">
-                 <Link href={`/na-co-wystarcza?realisticPension=${realisticPension}`}>
+                 <Link href={`/na-co-wystarcza?${linkParams.toString()}`}>
                     <Lightbulb className="mr-2 h-4 w-4" />
                     Na co to wystarcza
                 </Link>

@@ -62,6 +62,8 @@ function ShoppingSimulator() {
   const router = useRouter();
   const { toast } = useToast();
   const initialBalance = Number(searchParams.get('realisticPension') || '3500');
+  const expectedPension = searchParams.get('expectedPension');
+
 
   const [balance, setBalance] = useImmer(initialBalance);
   const [cart, setCart] = useImmer<Product[]>([]);
@@ -138,8 +140,19 @@ function ShoppingSimulator() {
       return;
     }
     
-    const cartItemsParam = encodeURIComponent(JSON.stringify(cart.map(item => item.id)));
-    router.push(`/podsumowanie-zakupow?totalCost=${totalCost}&balance=${balance}&cart=${cartItemsParam}`);
+    const params = new URLSearchParams();
+    params.set('totalCost', totalCost.toString());
+    params.set('balance', balance.toString());
+    params.set('cart', encodeURIComponent(JSON.stringify(cart.map(item => item.id))));
+    if (expectedPension) {
+      params.set('expectedPension', expectedPension);
+    }
+    router.push(`/podsumowanie-zakupow?${params.toString()}`);
+  }
+
+  const linkParams = new URLSearchParams();
+  if (expectedPension) {
+    linkParams.set('expectedPension', expectedPension);
   }
 
   return (
@@ -152,7 +165,7 @@ function ShoppingSimulator() {
       <main className="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="mb-6">
           <Button asChild variant="ghost" className="pl-0 text-base">
-            <Link href="/symulacja">
+            <Link href={`/symulacja?${linkParams.toString()}`}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               Wróć do symulatora
             </Link>

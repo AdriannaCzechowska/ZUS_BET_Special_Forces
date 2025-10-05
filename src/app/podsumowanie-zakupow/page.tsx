@@ -51,6 +51,7 @@ function ShoppingSummaryContent() {
   const searchParams = useSearchParams();
   const totalCost = Number(searchParams.get('totalCost') || 0);
   const balance = Number(searchParams.get('balance') || 0);
+  const expectedPension = searchParams.get('expectedPension');
 
   const purchasedItems = useMemo(() => {
     const cartParam = searchParams.get('cart');
@@ -78,12 +79,26 @@ function ShoppingSummaryContent() {
     }
   }, [searchParams]);
 
+  const naCoWystarczaLink = new URLSearchParams();
+  if (balance) {
+    naCoWystarczaLink.set('realisticPension', (totalCost + balance).toString());
+  }
+  if (expectedPension) {
+    naCoWystarczaLink.set('expectedPension', expectedPension);
+  }
+
+  const nowaSymulacjaLink = new URLSearchParams();
+  if (expectedPension) {
+    nowaSymulacjaLink.set('expectedPension', expectedPension);
+  }
+
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <Breadcrumbs items={[
         { label: 'Symulator emerytalny', href: '/' },
-        { label: 'Na co to wystarcza', href: '/na-co-wystarcza' },
+        { label: 'Na co to wystarcza', href: `/na-co-wystarcza?${naCoWystarczaLink.toString()}` },
         { label: 'Podsumowanie zakupów' }
       ]} />
       <main className="flex-grow w-full max-w-2xl mx-auto p-4 sm:p-6 lg:p-8 flex items-center justify-center">
@@ -125,10 +140,10 @@ function ShoppingSummaryContent() {
             <Separator />
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild>
-                    <Link href="/na-co-wystarcza">Wróć do sklepu</Link>
+                    <Link href={`/na-co-wystarcza?${naCoWystarczaLink.toString()}`}>Wróć do sklepu</Link>
                 </Button>
                 <Button asChild variant="outline">
-                    <Link href="/symulacja">Nowa symulacja</Link>
+                    <Link href={`/symulacja?${nowaSymulacjaLink.toString()}`}>Nowa symulacja</Link>
                 </Button>
             </div>
           </CardContent>

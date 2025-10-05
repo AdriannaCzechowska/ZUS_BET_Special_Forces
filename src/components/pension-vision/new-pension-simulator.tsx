@@ -120,10 +120,11 @@ const currentYear = new Date().getFullYear();
 
 interface NewPensionSimulatorProps {
     onStateChange: (state: SimulatorState) => void;
+    initialDesiredPension?: number;
 }
 
-export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps) {
-  const [desiredPension, setDesiredPension] = useState(4000);
+export function NewPensionSimulator({ onStateChange, initialDesiredPension = 4000 }: NewPensionSimulatorProps) {
+  const [desiredPension, setDesiredPension] = useState(initialDesiredPension);
   const [age, setAge] = useState(30);
   const [gender, setGender] = useState<'K' | 'M'>('K');
   const [isTaxExempt, setIsTaxExempt] = useState(true);
