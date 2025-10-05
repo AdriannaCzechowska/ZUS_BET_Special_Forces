@@ -8,7 +8,7 @@ import { Footer } from '@/components/layout/footer';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowLeft, Wallet, ShoppingCart, Trash2, Home, ShoppingBasket, Pill, Stethoscope, Shirt, Plane, Gift, Laptop, BookOpen } from 'lucide-react';
+import { ArrowLeft, Wallet, ShoppingCart, Trash2, Home, ShoppingBasket, Pill, Stethoscope, Shirt, Plane, Gift, Laptop, BookOpen, Zap, Droplets, Trash, Flame, Wifi, Smartphone, Tv, Cigarette, WashingMachine, Refrigerator, SprayCan, Clapperboard, Gamepad, Fuel, ShieldCheck, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
@@ -21,15 +21,31 @@ interface Product {
 }
 
 const products: Product[] = [
-  { id: 'rent', name: 'Czynsz i rachunki', price: 1450, icon: <Home className="h-8 w-8" /> },
-  { id: 'food', name: 'Jedzenie', price: 1000, icon: <ShoppingBasket className="h-8 w-8" /> },
-  { id: 'meds', name: 'Leki', price: 300, icon: <Pill className="h-8 w-8" /> },
-  { id: 'doctor', name: 'Prywatny lekarz', price: 200, icon: <Stethoscope className="h-8 w-8" /> },
-  { id: 'clothes', name: 'Ubrania', price: 150, icon: <Shirt className="h-8 w-8" /> },
-  { id: 'vacation', name: 'Wakacje', price: 3000, icon: <Plane className="h-8 w-8" /> },
-  { id: 'grandchild', name: 'Prezent dla wnuka', price: 200, icon: <Gift className="h-8 w-8" /> },
-  { id: 'electronics', name: 'Sprzęt RTV/AGD', price: 800, icon: <Laptop className="h-8 w-8" /> },
-  { id: 'books', name: 'Książki i kultura', price: 60, icon: <BookOpen className="h-8 w-8" /> },
+    { id: 'rent', name: 'Czynsz', price: 700, icon: <Home className="h-8 w-8" /> },
+    { id: 'electricity', name: 'Prąd', price: 100, icon: <Zap className="h-8 w-8" /> },
+    { id: 'water', name: 'Woda', price: 80, icon: <Droplets className="h-8 w-8" /> },
+    { id: 'garbage', name: 'Śmieci', price: 100, icon: <Trash className="h-8 w-8" /> },
+    { id: 'gas', name: 'Gaz', price: 80, icon: <Flame className="h-8 w-8" /> },
+    { id: 'internet', name: 'Internet', price: 50, icon: <Wifi className="h-8 w-8" /> },
+    { id: 'mobile', name: 'Abonament komórkowy', price: 30, icon: <Smartphone className="h-8 w-8" /> },
+    { id: 'tv', name: 'Telewizja', price: 30, icon: <Tv className="h-8 w-8" /> },
+    { id: 'food', name: 'Jedzenie', price: 800, icon: <ShoppingBasket className="h-8 w-8" /> },
+    { id: 'stimulants', name: 'Używki', price: 100, icon: <Cigarette className="h-8 w-8" /> },
+    { id: 'meds', name: 'Leki', price: 300, icon: <Pill className="h-8 w-8" /> },
+    { id: 'doctor', name: 'Prywatny lekarz', price: 200, icon: <Stethoscope className="h-8 w-8" /> },
+    { id: 'clothes', name: 'Ubrania', price: 150, icon: <Shirt className="h-8 w-8" /> },
+    { id: 'vacation', name: 'Wakacje', price: 1500, icon: <Plane className="h-8 w-8" /> },
+    { id: 'grandchild', name: 'Prezent dla wnuka', price: 100, icon: <Gift className="h-8 w-8" /> },
+    { id: 'phone', name: 'Telefon', price: 1500, icon: <Smartphone className="h-8 w-8" /> },
+    { id: 'washing_machine', name: 'Pralka', price: 1500, icon: <WashingMachine className="h-8 w-8" /> },
+    { id: 'fridge', name: 'Lodówka', price: 2000, icon: <Refrigerator className="h-8 w-8" /> },
+    { id: 'cosmetics', name: 'Kosmetyki', price: 150, icon: <SprayCan className="h-8 w-8" /> },
+    { id: 'theatre_cinema', name: 'Teatr/Kino', price: 50, icon: <Clapperboard className="h-8 w-8" /> },
+    { id: 'book', name: 'Książka', price: 60, icon: <BookOpen className="h-8 w-8" /> },
+    { id: 'game', name: 'Gra komputerowa', price: 150, icon: <Gamepad className="h-8 w-8" /> },
+    { id: 'fuel', name: 'Paliwo', price: 350, icon: <Fuel className="h-8 w-8" /> },
+    { id: 'insurance', name: 'Ubezpieczenie', price: 150, icon: <ShieldCheck className="h-8 w-8" /> },
+    { id: 'investment', name: 'Inwestycje', price: 200, icon: <TrendingUp className="h-8 w-8" /> },
 ];
 
 function ShoppingSimulator() {
@@ -131,7 +147,7 @@ function ShoppingSimulator() {
                 <CardTitle>Półka sklepowa</CardTitle>
                 <CardDescription>Kliknij produkt, aby dodać go do koszyka.</CardDescription>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {products.map(product => (
                   <button 
                     key={product.id} 
