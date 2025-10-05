@@ -65,26 +65,23 @@ export function PensionChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
-            <BarChart
+            <BarChart 
                 data={chartData}
-                layout="vertical"
                 accessibilityLayer
-                margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
+                margin={{ top: 20, right: 20, left: 20, bottom: 5 }}
             >
-                <CartesianGrid horizontal={false} />
-                <YAxis
+                <CartesianGrid vertical={false} />
+                <XAxis
                     dataKey="category"
-                    type="category"
                     tickLine={false}
                     tickMargin={10}
                     axisLine={false}
                     className="text-xs"
-                    width={110}
                 />
-                <XAxis type="number" hide={true} domain={[0, (dataMax: number) => dataMax * 1.1]} />
+                <YAxis hide={true} />
                 <ChartTooltip cursor={false} content={<CustomTooltip />} />
                 <Bar dataKey="value" radius={8}>
-                    <LabelList dataKey="value" position="right" offset={8} className="fill-foreground font-semibold" formatter={(value: number) => `${Math.round(value).toLocaleString('pl-PL')} zł`} />
+                     <LabelList dataKey="value" position="top" offset={8} className="fill-foreground font-semibold" formatter={(value: number) => `${Math.round(value).toLocaleString('pl-PL')} zł`} />
                     {chartData.map((entry) => (
                         <Cell key={entry.category} fill={chartConfig[entry.key as keyof typeof chartConfig].color} />
                     ))}
