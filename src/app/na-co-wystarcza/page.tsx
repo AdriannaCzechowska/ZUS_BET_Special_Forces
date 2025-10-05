@@ -138,7 +138,8 @@ function ShoppingSimulator() {
       return;
     }
     
-    router.push(`/podsumowanie-zakupow?totalCost=${totalCost}&balance=${balance}`);
+    const cartItemsParam = encodeURIComponent(JSON.stringify(cart.map(item => item.id)));
+    router.push(`/podsumowanie-zakupow?totalCost=${totalCost}&balance=${balance}&cart=${cartItemsParam}`);
   }
 
   return (
