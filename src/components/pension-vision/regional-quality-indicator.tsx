@@ -11,35 +11,6 @@ import { Skeleton } from '../ui/skeleton';
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 
-function Gauge({ value }: { value: number }) {
-    const percentage = Math.min(Math.max(value * 100, 0), 150);
-    const rotation = (percentage / 100) * 180 - 90;
-
-    let colorClass = 'bg-destructive'; // #F05E5E
-    if (percentage >= 100) {
-        colorClass = 'bg-primary'; // green
-    } else if (percentage >= 80) {
-        colorClass = 'bg-accent'; // #FFB34F
-    }
-
-    return (
-        <div className="relative w-48 h-24 mx-auto">
-            <div className="absolute top-0 left-0 w-full h-full border-b-8 border-l-8 border-r-8 border-muted rounded-t-full"></div>
-            <div className={cn(
-                "absolute top-0 left-0 w-full h-full border-b-8 border-l-8 border-r-8 rounded-t-full transition-all duration-500",
-                colorClass
-            )} style={{ clipPath: `inset(0 ${100 - (percentage / 1.5)}% 0 0)` }}></div>
-            <div
-                className="absolute bottom-0 left-1/2 w-1 h-1/2 bg-foreground origin-bottom transition-transform duration-500"
-                style={{ transform: `translateX(-50%) rotate(${rotation}deg)` }}
-            ></div>
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-2 text-2xl font-bold font-headline">
-                {Math.round(percentage)}%
-            </div>
-        </div>
-    );
-}
-
 interface RegionalQualityIndicatorProps {
     realisticPension: number;
     onPostcodeChange: (postcode: string) => void;
@@ -107,11 +78,8 @@ export function RegionalQualityIndicator({ realisticPension, onPostcodeChange }:
       <CardHeader>
         <CardTitle className="font-headline text-2xl flex items-center gap-2">
             <MapPin className="h-6 w-6 text-primary" />
-            Wskaźnik jakości życia w regionie
+            Kod Pocztowy
         </CardTitle>
-        <CardDescription>
-            Sprawdź, jak Twoja prognozowana emerytura urealniona wypada na tle szacowanych kosztów życia w Twoim powiecie.
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-col sm:flex-row gap-2">
@@ -127,51 +95,7 @@ export function RegionalQualityIndicator({ realisticPension, onPostcodeChange }:
         
         {isLoading && (
             <div className="space-y-4 pt-4">
-                <Skeleton className="h-24 w-48 mx-auto" />
-                <Skeleton className="h-6 w-3/4 mx-auto" />
-                <Skeleton className="h-4 w-1/2 mx-auto" />
-            </div>
-        )}
-
-        {result && (
-            <div className="text-center pt-4 space-y-4">
-                <Gauge value={result.ratio} />
-                <div className="max-w-md mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                    <div className='bg-background/50 p-4 rounded-lg border'>
-                         <p className="text-muted-foreground text-sm">Twoja prognozowana emerytura realna</p>
-                        <p className="text-xl font-bold font-headline">{realisticPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
-                    </div>
-                     <div className='bg-background/50 p-4 rounded-lg border'>
-                         <div className="text-muted-foreground text-sm flex items-center justify-center gap-1">
-                            <span>Lokalny koszyk seniora</span>
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="h-6 w-6 ml-1 -mt-1 inline-flex items-center justify-center">
-                                            <Info className="h-4 w-4 text-muted-foreground" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <div className="max-w-xs">Koszyk jest szacowany na podstawie średniej emerytury w powiecie {result.county} (dane GUS) i może nie odzwierciedlać w pełni realnych kosztów.</div>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                         </div>
-                        <p className="text-xl font-bold font-headline">{result.basket_cost.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
-                    </div>
-                </div>
-                 <Separator className="max-w-md mx-auto" />
-                 <p className={cn(
-                        "font-semibold text-lg max-w-md mx-auto",
-                        result.status === 'green' && 'text-primary',
-                        result.status === 'yellow' && 'text-accent-dark', // You might need to define text-accent-dark
-                        result.status === 'red' && 'text-destructive',
-                    )}>
-                        {result.status === 'green' && `Pokrywasz ${(result.ratio * 100).toFixed(0)}% kosztów życia – nadwyżka +${(realisticPension - result.basket_cost).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}/m-c`}
-                        {result.status === 'yellow' && `Pokrywasz ${(result.ratio * 100).toFixed(0)}% kosztów życia – brakuje ${(result.basket_cost - realisticPension).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}/m-c`}
-                        {result.status === 'red' && `Pokrywasz ${(result.ratio * 100).toFixed(0)}% kosztów życia – ryzyko niedoboru -${(result.basket_cost - realisticPension).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}/m-c`}
-                    </p>
-
+                <Skeleton className="h-4 w-3/4 mx-auto" />
             </div>
         )}
 
