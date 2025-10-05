@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useImmer } from 'use-immer';
 import { Header } from '@/components/layout/header';
@@ -39,8 +39,20 @@ function ShoppingSimulator() {
 
   const [balance, setBalance] = useImmer(initialBalance);
   const [cart, setCart] = useImmer<Product[]>([]);
+  const balanceRef = useRef<HTMLParagraphElement>(null);
 
   const totalCost = cart.reduce((sum, item) => sum + item.price, 0);
+
+  const triggerBalanceAnimation = () => {
+    const el = balanceRef.current;
+    if (el) {
+      el.classList.remove('animate-balance-update');
+      // void el.offsetWidth; // Trigger reflow
+      setTimeout(() => {
+          el.classList.add('animate-balance-update');
+      }, 10)
+    }
+  }
 
   const addToCart = (product: Product) => {
     if (balance < product.price) {
@@ -51,7 +63,11 @@ function ShoppingSimulator() {
       });
       return;
     }
-    setBalance(draft => draft - product.price);
+    setBalance(draft => {
+        draft -= product.price
+        triggerBalanceAnimation();
+    });
+
     setCart(draft => {
       draft.push(product);
     });
@@ -62,7 +78,10 @@ function ShoppingSimulator() {
   };
 
   const removeFromCart = (productToRemove: Product, indexToRemove: number) => {
-    setBalance(draft => draft + productToRemove.price);
+    setBalance(draft => {
+        draft += productToRemove.price
+        triggerBalanceAnimation();
+    });
     setCart(draft => {
       draft.splice(indexToRemove, 1);
     });
@@ -114,7 +133,11 @@ function ShoppingSimulator() {
               </CardHeader>
               <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {products.map(product => (
-                  <button key={product.id} onClick={() => addToCart(product)} className="text-center p-4 border rounded-lg hover:bg-accent hover:border-primary transition-all flex flex-col items-center justify-between h-40">
+                  <button 
+                    key={product.id} 
+                    onClick={() => addToCart(product)} 
+                    className="text-center p-4 border rounded-lg hover:bg-accent/80 hover:border-primary active:scale-95 transition-all flex flex-col items-center justify-between h-40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  >
                     <div className="text-primary">{product.icon}</div>
                     <div className="mt-2">
                       <p className="font-semibold text-sm">{product.name}</p>
@@ -138,7 +161,7 @@ function ShoppingSimulator() {
                 <p className="text-4xl font-bold font-headline text-primary">{initialBalance.toLocaleString('pl-PL')} zł</p>
                 <Separator className="my-4" />
                 <p className="text-sm text-muted-foreground">Pozostało</p>
-                <p className="text-3xl font-bold">{balance.toLocaleString('pl-PL')} zł</p>
+                <p ref={balanceRef} className="text-3xl font-bold">{balance.toLocaleString('pl-PL')} zł</p>
               </CardContent>
             </Card>
 
@@ -154,7 +177,7 @@ function ShoppingSimulator() {
                 ) : (
                   <div className="space-y-2">
                     {cart.map((item, index) => (
-                      <div key={index} className="flex justify-between items-center bg-background/50 p-2 rounded-md">
+                      <div key={`${item.id}-${index}`} className="flex justify-between items-center bg-background/50 p-2 rounded-md animate-cart-item-in">
                         <div>
                           <p className="text-sm font-medium">{item.name}</p>
                           <p className="text-xs text-muted-foreground">{item.price.toLocaleString('pl-PL')} zł</p>
