@@ -158,19 +158,26 @@ function ShoppingSimulator() {
                 <CardDescription>Kliknij produkt, aby dodać go do koszyka.</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {products.map(product => (
-                  <button 
-                    key={product.id} 
-                    onClick={() => addToCart(product)} 
-                    className="text-center p-4 border rounded-lg hover:bg-accent/80 hover:border-primary active:scale-95 transition-all flex flex-col items-center justify-between h-40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  >
-                    <div className="text-primary">{product.icon}</div>
-                    <div className="mt-2">
-                      <p className="font-semibold text-sm">{product.name}</p>
-                      <p className="text-xs text-muted-foreground">{product.price.toLocaleString('pl-PL')} zł</p>
-                    </div>
-                  </button>
-                ))}
+                {products.map(product => {
+                  const isSinglePurchase = singlePurchaseItems.has(product.id);
+                  const isInCart = cart.some(item => item.id === product.id);
+                  const isDisabled = isSinglePurchase && isInCart;
+
+                  return (
+                    <button 
+                      key={product.id} 
+                      onClick={() => addToCart(product)} 
+                      disabled={isDisabled}
+                      className="text-center p-4 border rounded-lg hover:bg-accent/80 hover:border-primary active:scale-95 transition-all flex flex-col items-center justify-between h-40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:bg-muted/50 disabled:cursor-not-allowed disabled:hover:bg-muted/50 disabled:scale-100"
+                    >
+                      <div className="text-primary">{product.icon}</div>
+                      <div className="mt-2">
+                        <p className="font-semibold text-sm">{product.name}</p>
+                        <p className="text-xs text-muted-foreground">{product.price.toLocaleString('pl-PL')} zł</p>
+                      </div>
+                    </button>
+                  );
+                })}
               </CardContent>
             </Card>
           </div>
