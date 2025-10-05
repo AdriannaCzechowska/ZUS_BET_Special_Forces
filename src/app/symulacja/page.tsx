@@ -9,13 +9,15 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { NewPensionSimulator, type SimulatorState } from '@/components/pension-vision/new-pension-simulator';
 import { Button } from '@/components/ui/button';
-import { Download, ChevronDown, Lightbulb } from 'lucide-react';
+import { Download, ChevronDown, Lightbulb, Target } from 'lucide-react';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthContext } from '@/context/AuthContext';
 import { useSearchParams } from 'next/navigation';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { calculatePension } from '@/lib/pension-calculator';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { ThirdPillarComparison } from '@/components/pension-vision/third-pillar-comparison';
 
 function SimulationPageContent() {
   const { toast } = useToast();
@@ -174,7 +176,7 @@ function SimulationPageContent() {
               initialDesiredPension={expectedPension ? Number(expectedPension) : undefined} 
             />
         </div>
-        <div className="mt-12 text-center flex justify-center items-center gap-4">
+        <div className="mt-12 text-center flex flex-wrap justify-center items-center gap-4">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button size="lg">
@@ -194,6 +196,18 @@ function SimulationPageContent() {
                     )}
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button size="lg" variant="outline">
+                        <Target className="mr-2 h-4 w-4" />
+                        Porównaj III filar
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl">
+                   <ThirdPillarComparison ppkRate={2} />
+                </DialogContent>
+            </Dialog>
 
             <Button asChild size="lg" variant="outline">
                  <Link href={`/na-co-wystarcza?${linkParams.toString()}`}>
