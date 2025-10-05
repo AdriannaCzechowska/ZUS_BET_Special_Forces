@@ -268,7 +268,7 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
              </FormSection>
             
             <FormSection title="Twoja ścieżka kariery">
-                <FormSlider label="Kiedy zacząłeś pracę" value={startWorkYear} min={birthYear + 16} max={currentYear} step={1} onValueChange={setStartWorkYear} unit="" />
+                <FormSlider label="Kiedy zacząłeś pracę" value={startWorkYear} min={birthYear + 16} max={currentYear+20} step={1} onValueChange={setStartWorkYear} unit="" />
                 <FormSlider label="Kiedy planujesz skończyć pracę" value={retireYear} min={minRetireYear} max={birthYear + 75} step={1} onValueChange={setRetireYear} unit="" />
             </FormSection>
         </div>

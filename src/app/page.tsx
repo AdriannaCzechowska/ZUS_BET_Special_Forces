@@ -13,10 +13,10 @@ export default function Home() {
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           <div className="space-y-8">
             <PensionInput />
-            <PensionChart />
+            <DailyFactCard />
           </div>
           <div className="space-y-8">
-            <DailyFactCard />
+            <PensionChart />
           </div>
         </div>
       </main>
