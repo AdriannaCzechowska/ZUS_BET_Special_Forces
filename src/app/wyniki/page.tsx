@@ -13,7 +13,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowLeft, RefreshCw, LayoutDashboard, Download, ChevronDown } from 'lucide-react';
+import { ArrowLeft, RefreshCw, LayoutDashboard, Download, ChevronDown, Lightbulb } from 'lucide-react';
 import Link from 'next/link';
 import { SimulationResults } from '@/components/pension-vision/simulation-results';
 import { useToast } from '@/hooks/use-toast';
@@ -30,6 +30,7 @@ function WynikiPageContent() {
   const resultsRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const { isAdmin } = useAuthContext();
+  const realisticPension = searchParams.get('realisticPension');
 
   const handleDownloadReport = async () => {
     toast({
@@ -123,6 +124,12 @@ function WynikiPageContent() {
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
+                    <Button asChild variant="ghost" className="w-full justify-start text-base px-4 py-3 rounded-none text-primary/80 hover:bg-primary/10">
+                         <Link href={`/na-co-wystarcza?realisticPension=${realisticPension || ''}`}>
+                            <Lightbulb className="mr-2 h-4 w-4" />
+                            Na co to wystarcza
+                        </Link>
+                    </Button>
                  </SideNav>
             </div>
 

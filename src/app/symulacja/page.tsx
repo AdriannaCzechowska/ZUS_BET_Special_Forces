@@ -139,6 +139,17 @@ export default function SimulationPage() {
     }
   }
 
+  const realisticPension = simulatorState ? calculatePension({
+        wiek: simulatorState.age,
+        plec: simulatorState.gender,
+        pensjaBrutto: simulatorState.salary,
+        rokRozpoczeciaPracy: simulatorState.startWorkYear,
+        rokPrzejsciaNaEmeryture: simulatorState.retireYear,
+        dodatkoweLataPracy: 0, // Simplified for this link
+        przerwyWLacznychMiesiacach: simulatorState.leavePeriods.reduce((sum, p) => sum + p.durationMonths, 0),
+        wariant: simulatorState.wariant,
+        employmentType: simulatorState.employmentType,
+    }).kwotaUrealniona : 0;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -173,7 +184,7 @@ export default function SimulationPage() {
             </DropdownMenu>
 
             <Button asChild size="lg" variant="outline">
-                <Link href="/na-co-wystarcza">
+                 <Link href={`/na-co-wystarcza?realisticPension=${realisticPension}`}>
                     <Lightbulb className="mr-2 h-4 w-4" />
                     Na co to wystarcza
                 </Link>

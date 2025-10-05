@@ -211,13 +211,7 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
   return (
     <div className="space-y-8">
        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <div className="space-y-8">
-            <FormSection title="Jaką emeryturę chciałbyś mieć w przyszłości?">
-                 <FormField label="Oczekiwana miesięczna emerytura (netto PLN)">
-                    <Input type="number" value={desiredPension} onChange={e => setDesiredPension(Number(e.target.value))} />
-                </FormField>
-            </FormSection>
-           
+        <div className="space-y-8">           
             <FormSection title="Podstawowe informacje">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField label="Ile masz lat?">
