@@ -140,16 +140,16 @@ export default function SimulationPage() {
   }
 
   const realisticPension = simulatorState ? calculatePension({
-        wiek: simulatorState.age,
-        plec: simulatorState.gender,
-        pensjaBrutto: simulatorState.salary,
-        rokRozpoczeciaPracy: simulatorState.startWorkYear,
-        rokPrzejsciaNaEmeryture: simulatorState.retireYear,
-        dodatkoweLataPracy: 0, // Simplified for this link
-        przerwyWLacznychMiesiacach: simulatorState.leavePeriods.reduce((sum, p) => sum + p.durationMonths, 0),
-        wariant: simulatorState.wariant,
-        employmentType: simulatorState.employmentType,
-    }).kwotaUrealniona : 0;
+      wiek: simulatorState.age,
+      plec: simulatorState.gender,
+      pensjaBrutto: simulatorState.salary,
+      rokRozpoczeciaPracy: simulatorState.startWorkYear,
+      rokPrzejsciaNaEmeryture: simulatorState.retireYear,
+      dodatkoweLataPracy: Math.max(0, (simulatorState.retireYear - (new Date().getFullYear() - simulatorState.age)) - (simulatorState.gender === 'K' ? 60 : 65)),
+      przerwyWLacznychMiesiacach: simulatorState.leavePeriods.reduce((sum, p) => sum + p.durationMonths, 0),
+      wariant: simulatorState.wariant,
+      employmentType: simulatorState.employmentType,
+  }).kwotaUrealniona : 0;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
