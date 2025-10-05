@@ -36,17 +36,17 @@ const chartConfig = {
   },
   minimalna: {
     label: "Poniżej minimalnej",
-    color: "hsl(var(--chart-4))", // red
+    color: "hsl(var(--chart-5))", 
   },
   srednia: {
     label: "Średnia obecna",
     color: "hsl(var(--chart-2))", // blue
   },
-  lekarz: { label: "Lekarz", color: "hsl(var(--chart-5))" },
-  programista: { label: "Programista", color: "hsl(var(--chart-5))" },
-  biurowy: { label: "Pracownik biurowy", color: "hsl(var(--chart-5))" },
-  kierowca: { label: "Kierowca zawodowy", color: "hsl(var(--chart-5))" },
-  ksiegowa: { label: "Księgowa", color: "hsl(var(--chart-5))" },
+  lekarz: { label: "Lekarz", color: "#6495ED" },
+  programista: { label: "Programista", color: "#8A2BE2" },
+  biurowy: { label: "Pracownik biurowy", color: "#DEB887" },
+  kierowca: { label: "Kierowca zawodowy", color: "#A52A2A" },
+  ksiegowa: { label: "Księgowa", color: "#7FFF00" },
   najwyzsza: {
     label: "Najwyższa w PL",
     color: "hsl(var(--chart-1))", // green
