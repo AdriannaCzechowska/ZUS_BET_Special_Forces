@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { Suspense, useRef, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { stringify } from 'csv-stringify/browser/esm/sync';
@@ -17,7 +17,7 @@ import { useSearchParams } from 'next/navigation';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { calculatePension } from '@/lib/pension-calculator';
 
-export default function SimulationPage() {
+function SimulationPageContent() {
   const { toast } = useToast();
   const simulatorRef = useRef<HTMLDivElement>(null);
   const [simulatorState, setSimulatorState] = useState<SimulatorState | null>(null);
@@ -152,8 +152,7 @@ export default function SimulationPage() {
   }).kwotaUrealniona : 0;
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <Header />
+     <>
       <Breadcrumbs items={[
         { label: 'Symulator emerytalny', href: '/' },
         { label: 'Formularz symulacji' }
@@ -191,7 +190,19 @@ export default function SimulationPage() {
             </Button>
         </div>
       </main>
-      <Footer />
-    </div>
+     </>
   );
+}
+
+
+export default function SimulationPage() {
+    return (
+        <div className="flex flex-col min-h-screen bg-background">
+            <Header />
+            <Suspense fallback={<div>Ładowanie...</div>}>
+                <SimulationPageContent />
+            </Suspense>
+            <Footer />
+        </div>
+    );
 }
