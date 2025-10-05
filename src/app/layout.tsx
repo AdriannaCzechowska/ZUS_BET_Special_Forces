@@ -4,7 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { FirebaseClientProvider, useAuth } from '@/firebase';
 import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
-import { inter, playfair_display } from './fonts';
+import { lato } from './fonts';
 import { AuthProvider } from '@/context/AuthContext';
 
 function AuthHandler({ children }: { children: React.ReactNode }) {
@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${inter.variable} ${playfair_display.variable}`}>
+    <html lang="pl" className={`${lato.variable}`}>
       <body>
         <AuthProvider>
           <FirebaseClientProvider>
