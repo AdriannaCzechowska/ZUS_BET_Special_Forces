@@ -1,13 +1,13 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { ResultCard } from './result-card';
 import { ExpectationGap } from './expectation-gap';
 import { PostponementComparison } from './postponement-comparison';
 import { Info, TrendingUp, TrendingDown, Percent, Briefcase, BarChart } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { Suspense } from 'react';
 import { resultTooltips } from '@/lib/result-tooltips';
+import { ResultCard } from './result-card';
 
 function ResultsContent() {
   const searchParams = useSearchParams();
@@ -60,24 +60,20 @@ function ResultsContent() {
       </header>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ResultCard
-          title="Wysokość rzeczywista"
-          value={realPension}
-          unit="PLN"
-          icon={<TrendingUp className="text-[hsl(var(--chart-1))]" />}
-          description={`Nominalna kwota w roku przejścia. Odpowiada to stopie zastąpienia ${nominalReplacementRate.toFixed(2)}%.`}
-          variant="primary"
-          tooltipData={resultTooltips.wysokoscRzeczywista}
-        />
-        <ResultCard
-          title="Wysokość urealniona"
-          value={realisticPension}
-          unit="PLN"
-          icon={<TrendingDown className="text-accent" />}
-          description={`Wartość w dzisiejszych cenach. Odpowiada to stopie zastąpienia ${replacementRate.toFixed(2)}%.`}
-          variant="secondary"
-          tooltipData={resultTooltips.wysokoscUrealniona}
-        />
+        <div className="p-6 border rounded-lg bg-primary/5 border-primary/20 text-center">
+            <h3 className="text-lg font-medium text-primary">Wysokość rzeczywista</h3>
+            <p className="text-4xl font-bold font-headline my-2">{realPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
+            <p className="text-sm text-muted-foreground">
+                Nominalna kwota w roku przejścia. Odpowiada to stopie zastąpienia {nominalReplacementRate.toFixed(2)}%.
+            </p>
+        </div>
+         <div className="p-6 border rounded-lg bg-secondary/20 border-secondary/40 text-center">
+            <h3 className="text-lg font-medium">Wysokość urealniona</h3>
+            <p className="text-4xl font-bold font-headline my-2 text-accent-foreground">{realisticPension.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
+            <p className="text-sm text-muted-foreground">
+                Wartość w dzisiejszych cenach. Odpowiada to stopie zastąpienia {replacementRate.toFixed(2)}%.
+            </p>
+        </div>
       </div>
 
       {expectedPension > 0 && <ExpectationGap expected={expectedPension} forecasted={realisticPension} />}
