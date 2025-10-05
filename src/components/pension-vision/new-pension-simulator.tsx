@@ -69,47 +69,51 @@ const months = [
 ]
 
 
-const FormSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <div className="space-y-4 p-6 border rounded-lg bg-card shadow-sm">
-    <h3 className="font-headline text-xl text-primary">{title}</h3>
+const FormSection = ({ title, children, id }: { title: string; children: React.ReactNode, id: string }) => (
+  <section aria-labelledby={id} className="space-y-4 p-6 border rounded-lg bg-card shadow-sm">
+    <h3 id={id} className="font-headline text-xl text-primary">{title}</h3>
     {children}
-  </div>
+  </section>
 );
 
-const FormField = ({ label, children }: { label: string; children: React.ReactNode }) => (
+const FormField = ({ label, children, id }: { label: string; children: React.ReactNode; id: string }) => (
   <div className="space-y-2">
-    <Label>{label}</Label>
+    <Label htmlFor={id}>{label}</Label>
     {children}
   </div>
 );
 
-const FormSlider = ({ label, value, min, max, step, onValueChange, unit }: { label: string, value: number, min: number, max: number, step: number, onValueChange: (value: number) => void, unit: string }) => (
-  <FormField label={`${label}: ${value} ${unit}`}>
+const FormSlider = ({ label, value, min, max, step, onValueChange, unit, id }: { label: string, value: number, min: number, max: number, step: number, onValueChange: (value: number) => void, unit: string, id: string }) => (
+  <FormField label={`${label}: ${value} ${unit}`} id={id}>
     <Slider
+      id={id}
       value={[value]}
       min={min}
       max={max}
       step={step}
       onValueChange={(v) => onValueChange(v[0])}
+      aria-valuetext={`${value} ${unit}`}
     />
   </FormField>
 );
 
 const FormRadioGroup = ({ label, value, options, onValueChange }: { label: string, value: string, options: { value: string, label: string }[], onValueChange: (value: string) => void }) => (
-  <FormField label={label}>
-    <div className="flex gap-2">
+  <div className="space-y-2">
+    <Label>{label}</Label>
+    <RadioGroup
+        value={value}
+        onValueChange={onValueChange}
+        className="flex gap-2"
+        role="radiogroup"
+    >
       {options.map(option => (
-        <Button
-          key={option.value}
-          variant={value === option.value ? 'default' : 'outline'}
-          onClick={() => onValueChange(option.value)}
-          type="button"
-        >
-          {option.label}
-        </Button>
+        <div key={option.value} className="flex items-center">
+            <RadioGroupItem value={option.value} id={`radio-${option.value}`} />
+            <Label htmlFor={`radio-${option.value}`} className="ml-2 font-normal cursor-pointer">{option.label}</Label>
+        </div>
       ))}
-    </div>
-  </FormField>
+    </RadioGroup>
+  </div>
 );
 
 const currentYear = new Date().getFullYear();
@@ -212,10 +216,10 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
     <div className="space-y-8">
        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <div className="space-y-8">           
-            <FormSection title="Podstawowe informacje">
+            <FormSection title="Podstawowe informacje" id="form-section-basic-info">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <FormField label="Ile masz lat?">
-                    <Input type="number" value={age} onChange={e => setAge(Number(e.target.value))} />
+                <FormField label="Ile masz lat?" id="age-input">
+                    <Input type="number" id="age-input" value={age} onChange={e => setAge(Number(e.target.value))} />
                 </FormField>
                 <FormRadioGroup
                     label="Jaką masz płeć?"
@@ -226,50 +230,50 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
                 </div>
             </FormSection>
             
-            <FormSection title="Jakie są Twoje średnie zarobki?">
+            <FormSection title="Jakie są Twoje średnie zarobki?" id="form-section-salary">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <FormField label="Miesięczne wynagrodzenie brutto (PLN)">
-                        <Input type="number" value={salary} onChange={e => setSalary(Number(e.target.value))} />
+                    <FormField label="Miesięczne wynagrodzenie brutto (PLN)" id="salary-input">
+                        <Input type="number" id="salary-input" value={salary} onChange={e => setSalary(Number(e.target.value))} />
                     </FormField>
                     <SalaryHelper onSalarySelect={setSalary} />
                 </div>
             </FormSection>
 
-            <FormSection title="Forma zatrudnienia">
-                <RadioGroup value={employmentType} onValueChange={(v) => setEmploymentType(v as EmploymentType)} className="grid grid-cols-2 gap-4">
+            <FormSection title="Forma zatrudnienia" id="form-section-employment">
+                <RadioGroup value={employmentType} onValueChange={(v) => setEmploymentType(v as EmploymentType)} className="grid grid-cols-2 gap-4" aria-labelledby='form-section-employment'>
                   <div>
                     <RadioGroupItem value="uop" id="uop" className="peer sr-only" />
-                    <Label htmlFor="uop" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                    <Label htmlFor="uop" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
                       Umowa o pracę
                     </Label>
                   </div>
                   <div>
                     <RadioGroupItem value="zlecenie" id="zlecenie" className="peer sr-only" />
-                    <Label htmlFor="zlecenie" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                    <Label htmlFor="zlecenie" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
                       Umowa zlecenie
                     </Label>
                   </div>
                   <div>
                     <RadioGroupItem value="b2b" id="b2b" className="peer sr-only" />
-                    <Label htmlFor="b2b" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                    <Label htmlFor="b2b" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
                       Działalność / B2B
                     </Label>
                   </div>
                   <div>
                     <RadioGroupItem value="brak" id="brak" className="peer sr-only" />
-                    <Label htmlFor="brak" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                    <Label htmlFor="brak" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
                       Brak składek
                     </Label>
                   </div>
                 </RadioGroup>
-                <div className="mt-4 text-sm text-muted-foreground bg-gray-50 p-3 rounded-md border">
+                <div id="employment-type-description" className="mt-4 text-sm text-muted-foreground bg-gray-50 p-3 rounded-md border">
                   {employmentTypes[employmentType]}
                 </div>
              </FormSection>
             
-            <FormSection title="Twoja ścieżka kariery">
-                <FormSlider label="Kiedy zacząłeś pracę" value={startWorkYear} min={birthYear + 16} max={currentYear+20} step={1} onValueChange={setStartWorkYear} unit="" />
-                <FormSlider label="Kiedy planujesz skończyć pracę" value={retireYear} min={minRetireYear} max={birthYear + 75} step={1} onValueChange={setRetireYear} unit="" />
+            <FormSection title="Twoja ścieżka kariery" id="form-section-career-path">
+                <FormSlider label="Kiedy zacząłeś pracę" value={startWorkYear} min={birthYear + 16} max={currentYear+20} step={1} onValueChange={setStartWorkYear} unit="" id="start-work-year-slider" />
+                <FormSlider label="Kiedy planujesz skończyć pracę" value={retireYear} min={minRetireYear} max={birthYear + 75} step={1} onValueChange={setRetireYear} unit="" id="retire-year-slider" />
             </FormSection>
         </div>
         
@@ -288,7 +292,7 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
                                       <TooltipProvider>
                                         <Tooltip>
                                           <TooltipTrigger asChild>
-                                            <Button type="button" variant="ghost" size="icon" className="h-4 w-4 ml-1 cursor-help" onClick={(e) => e.stopPropagation()}>
+                                            <Button type="button" variant="ghost" size="icon" className="h-4 w-4 ml-1 cursor-help" onClick={(e) => e.stopPropagation()} aria-label={`Więcej informacji o ${config.label}`}>
                                               <HelpCircle className="h-4 w-4" />
                                             </Button>
                                           </TooltipTrigger>
@@ -298,7 +302,7 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
                                         </Tooltip>
                                       </TooltipProvider>
                                   </Label>
-                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={(e) => { e.stopPropagation(); removeLeavePeriod(period.id); }}>
+                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={(e) => { e.stopPropagation(); removeLeavePeriod(period.id); }} aria-label={`Usuń okres ${config.label}`}>
                                     <Trash2 className="h-4 w-4" />
                                   </Button>
                               </div>
@@ -307,24 +311,26 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
                               <div className='grid grid-cols-1 md:grid-cols-2 gap-4 pt-2'>
                                   <div className='space-y-2'>
                                       <div className='flex justify-between items-center'>
-                                          <Label className='text-xs'>Wiek rozpoczęcia:</Label>
+                                          <Label htmlFor={`start-age-${period.id}`} className='text-xs'>Wiek rozpoczęcia:</Label>
                                           <span className='text-xs font-bold'>{period.startAge} lat</span>
                                       </div>
                                       <Slider
+                                          id={`start-age-${period.id}`}
                                           min={age}
                                           max={retireYear - birthYear}
                                           step={1}
                                           value={[period.startAge]}
                                           onValueChange={(val) => updateLeavePeriod(period.id, 'startAge', val[0])}
+                                          aria-label={`Wiek rozpoczęcia dla ${config.label}`}
                                       />
                                   </div>
                                    <div className='space-y-2'>
-                                      <Label className='text-xs'>Miesiąc rozpoczęcia:</Label>
+                                      <Label htmlFor={`start-month-${period.id}`} className='text-xs'>Miesiąc rozpoczęcia:</Label>
                                       <Select 
                                         value={String(period.startMonth)} 
                                         onValueChange={(val) => updateLeavePeriod(period.id, 'startMonth', Number(val))}
                                       >
-                                        <SelectTrigger className="h-8">
+                                        <SelectTrigger id={`start-month-${period.id}`} className="h-8">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -337,15 +343,17 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
                               </div>
                                <div className='space-y-2'>
                                   <div className='flex justify-between items-center'>
-                                          <Label className='text-xs'>Długość:</Label>
+                                          <Label htmlFor={`duration-${period.id}`} className='text-xs'>Długość:</Label>
                                           <span className='text-xs font-bold'>{period.durationMonths} mies.</span>
                                   </div>
                                   <Slider
+                                      id={`duration-${period.id}`}
                                       min={1}
                                       max={config.maxDuration}
                                       step={1}
                                       value={[period.durationMonths]}
                                       onValueChange={(val) => updateLeavePeriod(period.id, 'durationMonths', val[0])}
+                                      aria-label={`Długość okresu ${config.label} w miesiącach`}
                                   />
                               </div>
                           </AccordionContent>
@@ -356,7 +364,7 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
 
              <div className="flex gap-2 items-center pt-2">
                 <Select value={newPeriodType} onValueChange={(value) => setNewPeriodType(value as PeriodType)}>
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Wybierz typ przerwy do dodania">
                         <SelectValue placeholder="Wybierz typ przerwy..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -382,14 +390,14 @@ export function NewPensionSimulator({ onStateChange }: NewPensionSimulatorProps)
       
       <div className="p-6 border rounded-lg bg-card shadow-sm mt-8">
         <h3 className="font-headline text-xl text-primary mb-4">Wybierz wariant prognozy</h3>
-        <div className="flex gap-2">
-            <Button variant={wariant === 1 ? 'default' : 'outline'} onClick={() => setWariant(1)}>Pośredni</Button>
-            <Button variant={wariant === 2 ? 'default' : 'outline'} onClick={() => setWariant(2)}>Pesymistyczny</Button>
-            <Button variant={wariant === 3 ? 'default' : 'outline'} onClick={() => setWariant(3)}>Optymistyczny</Button>
+        <div className="flex gap-2" role="radiogroup" aria-label="Warianty prognozy">
+            <Button variant={wariant === 1 ? 'default' : 'outline'} onClick={() => setWariant(1)} aria-pressed={wariant === 1}>Pośredni</Button>
+            <Button variant={wariant === 2 ? 'default' : 'outline'} onClick={() => setWariant(2)} aria-pressed={wariant === 2}>Pesymistyczny</Button>
+            <Button variant={wariant === 3 ? 'default' : 'outline'} onClick={() => setWariant(3)} aria-pressed={wariant === 3}>Optymistyczny</Button>
         </div>
       </div>
 
-      <div className="p-8 border-2 rounded-lg mt-8" style={{ borderColor: isGoalAchieved ? '#22c55e' : '#ef4444' }}>
+      <div className="p-8 border-2 rounded-lg mt-8" style={{ borderColor: isGoalAchieved ? '#22c55e' : '#ef4444' }} role="alert" aria-live="polite">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
             <div>
                 <h3 className="text-lg text-muted-foreground">Emerytura urealniona</h3>

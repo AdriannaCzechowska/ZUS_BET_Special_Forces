@@ -10,7 +10,7 @@ type PeriodType = 'employment' | 'unemployed' | 'sick_leave' | 'maternity_leave'
 
 export interface CareerPeriod {
   type: PeriodType;
-  start: { year: number; month: number }; // month 0-11
+  start: { year: number; month: number };
   end: { year: number; month: number };
 }
 

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { Info } from "lucide-react";
 import Link from "next/link";
+import { Label } from "../ui/label";
 
 export function PensionInput() {
   const [amount, setAmount] = useState("");
@@ -69,16 +70,17 @@ export function PensionInput() {
           className="flex flex-col sm:flex-row gap-4"
         >
           <div className="relative flex-grow">
+            <Label htmlFor="pension-amount-input" className="sr-only">Docelowa kwota emerytury</Label>
             <Input
+              id="pension-amount-input"
               type="number"
               min="0"
               placeholder="np. 4500"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="pr-16 text-lg h-14 rounded-md"
-              aria-label="Docelowa kwota emerytury"
             />
-            <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground font-semibold">
+            <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground font-semibold" aria-hidden="true">
               PLN
             </span>
           </div>

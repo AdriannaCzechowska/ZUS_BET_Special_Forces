@@ -12,19 +12,19 @@ const ZusLogo = () => (
 );
 
 const HearingIcon = () => (
-    <img src="/gluchy.png" alt='Hearing' className="h-10 w-10 object-contain"/>
+    <img src="/gluchy.png" alt="Ikona ułatwień dla osób niesłyszących" className="h-10 w-10 object-contain"/>
 )
 
 const WheelchairIcon = () => (
-    <img src="/amadeusz.png" alt="Wheelchair" className="h-10 w-10 object-contain"/>
+    <img src="/amadeusz.png" alt="Ikona ułatwień dla osób z niepełnosprawnością ruchową" className="h-10 w-10 object-contain"/>
 )
 
 const BipIcon = () => (
-    <img src="/bip.png" alt="BIP" className="h-10 w-15 object-contain"/>
+    <img src="/bip.png" alt="Biuletyn Informacji Publicznej" className="h-10 w-15 object-contain"/>
 )
 
 const EUFlagIcon = () => (
-    <img src="/unia.png" alt="EU" className="h-10 w-15 object-contain"/>
+    <img src="/unia.png" alt="Flaga Unii Europejskiej" className="h-10 w-15 object-contain"/>
 )
 
 export function Header() {
@@ -47,9 +47,9 @@ export function Header() {
                     <ChevronDown className="h-4 w-4"/>
                 </div>
                 <div className="flex items-center border-l pl-4 gap-2">
-                    <button className="p-1.5 rounded-sm"><HearingIcon /></button>
-                    <button className="p-1.5 rounded-sm"><WheelchairIcon /></button>
-                    <a href="#"><BipIcon /></a>
+                    <button className="p-1.5 rounded-sm" aria-label="Ułatwienia dla osób niesłyszących"><HearingIcon /></button>
+                    <button className="p-1.5 rounded-sm" aria-label="Ułatwienia dla osób z niepełnosprawnością ruchową"><WheelchairIcon /></button>
+                    <a href="#" aria-label="Przejdź do Biuletynu Informacji Publicznej"><BipIcon /></a>
                 </div>
                 <div className="flex items-center gap-2 border-l pl-4">
                     <a href="#" className="border border-gray-400 rounded-sm px-3 py-1.5 hover:bg-gray-100">Zarejestruj w PUE/eZUS</a>
@@ -72,13 +72,13 @@ export function Header() {
                     )}
                 </div>
                 <div className="flex items-center gap-4 border-l pl-4">
-                    <a href="#" className="flex flex-col items-center text-primary">
+                    <a href="#" className="flex flex-col items-center text-primary" aria-label="Wyszukaj w serwisie">
                         <div className="h-8 w-8 rounded-full border-2 border-primary flex items-center justify-center">
                             <Search className="h-5 w-5"/>
                         </div>
                         <span className="text-xs">Szukaj</span>
                     </a>
-                     <a href="#" className="flex flex-col items-center text-primary">
+                     <a href="#" className="flex flex-col items-center text-primary" aria-label="Informacje o Unii Europejskiej">
                         <EUFlagIcon />
                         <span className="text-xs text-center">Unia Europejska</span>
                     </a>
@@ -88,7 +88,7 @@ export function Header() {
       </div>
       <div className="border-t border-gray-200">
         <div className="container mx-auto px-4">
-            <nav className="flex items-center gap-8 text-sm font-semibold">
+            <nav className="flex items-center gap-8 text-sm font-semibold" aria-label="Główna nawigacja">
                 <a href="#" className="text-primary border-b-4 border-primary py-3">Świadczenia</a>
                 <a href="#" className="text-primary/80 hover:text-primary py-3">Firmy</a>
                 <a href="#" className="text-primary/80 hover:text-primary py-3">Pracujący</a>
