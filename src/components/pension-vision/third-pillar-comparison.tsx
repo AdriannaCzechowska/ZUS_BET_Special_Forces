@@ -72,8 +72,8 @@ export function ThirdPillarComparison({ ppkRate }: ThirdPillarComparisonProps) {
                 <div className="flex items-center">Limit wpłat (2024) <InfoTooltip text="Maksymalna kwota, jaką możesz wpłacić w danym roku kalendarzowym." /></div>
               </TableCell>
               <TableCell>4% wynagrodzenia brutto (składka pracownika)</TableCell>
-              <TableCell>23 472 zł</TableCell>
-              <TableCell>9 388,80 zł (14 083,20 zł dla samozatrudnionych)</TableCell>
+              <TableCell>26 019 zł</TableCell>
+              <TableCell>10 407.60 zł (15 611,40 zł dla samozatrudnionych)</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="font-medium">

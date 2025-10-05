@@ -199,7 +199,7 @@ function SimulationPageContent() {
 
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button size="lg" variant="outline">
+                    <Button size="lg">
                         <Target className="mr-2 h-4 w-4" />
                         Porównaj III filar
                     </Button>
@@ -209,7 +209,7 @@ function SimulationPageContent() {
                 </DialogContent>
             </Dialog>
 
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg">
                  <Link href={`/na-co-wystarcza?${linkParams.toString()}`}>
                     <Lightbulb className="mr-2 h-4 w-4" />
                     Na co to wystarcza
