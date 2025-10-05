@@ -102,9 +102,6 @@ export function PensionChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-4">
-        <p className="text-xs text-muted-foreground text-center w-full">
-          Obecna średnia stopa zastąpienia to ok. <span className="font-semibold text-foreground">40%</span> ostatniego wynagrodzenia.
-        </p>
         <Separator />
         <p className="text-xs text-muted-foreground text-center w-full">
           Wskaźniki waloryzacji składek ogłasza MRPiPS w Monitorze Polskim – aktualizacja co 1 czerwca.

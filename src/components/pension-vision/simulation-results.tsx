@@ -17,7 +17,15 @@ function ResultsContent() {
   const realisticPension = Number(searchParams.get('realisticPension') || '0');
   const replacementRate = Number(searchParams.get('replacementRate') || '0');
   const pensionWithoutL4 = Number(searchParams.get('pensionWithoutL4') || '0');
+  const grossSalary = Number(searchParams.get('grossSalary') || '0');
+  const retirementYear = Number(searchParams.get('retirementYear') || new Date().getFullYear());
   
+  const yearsToRetirement = retirementYear - new Date().getFullYear();
+  // Simplified assumption for nominal salary growth for replacement rate calculation
+  const lastNominalSalary = grossSalary * Math.pow(1.034, yearsToRetirement); 
+  const nominalReplacementRate = lastNominalSalary > 0 ? (realPension / lastNominalSalary) * 100 : 0;
+
+
   // Mock data - replace with actual simulation output
   const avgPensionInRetirementYear = 4100;
 
@@ -60,6 +68,7 @@ function ResultsContent() {
           description={resultTooltips.wysokoscRzeczywista.shortHint}
           variant="primary"
           tooltipData={resultTooltips.wysokoscRzeczywista}
+          subValue={`Stopa zastąpienia: ${nominalReplacementRate.toFixed(2)}%`}
         />
         <ResultCard
           title="Wysokość urealniona"
@@ -69,6 +78,7 @@ function ResultsContent() {
           description={resultTooltips.wysokoscUrealniona.shortHint}
           variant="secondary"
           tooltipData={resultTooltips.wysokoscUrealniona}
+          subValue={`Stopa zastąpienia: ${replacementRate.toFixed(2)}%`}
         />
       </div>
 
